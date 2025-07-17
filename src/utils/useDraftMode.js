@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useRouter } from 'next/router';
 
 export const useDraftMode = () => {
   const router = useRouter();
   const [isDraftMode, setIsDraftMode] = useState(false);
+  const [lastRefresh, setLastRefresh] = useState(Date.now());
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const refreshTimeoutRef = useRef(null);
 
   useEffect(() => {
     // Check if draft mode is enabled via URL parameter
@@ -12,6 +15,41 @@ export const useDraftMode = () => {
 
     setIsDraftMode(isDraft);
   }, [router.query.draft]);
+
+  // Debounced refresh function
+  const debouncedRefresh = useCallback(() => {
+    if (refreshTimeoutRef.current) {
+      clearTimeout(refreshTimeoutRef.current);
+    }
+
+    refreshTimeoutRef.current = setTimeout(() => {
+      if (!isRefreshing) {
+        setIsRefreshing(true);
+        try {
+          window.location.reload();
+        } catch (error) {
+          console.error('Refresh error:', error);
+          setIsRefreshing(false);
+        }
+      }
+    }, 1000); // 1 second debounce
+  }, [isRefreshing]);
+
+  // Auto-refresh for draft mode
+  useEffect(() => {
+    if (!isDraftMode) return;
+
+    const interval = setInterval(() => {
+      debouncedRefresh();
+    }, 15000); // 15 seconds
+
+    return () => {
+      clearInterval(interval);
+      if (refreshTimeoutRef.current) {
+        clearTimeout(refreshTimeoutRef.current);
+      }
+    };
+  }, [isDraftMode, debouncedRefresh]);
 
   const enterDraftMode = (slug) => {
     const currentPath = router.asPath.split('?')[0]; // Remove existing query params
@@ -24,9 +62,39 @@ export const useDraftMode = () => {
     router.push(currentPath);
   };
 
+  const forceRefresh = async () => {
+    if (isRefreshing) return;
+
+    try {
+      setIsRefreshing(true);
+      const secret = process.env.NEXT_PUBLIC_DRAFT_REVALIDATION_SECRET || 'dev-secret';
+      const path = router.asPath.split('?')[0];
+
+      // Call draft revalidation API
+      const response = await fetch(`/api/draft/revalidate?secret=${secret}&path=${path}&draft=true`);
+
+      if (response.ok) {
+        setLastRefresh(Date.now());
+        console.log('Draft revalidation successful');
+        // Use window.location.reload() for more reliable refresh
+        window.location.reload();
+      } else {
+        const errorData = await response.json();
+        console.error('Draft revalidation failed:', errorData);
+        setIsRefreshing(false);
+      }
+    } catch (error) {
+      console.error('Error forcing refresh:', error);
+      setIsRefreshing(false);
+    }
+  };
+
   return {
     isDraftMode,
     enterDraftMode,
-    exitDraftMode
+    exitDraftMode,
+    forceRefresh,
+    lastRefresh,
+    isRefreshing
   };
 };

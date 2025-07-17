@@ -2,7 +2,7 @@ import React from 'react';
 import { useDraftMode } from '../utils/useDraftMode';
 
 const DraftModeBanner = () => {
-  const { isDraftMode, exitDraftMode } = useDraftMode();
+  const { isDraftMode, exitDraftMode, forceRefresh, lastRefresh, isRefreshing } = useDraftMode();
 
   if (!isDraftMode) {
     return null;
@@ -24,7 +24,24 @@ const DraftModeBanner = () => {
         fontWeight: '500',
       }}
     >
-      <span>Preview Mode - </span>
+      <span>Preview Mode - Auto-refresh every 15s - </span>
+      <button
+        onClick={forceRefresh}
+        disabled={isRefreshing}
+        style={{
+          backgroundColor: 'transparent',
+          border: '1px solid white',
+          color: 'white',
+          padding: '4px 12px',
+          marginLeft: '8px',
+          borderRadius: '4px',
+          cursor: isRefreshing ? 'not-allowed' : 'pointer',
+          fontSize: '12px',
+          opacity: isRefreshing ? 0.6 : 1,
+        }}
+      >
+        {isRefreshing ? 'Refreshing...' : 'Force Refresh'}
+      </button>
       <button
         onClick={exitDraftMode}
         style={{
@@ -40,6 +57,9 @@ const DraftModeBanner = () => {
       >
         Exit Preview
       </button>
+      <div style={{ fontSize: '11px', marginTop: '4px', opacity: 0.8 }}>
+        Last refresh: {new Date(lastRefresh).toLocaleTimeString()}
+      </div>
     </div>
   );
 };

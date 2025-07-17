@@ -225,7 +225,7 @@ const Page = ({
           {generalMetaKeywords && (
             <meta name="keywords" content={generalMetaKeywords} />
           )}
-          <title>{pageTitle && `${pageTitle} | `} CW Bearing</title>
+          <title>{pageTitle ? `${pageTitle} | CW Bearing` : 'CW Bearing'}</title>
           <meta name="theme-color" content="#2012e6" />
           <link
             rel="icon"
@@ -374,16 +374,56 @@ export const getStaticProps = async (context) => {
       };
     }
 
+    // Only fetch menu data for current locale to reduce payload
     const menuItems = await getAPIData(
       !isGerman(context.locale) ? `${context.locale}/` : "",
       isDraftMode
     );
-    const enData = await getAPIData("en", isDraftMode);
-    const usData = await getAPIData("us", isDraftMode);
-    const deData = await getAPIData("", isDraftMode);
-    const itData = await getAPIData("it", isDraftMode);
-    const frData = await getAPIData("fr", isDraftMode);
-    const plData = await getAPIData("pl", isDraftMode);
+
+    // For draft mode, fetch all languages. For production, only fetch current locale
+    let enData, usData, deData, itData, frData, plData;
+
+    if (isDraftMode) {
+      // Draft mode: fetch all languages for complete preview
+      [enData, usData, deData, itData, frData, plData] = await Promise.all([
+        getAPIData("en", isDraftMode),
+        getAPIData("us", isDraftMode),
+        getAPIData("", isDraftMode),
+        getAPIData("it", isDraftMode),
+        getAPIData("fr", isDraftMode),
+        getAPIData("pl", isDraftMode)
+      ]);
+    } else {
+      // Production: only fetch current locale and default
+      const currentLocale = context.locale;
+      const defaultLocale = "de";
+
+      if (currentLocale === defaultLocale) {
+        deData = await getAPIData("", isDraftMode);
+        enData = usData = itData = frData = plData = { data: { page: {} } };
+      } else {
+        const [currentData, defaultData] = await Promise.all([
+          getAPIData(currentLocale, isDraftMode),
+          getAPIData(defaultLocale === "de" ? "" : defaultLocale, isDraftMode)
+        ]);
+
+        // Assign based on current locale
+        if (currentLocale === "en") enData = currentData;
+        else if (currentLocale === "us") usData = currentData;
+        else if (currentLocale === "it") itData = currentData;
+        else if (currentLocale === "fr") frData = currentData;
+        else if (currentLocale === "pl") plData = currentData;
+
+        deData = defaultData;
+
+        // Set others to empty
+        enData = enData || { data: { page: {} } };
+        usData = usData || { data: { page: {} } };
+        itData = itData || { data: { page: {} } };
+        frData = frData || { data: { page: {} } };
+        plData = plData || { data: { page: {} } };
+      }
+    }
 
     return {
       props: {
@@ -396,8 +436,8 @@ export const getStaticProps = async (context) => {
         siteFrData: frData.data.page,
         sitePlData: plData.data.page,
       },
-      // Enable ISR - revalidate every 60 seconds (1 minute)
-      revalidate: 60,
+      // Enable ISR - faster revalidation for draft mode, slower for production
+      revalidate: isDraftMode ? 10 : 60, // 10 seconds for draft, 60 for production
     };
   } catch (error) {
     // If any error occurs during data fetching, return notFound
