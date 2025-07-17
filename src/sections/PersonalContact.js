@@ -7,6 +7,7 @@ import RoundedImage from "../components/Shared/RoundedImage";
 import SecondaryButton from "../components/Shared/SecondaryButton";
 import { validateEmail } from "../utils/validation";
 import Link from "next/link";
+import SafeLink from "../components/Shared/SafeLink";
 import rehypeRaw from "rehype-raw";
 
 const PersonalContact = ({ id, data }) => {
@@ -50,7 +51,7 @@ const PersonalContact = ({ id, data }) => {
                 <div className="btn-wrapper desktop-visible">
                   {data.phone && (
                     <>
-                      {data.phone.href ? (
+                      {data.phone.href && typeof data.phone.href === 'string' ? (
                         <Link
                           data-aos="fade-left"
                           href={data.phone.href}
@@ -62,7 +63,7 @@ const PersonalContact = ({ id, data }) => {
                         <>
                           <Link
                             data-aos="fade-left"
-                            href={`tel: ${data.phone}`}
+                            href={`tel: ${typeof data.phone === 'string' ? data.phone : data.phone.title || ''}`}
                             className="tel-no"
                           >
                             {data.phone.title}
@@ -117,7 +118,7 @@ const PersonalContact = ({ id, data }) => {
                   <ReactMarkdown
                     children={data.text}
                     rehypePlugins={[rehypeRaw]}
-                    components={{ a: Link }}
+                    components={{ a: SafeLink }}
                   />
                 )}
                 <div className="btn-wrapper mobile-visible">
@@ -135,7 +136,7 @@ const PersonalContact = ({ id, data }) => {
                                     className={`btn btn-red btn-br-red`}
                                     href={`${b.btnlink.href.replace("(at)", "@")}`}
                                   >
-                                    {b.btnlink}
+                                    {b.btntext}
                                   </Link>
                                 ) : (
                                   <SecondaryButton
