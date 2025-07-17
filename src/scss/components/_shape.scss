@@ -1,0 +1,144 @@
+.dark-btm-right-shape {
+  position: relative;
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding-bottom: 21.4%;
+    background-image: url("/images/png/bogen-dark-bottom-right-375-mobil.svg");
+    background-size: 101%;
+    background-position: center;
+    background-repeat: no-repeat;
+    @include media-breakpoint-up(lg) {
+      background-image: url("/images/png/bogen-dark-bottom-right-1920-desktop.svg");
+    }
+  }
+}
+
+.btm-right-shape {
+  position: relative;
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding-bottom: 19%;
+    background-image: url("/images/png/bogen-bottom-right-375-mobil.svg");
+    background-size: 101%;
+    background-position: center;
+    background-repeat: no-repeat;
+    @include media-breakpoint-up(lg) {
+      background-image: url("/images/png/bogen-bottom-right-1920-desktop.svg");
+    }
+  }
+}
+
+.dark-top-center-shape {
+  position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding-bottom: 7.7%;
+    background-image: url("/images/png/bogen-dark-top-center-375-mobil.svg");
+    background-size: 102%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+}
+
+.top-center-shape {
+  position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding-bottom: 7.5%;
+    background-image: url("/images/png/bogen-top-center-375-mobil.svg");
+    background-size: 101%;
+    background-position: center;
+    background-repeat: no-repeat;
+    @include media-breakpoint-up(sm) {
+      padding-bottom: 7.3%;
+    }
+    @include media-breakpoint-up(lg) {
+      padding-bottom: 4.3%;
+      background-image: url("/images/png/bogen-top-center-1920-desktop.svg");
+    }
+  }
+}
+
+.btm-left-shape {
+  position: relative;
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding-bottom: 19%;
+    background-image: url("/images/png/bogen-bottom-left-375-mobil.svg");
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    @include media-breakpoint-up(lg) {
+      background-image: url("/images/png/bogen-bottom-left-1920-desktop.svg");
+    }
+  }
+}
+
+.top-left-shape {
+  position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding-bottom: 18.9%;
+    background-image: url("/images/png/bogen-top-left-375-mobil.svg");
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    @include media-breakpoint-up(lg) {
+      background-image: url("/images/png/bogen-top-left-1920-desktop.svg");
+    }
+  }
+}
+
+.btm-center-shape {
+  position: relative;
+  &:before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding-bottom: 7.5%;
+    background-image: url("/images/png/bogen-bottom-center-375-mobil.svg");
+    background-size: 104%;
+    background-position: center;
+    background-repeat: no-repeat;
+    @include media-breakpoint-up(sm) {
+      padding-bottom: 7.3%;
+    }
+    @include media-breakpoint-up(lg) {
+      padding-bottom: 4.3%;
+      background-image: url("/images/png/bogen-bottom-center-1920-desktop.svg");
+    }
+  }
+}

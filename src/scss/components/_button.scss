@@ -1,0 +1,97 @@
+/*******************************************************************************
+* Button
+*******************************************************************************/
+.btn {
+  @extend %fontsize18;
+  @include transition(all, 0.25s, ease, 0s);
+  @include inline-block();
+  @include box-shadow(2px -3px 6px 0px transparent);
+  background-color: $brand-color-secondary;
+  border: 2px solid $brand-color-secondary;
+  border-radius: 25px;
+  color: $white;
+  font-size: 18px;
+  font-family: $font-primary;
+  font-weight: $regular-weight;
+  margin: 0;
+  outline: 0;
+  min-height: 46px;
+  line-height: 42px;
+  padding: 0 16px !important;
+  min-width: 160px;
+  white-space: normal;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: transparent;
+	border: 2px solid $brand-color-secondary;
+    color: $brand-color-secondary;
+  }
+
+  &.btn-w-arrow {
+    min-width: 1px;
+    min-height: 34px;
+    line-height: 30px;
+    &.br-hover-white {
+      &:hover,
+      &:focus,
+      &:active {
+        img {
+          display: inline;
+          &.hover-visible {
+            display: none;
+          }
+        }
+      }
+    }
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: #ffffff;
+      img {
+        display: none;
+        &.hover-visible {
+          display: inline;
+        }
+      }
+    }
+    .text-wrapper {
+      @include flexbox();
+      @include align-items(center);
+      .icon-in {
+        @include flexbox();
+        @include align-items(center);
+        width: 16px;
+        margin-left: 16px;
+      }
+    }
+    img {
+      &.hover-visible {
+        display: none;
+      }
+    }
+  }
+
+  &.br-hover-white {
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: transparent;
+      border-color: #ffffff;
+      color: #ffffff;
+    }
+  }
+}
+
+button:focus,
+a:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+@include media-breakpoint-up(sm) {
+  .btn {
+    padding: 9px 25px;
+  }
+}

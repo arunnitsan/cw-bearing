@@ -1,0 +1,37 @@
+//****************************************************************************
+//  Fonts
+//***************************************************************************/
+:root {
+  --font-lato: 'Lato', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+}
+
+//****************************************************************************
+//  Bootsrap variables overrides
+//***************************************************************************/
+$font-family-sans-serif: var(--font-lato), 'Lato', sans-serif;
+$font-primary: $font-family-sans-serif;
+$body-color: #373737;
+$btn-box-shadow: none;
+
+//****************************************************************************
+//  Custom variables
+//***************************************************************************/
+$brand-color: #005a96;
+$brand-color-primary: $brand-color;
+$brand-color-secondary: #ED1C24;
+$brand-color-hover: $brand-color-secondary;
+$brand-color-primary-hover: $brand-color-secondary;
+$brand-color-secondary-hover: $brand-color;
+$brand-color-gray: #85a0c8;
+$table-hover-bg: #fcf2e7;
+$input-color: $body-color;
+
+//****************************************************************************
+//  Font Weight
+//***************************************************************************/
+$light-weight: 300;
+$regular-weight: 400;
+$medium-weight: 500;
+$semi-bold-weight: 600;
+$bold-weight: 700;

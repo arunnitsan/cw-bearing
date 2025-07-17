@@ -1,0 +1,70 @@
+.intro-products-section {
+  padding: 0 0 120px;
+
+  @include media-breakpoint-up(md) {
+    padding: 0 0 166px;
+  }
+
+  @include media-breakpoint-up(lg) {
+    padding: 0 0 150px;
+  }
+
+  @include media-breakpoint-up(xl) {
+    padding: 0 0 250px;
+  }
+
+  &:after {
+    @include media-breakpoint-up(lg) {
+      padding-bottom: 12.2%;
+      background-image: url("/images/png/bogen-bottom-right-1920-desktop.svg");
+    }
+
+    @include media-breakpoint-up(xl) {
+      padding-bottom: 12.3%;
+    }
+  }
+
+  .content-block {
+    @include order(1);
+
+    @include media-breakpoint-up(md) {
+      @include order(0);
+    }
+
+    h1 {
+      margin-bottom: 35px;
+
+      @include media-breakpoint-up(lg) {
+        margin-bottom: 50px;
+        font-size: 52px;
+        letter-spacing: 0.4px;
+      }
+    }
+
+    .content-in {
+      &:not(:last-child) {
+        padding-bottom: 28px;
+
+        @include media-breakpoint-up(lg) {
+          padding-bottom: 50px;
+        }
+      }
+    }
+
+    .more-link {
+      text-transform: uppercase;
+
+      &:not(:last-child) {
+        margin-bottom: 18px;
+
+        @include media-breakpoint-up(lg) {
+          margin-bottom: 20px;
+        }
+      }
+    }
+  }
+
+  .product-img-in {
+    padding-bottom: 36px;
+  }
+}

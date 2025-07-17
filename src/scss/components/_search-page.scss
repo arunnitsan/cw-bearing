@@ -1,0 +1,107 @@
+.search-results-section {
+  .search-results-banner {
+    padding: 70px 0 100px;
+    @include media-breakpoint-up(lg) {
+      padding: 86px 0 200px;
+    }
+    &:after {
+      @include media-breakpoint-up(lg) {
+        padding-bottom: 12.4%;
+        background-image: url("/images/png/bogen-bottom-right-1920-desktop.svg");
+      }
+    }
+    .search-form {
+      z-index: 11;
+      .input-box input {
+        color: $brand-color;
+        border-color: #aabbda;
+        &::-webkit-input-placeholder {
+          font-size: 20px;
+          line-height: 36px;
+          color: $brand-color;
+          font-weight: 400;
+          @include media-breakpoint-up(lg) {
+            font-size: 31px;
+          }
+        }
+        &:-ms-input-placeholder {
+          font-size: 20px;
+          line-height: 36px;
+          color: $brand-color;
+          font-weight: 400;
+          @include media-breakpoint-up(lg) {
+            font-size: 31px;
+          }
+        }
+        &::placeholder {
+          font-size: 20px;
+          line-height: 36px;
+          color: $brand-color-gray;
+          font-weight: 400;
+          @include media-breakpoint-up(lg) {
+            font-size: 31px;
+          }
+        }
+      }
+      .close {
+        &:before,
+        &:after {
+          background-color: #aabbda;
+        }
+      }
+    }
+  }
+  .search-results-wrapper {
+    padding: 40px 0;
+    @include media-breakpoint-up(lg) {
+      padding: 68px 0 50px;
+    }
+    .tx-indexedsearch-searchbox {
+      display: none;
+    }
+    .tx-indexedsearch-info-noresult {
+      font-size: 20px;
+      line-height: 24px;
+      color: $brand-color-secondary;
+    }
+    .main-search-title {
+      color: #85a0c8;
+      font-weight: 400;
+      margin-bottom: 60px;
+      @include media-breakpoint-up(lg) {
+        margin-bottom: 75px;
+      }
+    }
+    .search-results {
+      .search-result-box {
+        &:not(:last-child) {
+          margin-bottom: 88px;
+        }
+        h3 {
+          margin-bottom: 16px;
+          @include media-breakpoint-up(lg) {
+            font-weight: 400;
+            margin-bottom: 5px;
+          }
+        }
+        p {
+          margin-bottom: 30px;
+        }
+        .more-link {
+          display: inline-flex;
+          font-weight: 700;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+  .spinner-wrapper {
+    @include flexbox();
+    @include align-items(center);
+    @include justify-content(center);
+    padding: 50px 0;
+    @include media-breakpoint-up(lg) {
+      padding: 75px 0;
+    }
+  }
+}

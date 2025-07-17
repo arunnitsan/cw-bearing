@@ -1,0 +1,74 @@
+// @import "~aos/dist/aos.css";
+// @import "~react-lazy-load-image-component/src/effects/blur.css";
+// @import "~slick-carousel/slick/slick.css";
+// @import "~slick-carousel/slick/slick-theme.css";
+// @import "~animate.css/animate.min.css";
+// @import "../assets/fonts/typography-font/typography.css";
+// @import "../assets/fonts/fontawesome-5/css/all.css";
+@import "./bootstrap.scss";
+//* This is the main application stylesheet. It should include or import all
+//* custom and vendor stylesheets.
+//****************************************************************************
+//  Include our own variables and the ones that override the Bootstrap variables
+//  Always include this file first
+//***************************************************************************/
+@import "base/variables";
+
+//****************************************************************************
+//  Include a custom build of the Twitter Bootstrap SCSS files.
+//***************************************************************************/
+// @import "bootstrap";
+
+//Bootstrap Required
+@import "bootstrap/functions";
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+//****************************************************************************
+//  Include base styles
+//***************************************************************************/
+@import "mixins/mixins";
+@import "base/extensions";
+@import "base/typography";
+@import "base/base";
+
+//****************************************************************************
+//  Include components styles
+//***************************************************************************/
+@import "components/shape";
+@import "components/header";
+@import "components/header-big";
+@import "components/footer";
+@import "components/secondary-button";
+@import "components/aurora-inner";
+@import "components/main-menu-modal";
+@import "components/intro-industries";
+@import "components/intro-products";
+@import "components/image-icon-text";
+@import "components/intro-products-overview";
+@import "components/intro-industries-overview";
+@import "components/personal-contact";
+@import "components/testimonial";
+@import "components/product-solutions";
+@import "components/icon-link-list";
+@import "components/cta-with-background";
+@import "components/product-types";
+@import "components/news-teaser";
+@import "components/accordion";
+@import "components/cta-with-circle";
+@import "components/configurator";
+@import "components/info-modal";
+@import "components/news-details";
+@import "components/search-page";
+@import "components/simple-download";
+@import "components/intro-career";
+@import "components/structured-content";
+@import "components/content-section";
+@import "components/close";
+@import "components/general";
+@import "components/button";
+@import "components/form";
+@import "components/cms";
+@import "components/search-overlay";
+@import "components/sliders";
+@import "components/spacer";
+@import "components/sub-menu";

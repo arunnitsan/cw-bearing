@@ -1,0 +1,161 @@
+//****************************************************************************
+//  General extensions
+//***************************************************************************/
+
+%inherit_textstyles {
+  color: inherit;
+  font-size: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  text-align: inherit;
+  text-transform: inherit;
+}
+
+//****************************************************************************
+//  Font sizes extensions
+//***************************************************************************/
+%fontsize54 {
+  font-size: 33px;
+  line-height: 40px;
+}
+
+%fontsize48 {
+  font-size: 30px;
+  line-height: 42px;
+}
+
+%fontsize40 {
+  font-size: 28px;
+  line-height: 38px;
+}
+
+%fontsize36 {
+  font-size: 24px;
+  line-height: 30px;
+}
+
+%fontsize30 {
+  font-size: 20px;
+  line-height: 26px;
+}
+
+%fontsize28 {
+  font-size: 20px;
+  line-height: 30px;
+}
+
+%fontsize24 {
+  font-size: 18px;
+  line-height: 28px;
+}
+
+%fontsize22 {
+  font-size: 18px;
+  line-height: 28px;
+}
+
+%fontsize20 {
+  font-size: 18px;
+  line-height: 28px;
+}
+
+%fontsize18 {
+  font-size: 15px;
+  line-height: 22px;
+}
+
+%fontsize16 {
+  font-size: 15px;
+  line-height: 20px;
+}
+
+%fontsize15 {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+%fontsize14 {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+@include media-breakpoint-up(md) {
+  %fontsize48 {
+    font-size: 38px;
+    line-height: 42px;
+  }
+
+  %fontsize40 {
+    font-size: 36px;
+    line-height: 42px;
+  }
+
+  %fontsize36 {
+    font-size: 28px;
+    line-height: 32px;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  %fontsize54 {
+    font-size: 54px;
+    line-height: 64px;
+  }
+
+  %fontsize48 {
+    font-size: 48px;
+    line-height: 56px;
+  }
+
+  %fontsize40 {
+    font-size: 40px;
+    line-height: 48px;
+  }
+
+  %fontsize36 {
+    font-size: 36px;
+    line-height: 40px;
+  }
+
+  %fontsize30 {
+    font-size: 30px;
+    line-height: 36px;
+  }
+
+  %fontsize28 {
+    font-size: 28px;
+    line-height: 40px;
+  }
+
+  %fontsize24 {
+    font-size: 24px;
+    line-height: 36px;
+  }
+
+  %fontsize22 {
+    font-size: 22px;
+    line-height: 22px;
+  }
+
+  %fontsize20 {
+    font-size: 20px;
+    line-height: 31px;
+  }
+
+  %fontsize18 {
+    font-size: 18px;
+    line-height: 28px;
+  }
+
+  %fontsize16 {
+    font-size: 16px;
+    line-height: 26px;
+  }
+
+  %fontsize15 {
+    font-size: 15px;
+    line-height: 21px;
+  }
+}

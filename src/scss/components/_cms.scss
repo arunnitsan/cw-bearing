@@ -1,0 +1,254 @@
+/****************************************************************************
+ * TYPO3 CMS Styles
+ ***************************************************************************/
+.ce-align-left {
+  text-align: left;
+}
+
+.ce-align-center {
+  text-align: center;
+}
+
+.ce-align-right {
+  text-align: right;
+}
+
+.ce-table td,
+.ce-table th {
+  vertical-align: top;
+}
+
+hr {
+  border-top: solid 1px $brand-color-gray;
+}
+
+.ce-textpic,
+.ce-nowrap .ce-bodytext,
+.ce-gallery,
+.ce-row,
+.ce-uploads li,
+.ce-uploads div {
+  overflow: hidden;
+}
+
+.ce-center .ce-outer {
+  float: right;
+  position: relative;
+  right: 50%;
+}
+
+.ce-center .ce-inner {
+  float: right;
+  position: relative;
+  right: -50%;
+}
+
+.ce-gallery figure {
+  display: table;
+  margin: 0;
+}
+
+.ce-gallery figcaption {
+  caption-side: bottom;
+  display: table-caption;
+}
+
+.ce-gallery img {
+  display: block;
+}
+
+.ce-gallery iframe {
+  border-width: 0;
+}
+
+.ce-border img,
+.ce-border iframe {
+  border: 2px solid #000;
+  padding: 0;
+}
+
+.ce-intext.ce-right .ce-gallery,
+.ce-intext.ce-left .ce-gallery,
+.ce-above .ce-gallery,
+.ce-below .ce-gallery {
+  margin-bottom: 0;
+}
+
+.ce-intext.ce-right .ce-gallery {
+  margin-top: 3px;
+}
+
+.ce-intext.ce-left .ce-gallery {
+  margin-top: 3px;
+}
+
+.ce-intext.ce-right .ce-bodytext h5,
+.ce-intext.ce-left .ce-bodytext h5 {
+  margin-top: 4px;
+}
+
+.ce-above .ce-gallery {
+  margin-top: 0;
+}
+
+.ce-below.ce-right .ce-gallery,
+.ce-below.ce-left .ce-gallery,
+.ce-below.ce-center .ce-gallery {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.ce-column {
+  margin-bottom: 15px;
+  margin-right: 15px;
+}
+
+.ce-column:last-child {
+  margin-right: 0;
+}
+
+.ce-row {
+  margin-bottom: 10px;
+}
+
+.ce-row:last-child {
+  margin-bottom: 0;
+}
+
+.ce-above .ce-bodytext {
+  clear: both;
+}
+
+.ce-intext.ce-left ol,
+.ce-intext.ce-left ul {
+  overflow: auto;
+  padding-left: 40px;
+}
+
+.ce-intext.ce-left ul {
+  padding-left: 0;
+}
+
+.ce-uploads img {
+  margin-top: 5px;
+}
+
+.ce-uploads span {
+  display: block;
+}
+
+img {
+  &.float-left {
+    margin-right: 20px;
+  }
+
+  &.float-right {
+    margin-left: 20px;
+  }
+}
+
+.frame {
+  .ce-textpic {
+    &.ce-left {
+      padding-bottom: 0;
+
+      .ce-gallery {
+        img {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+// .button-group {
+//   margin: 20px atuo;
+// }
+
+.cc-window {
+  flex-wrap: wrap;
+}
+
+.cc-message {
+  margin-bottom: 10px;
+}
+
+.frame {
+  .ce-textpic {
+    padding-bottom: 20px;
+
+    img {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.ce-right,
+.ce-left {
+  .ce-gallery {
+    float: none;
+    margin: 0 auto;
+  }
+}
+
+.ce-column {
+  float: none;
+}
+
+.ce-image {
+  img {
+    margin-bottom: 10px;
+  }
+}
+
+.video-section {
+  .ce-textpic {
+    padding-bottom: 0;
+
+    img,
+    .ce-column {
+      margin-bottom: 0;
+    }
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .ce-left .ce-gallery,
+  .ce-column {
+    float: left;
+  }
+
+  .ce-right .ce-gallery {
+    float: right;
+  }
+
+  .ce-intext.ce-right .ce-gallery {
+    margin-left: 50px;
+  }
+
+  .ce-intext.ce-left .ce-gallery {
+    margin-right: 50px;
+  }
+
+  .frame {
+    .ce-textpic {
+      &.ce-left {
+        .ce-bodytext {
+          padding-left: 0;
+        }
+      }
+    }
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .frame {
+    .ce-textpic {
+      &.ce-left {
+        .ce-bodytext {
+          padding-right: 85px;
+        }
+      }
+    }
+  }
+}

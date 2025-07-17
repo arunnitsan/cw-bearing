@@ -1,0 +1,8 @@
+<svg version="1.2" baseProfile="tiny-ps" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 631 342" width="631" height="342">
+	<title>Vereinigungsmenge 1</title>
+	<style>
+		tspan { white-space:pre }
+		.shp0 { fill: none;stroke: #ed1c24;stroke-width: 2 } 
+	</style>
+	<path id="Vereinigungsmenge 1" class="shp0" d="M32.82 327.95L23.49 261.56L0.73 99.61C87.36 57.03 187.24 25.9 295.32 10.71C401.63 -4.23 504.53 -2.17 598.29 14.13L621.25 177.55L621.25 177.55L630.38 242.47C543.75 285.05 443.87 316.18 335.79 331.37C229.48 346.31 126.58 344.25 32.82 327.95Z" />
+</svg>

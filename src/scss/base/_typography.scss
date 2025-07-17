@@ -1,0 +1,122 @@
+/****************************************************************************
+  Body
+ ***************************************************************************/
+body {
+  @extend %fontsize18;
+  font-family: $font-primary;
+}
+
+.container {
+  max-width: 1920px;
+  padding: 0 15px;
+  // max-width: 1200px;
+}
+
+p {
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 400;
+  margin-bottom: 15px;
+  @include media-breakpoint-up(lg) {
+    font-size: 22px;
+    line-height: 34px;
+  }
+  a {
+    color: inherit;
+  }
+}
+
+img {
+  height: auto;
+  max-width: 100%;
+}
+
+figure {
+  margin: 0 0 15px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+/****************************************************************************
+  Links
+ ***************************************************************************/
+a {
+  @include transition(all, 0.2s, ease, 0s);
+  color: inherit;
+  font-family: $font-primary;
+  outline: none;
+  text-decoration: none;
+
+  &:hover,
+  &:focus {
+    color: inherit;
+  }
+
+  span {
+    @include transition(all, 0.2s, ease, 0s);
+  }
+}
+
+strong,
+b {
+  font-weight: $bold-weight;
+}
+
+::-moz-selection {
+  /* Code for Firefox */
+  color: $white;
+  background: $brand-color;
+}
+
+::selection {
+  background: $brand-color;
+  color: $white;
+}
+
+/****************************************************************************
+  Headings
+ ***************************************************************************/
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  color: $brand-color;
+  font-family: $font-primary;
+  font-weight: $bold-weight;
+}
+
+h1 {
+  @extend %fontsize54;
+  font-weight: 400;
+}
+
+h2 {
+  @extend %fontsize54;
+}
+
+h3 {
+  @extend %fontsize28;
+}
+
+h4 {
+  @extend %fontsize24;
+}
+
+h5 {
+  @extend %fontsize20;
+}
+
+h6 {
+  @extend %fontsize18;
+}

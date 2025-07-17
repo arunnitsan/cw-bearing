@@ -1,0 +1,93 @@
+/*******************************************************************************
+* All Slider
+*******************************************************************************/
+.owl-carousel {
+  .owl-item {
+    text-align: center;
+  }
+
+  .owl-nav {
+    span {
+      display: none;
+    }
+
+    button {
+      &.owl-prev,
+      &.owl-next {
+        @include rotate(-45deg);
+        @include transition(all, 0.2s, ease-in-out, 0s);
+        border-color: transparent #fff #fff;
+        border-radius: 0;
+        border-style: solid;
+        border-width: 0 2px 2px 0;
+        display: inline-block;
+        height: 24px;
+        margin-top: -12px;
+        outline: none;
+        padding: 7px;
+        position: absolute;
+        right: 22px;
+        top: 124px;
+        width: 24px;
+      }
+
+      &.owl-prev {
+        @include rotate(132deg);
+        left: 22px;
+        right: auto;
+      }
+    }
+  }
+
+  .owl-dots {
+    bottom: 8px;
+    left: 50%;
+    position: absolute;
+    right: auto;
+    text-align: center;
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+
+    button {
+      width: auto;
+    }
+
+    .owl-dot {
+      @include inline-block;
+
+      span {
+        @include transition(opacity, 0.2s, ease, 0s);
+        background: #ccc;
+        border-radius: 30px;
+        display: block;
+        height: 2px;
+        margin: 5px;
+        width: 30px;
+      }
+
+      &.active {
+        span {
+          background: $brand-color;
+        }
+      }
+    }
+  }
+}
+
+@include media-breakpoint-up(sm) {
+  .owl-carousel {
+    .owl-dots {
+      left: auto;
+      right: 15px;
+    }
+
+    .owl-nav {
+      button {
+        &.owl-prev,
+        &.owl-next {
+          top: 50%;
+        }
+      }
+    }
+  }
+}

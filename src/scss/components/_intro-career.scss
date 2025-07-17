@@ -1,0 +1,52 @@
+.intro-career-section {
+  padding: 58px 0 42px;
+  @include media-breakpoint-up(lg) {
+    padding: 90px 0 80px;
+  }
+  &:after {
+    @include media-breakpoint-up(lg) {
+      padding-bottom: 12.3%;
+      background-image: url("/images/png/bogen-bottom-right-1920-desktop.svg");
+    }
+  }
+  .intro-careers-wrapper {
+    .highlight-text {
+      display: block;
+      font-size: 20px;
+      line-height: 40px;
+      font-weight: 400;
+      color: $brand-color-gray;
+      @include media-breakpoint-up(lg) {
+        font-size: 28px;
+        line-height: 40px;
+        margin-bottom: 14px;
+      }
+    }
+    h1 {
+      margin-bottom: 34px;
+      @include media-breakpoint-up(lg) {
+        margin-bottom: 52px;
+      }
+    }
+    .content-wrapper {
+      padding: 0 0 50px 0;
+      @include media-breakpoint-up(md) {
+        padding: 0 8px 50px 0;
+      }
+      @include media-breakpoint-up(lg) {
+        max-width: 75%;
+        padding-bottom: 0;
+      }
+    }
+    .rounded-image-wrapper {
+      position: relative;
+      @include flexbox();
+      @include justify-content(flex-end);
+      z-index: 5;
+      margin: 0 0 -70px 0;
+      @include media-breakpoint-up(xl) {
+        margin-top: 65px;
+      }
+    }
+  }
+}

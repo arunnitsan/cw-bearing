@@ -1,0 +1,114 @@
+.search-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  z-index: 9999999;
+  display: block;
+  width: 100%;
+  background-color: #005a96;
+  background-size: 100%;
+  padding: 0 15px;
+  overflow: hidden;
+  opacity: 1;
+  z-index: 999999;
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  transition: all 0.3s ease-out;
+  opacity: 0;
+  &.hidden {
+    // opacity: 0;
+    z-index: -1;
+    // -webkit-transform: scale(0.85) translateX(0);
+    // -ms-transform: scale(0.85) translateX(0);
+    // transform: scale(0.85) translateX(0);
+    // transition: all 0.3s ease-out;
+  }
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  position: relative;
+  max-width: 400px;
+  margin: 0 auto;
+  @include media-breakpoint-up(lg) {
+    max-width: 562px;
+  }
+  .input-box {
+    width: 100%;
+    input {
+      background: transparent;
+      border: 0;
+      height: 50px;
+      border-bottom: 2px solid #ffff;
+      color: #fff;
+      padding: 0 30px 17px;
+      font-size: 26px;
+      line-height: 36px;
+      @include media-breakpoint-up(lg) {
+        height: 55px;
+        font-size: 31px;
+        padding: 0 40px 17px;
+      }
+      &::-webkit-input-placeholder {
+        /* Edge */
+        font-size: 18px;
+        line-height: 36px;
+        color: #85a0c8;
+        @include media-breakpoint-up(lg) {
+          font-size: 31px;
+        }
+      }
+      &:-ms-input-placeholder {
+        /* Internet Explorer 10-11 */
+        font-size: 18px;
+        line-height: 36px;
+        color: #85a0c8;
+        @include media-breakpoint-up(lg) {
+          font-size: 31px;
+        }
+      }
+      &::placeholder {
+        font-size: 18px;
+        line-height: 36px;
+        color: #85a0c8;
+        @include media-breakpoint-up(lg) {
+          font-size: 31px;
+        }
+      }
+    }
+  }
+  button {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-62%);
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0 16px 0 0;
+    span {
+      display: inline-flex;
+      width: 22px;
+    }
+  }
+  .close-wrapper {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    .close {
+      width: 30px;
+      &:before,
+      &:after {
+        left: auto;
+        right: 8px;
+      }
+    }
+  }
+}

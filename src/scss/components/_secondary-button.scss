@@ -1,0 +1,12 @@
+.btn-red {
+  &.btn-br-red {
+    min-width: 1px;
+    border-color: $brand-color-secondary;
+    color: $brand-color-secondary;
+    background-color: transparent;
+    &:hover {
+      border-color: $brand-color;
+      color: $brand-color;
+    }
+  }
+}

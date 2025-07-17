@@ -1,0 +1,32 @@
+.container {
+  max-width: 100%;
+  padding: 0 20px;
+  margin: 0 auto;
+  @include media-breakpoint-up(sm) {
+    max-width: 1202px;
+  }
+}
+
+.container-md {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 22px;
+  @include media-breakpoint-up(sm) {
+    max-width: 1192px;
+  }
+}
+
+.container-lg {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 22px;
+  @include media-breakpoint-up(sm) {
+    padding: 0 15px;
+    max-width: 1920px;
+  }
+}
+
+.container-sm {
+  max-width: 1002px;
+  margin: 0 auto;
+}

@@ -1,0 +1,97 @@
+/*******************************************************************************
+* Content Section
+*******************************************************************************/
+.content-section {
+  padding: 40px 0;
+
+  br {
+    display: none;
+  }
+}
+
+main {
+  ul {
+    li {
+      list-style-type: none;
+      margin-bottom: 10px;
+      padding-left: 17px;
+      position: relative;
+      width: 100%;
+
+      &::before {
+        background-color: $brand-color;
+        border-radius: 50%;
+        content: '';
+        height: 6px;
+        left: 1px;
+        position: absolute;
+        top: 9px;
+        width: 6px;
+      }
+    }
+
+    ul {
+      padding-top: 15px;
+      padding-left: 15px;
+    }
+  }
+
+  ol {
+    counter-reset: my-badass-counter;
+    margin: 12px 0 25px;
+    padding: 0;
+
+    li {
+      list-style-type: none;
+      margin-bottom: 10px;
+      padding-left: 35px;
+      position: relative;
+      width: 100%;
+
+      &::before {
+        content: counter(my-badass-counter, upper-roman) '.';
+        counter-increment: my-badass-counter;
+        font-weight: $semi-bold-weight;
+        left: 1px;
+        position: absolute;
+        top: 0;
+      }
+    }
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .content-section {
+    padding: 110px 0;
+
+    br {
+      display: block;
+    }
+  }
+
+  main {
+    ul {
+      li {
+        margin-bottom: 15px;
+        padding-left: 20px;
+
+        &::before {
+          top: 11px;
+        }
+      }
+    }
+
+    ol {
+      margin: 15px 0 35px;
+
+      li {
+        margin-bottom: 15px;
+        padding-left: 30px;
+
+        ol {
+          margin: 15px 0 0;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,131 @@
+.image-ic-section {
+  .ii-text-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+
+    @include media-breakpoint-up(lg) {
+      margin: 0 -15px;
+    }
+
+    .ii-text-left,
+    .ii-text-right {
+      flex: 0 0 100%;
+      max-width: 100%;
+      width: 100%;
+    }
+
+    .ii-text-left {
+      @include media-breakpoint-up(lg) {
+        flex: 0 0 49.5%;
+        max-width: 49.5%;
+      }
+
+      img {
+        @include media-breakpoint-up(lg) {
+          width: 100%;
+        }
+      }
+    }
+
+    .ii-text-right {
+      @include media-breakpoint-up(lg) {
+        @include flexbox();
+        @include align-items(center);
+        flex: 0 0 50.5%;
+        max-width: 50.5%;
+      }
+    }
+  }
+
+  .content-block {
+    @include media-breakpoint-up(lg) {
+      padding: 0 15px;
+      max-width: 471px;
+      // max-width: 65.45%;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 1400px) {
+      max-width: 100%;
+      padding: 0 122px 0 135px;
+    }
+
+    h1 {
+      display: flex;
+      align-items: center;
+      color: $brand-color;
+      margin-bottom: 22px;
+
+      @include media-breakpoint-up(lg) {
+        font-size: 28px;
+      }
+
+      @include media-breakpoint-up(xl) {
+        margin-bottom: 38px;
+      }
+
+      .icon-in {
+        @include inline-flexbox();
+        width: 40px;
+        margin-right: 18px;
+
+        @include media-breakpoint-up(lg) {
+          width: 62px;
+          margin-right: 37px;
+        }
+      }
+    }
+
+    .img-in {
+      padding-bottom: 35px;
+      margin: 0 -22px;
+
+      @include media-breakpoint-up(md) {
+        width: 100%;
+        margin: 0;
+      }
+      @include media-breakpoint-up(lg) {
+        width: 100%;
+        margin: 0 -22px;
+      }
+    }
+
+    .content-in {
+      p {
+        font-size: 18px;
+        line-height: 26px;
+        font-weight: 400;
+        margin-bottom: 15px;
+
+        @include media-breakpoint-up(xl) {
+          font-size: 22px;
+          line-height: 34px;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .desktop-visible {
+    display: none;
+
+    @include media-breakpoint-up(lg) {
+      display: block;
+    }
+  }
+
+  .mobile-visible {
+    display: block;
+
+    img {
+      width: 100%;
+    }
+
+    @include media-breakpoint-up(lg) {
+      display: none;
+    }
+  }
+}

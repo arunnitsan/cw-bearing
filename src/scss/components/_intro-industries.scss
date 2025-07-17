@@ -1,0 +1,60 @@
+.intro-industries-section {
+  padding: 0 0 80px; //50px 0 80px
+  z-index: 0;
+  margin-bottom: 55px;
+  @include media-breakpoint-up(lg) {
+    padding: 0 0 150px; //118px 0 150px
+  }
+  &:after {
+    z-index: -1;
+    @include media-breakpoint-up(lg) {
+      padding-bottom: 12.2%;
+      background-image: url("/images/png/bogen-bottom-right-1920-desktop.svg");
+    }
+  }
+  .title-wrapper {
+    @include flexbox();
+    @include justify-content(space-between);
+    padding: 0 20px 38px 0;
+    @include media-breakpoint-up(lg) {
+      @include justify-content(flex-start);
+      padding-bottom: 54px;
+    }
+    h1 {
+      margin: 0;
+      @include media-breakpoint-up(lg) {
+        font-size: 54px;
+        @include order(1);
+      }
+    }
+    .icon-in {
+      min-width: 52px;
+      max-width: 52px;
+      padding-top: 5px;
+      @include media-breakpoint-up(lg) {
+        min-width: 78px;
+        max-width: 78px;
+        padding-top: 0;
+        margin-right: 18px;
+      }
+    }
+  }
+  .content-wrapper {
+    padding: 0 5px 36px 0;
+    @include media-breakpoint-up(lg) {
+      padding: 0 57px 36px 96px;
+    }
+    p {
+      letter-spacing: 0px;
+      margin-bottom: 27px;
+      @include media-breakpoint-up(lg) {
+        margin-bottom: 30px;
+      }
+    }
+  }
+  .rounded-image-wrapper {
+    @include flexbox();
+    @include justify-content(flex-end);
+    margin-bottom: -130px;
+  }
+}
