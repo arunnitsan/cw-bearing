@@ -13,6 +13,7 @@ import PageWrapper from "../components/PageWrapper";
 import GlobalContext from "../context/GlobalContext";
 import Configurator from "../components/Configurator";
 import SuccessModal from "../components/SuccessModal/SuccessModal";
+import DraftModeBanner from "../components/DraftModeBanner";
 // import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 // import useTranslation from 'next-i18next';
 
@@ -208,6 +209,7 @@ const Page = ({
 
   return (
     <>
+      <DraftModeBanner />
       <PageWrapper>
         <Head>
           {siteLanguage && <meta name="language" content={siteLanguage} />}
@@ -342,8 +344,12 @@ export const getStaticPaths = async (context) => {
 
 export const getStaticProps = async (context) => {
   try {
+    // Check if draft mode is enabled via query parameter
+    const isDraftMode = context.preview || context.draftMode ||
+                       (context.params && context.params.draft === 'true');
+
     const paramSlug = context.params.slug;
-    var newsData = await getAPIData("news/detail/" + paramSlug);
+    var newsData = await getAPIData("news/detail/" + paramSlug, isDraftMode);
     if (!newsData.error) {
       var pageData = newsData;
     } else {
@@ -358,7 +364,7 @@ export const getStaticProps = async (context) => {
         slug = paramSlug[0];
       }
       const url = !isGerman(context.locale) ? `${context.locale}/${slug}` : slug;
-      var pageData = await getAPIData(url);
+      var pageData = await getAPIData(url, isDraftMode);
     }
 
     // If pageData has an error, return notFound to trigger 404
@@ -369,14 +375,15 @@ export const getStaticProps = async (context) => {
     }
 
     const menuItems = await getAPIData(
-      !isGerman(context.locale) ? `${context.locale}/` : ""
+      !isGerman(context.locale) ? `${context.locale}/` : "",
+      isDraftMode
     );
-    const enData = await getAPIData("en");
-    const usData = await getAPIData("us");
-    const deData = await getAPIData("");
-    const itData = await getAPIData("it");
-    const frData = await getAPIData("fr");
-    const plData = await getAPIData("pl");
+    const enData = await getAPIData("en", isDraftMode);
+    const usData = await getAPIData("us", isDraftMode);
+    const deData = await getAPIData("", isDraftMode);
+    const itData = await getAPIData("it", isDraftMode);
+    const frData = await getAPIData("fr", isDraftMode);
+    const plData = await getAPIData("pl", isDraftMode);
 
     return {
       props: {
@@ -389,6 +396,8 @@ export const getStaticProps = async (context) => {
         siteFrData: frData.data.page,
         sitePlData: plData.data.page,
       },
+      // Enable ISR - revalidate every 60 seconds (1 minute)
+      revalidate: 60,
     };
   } catch (error) {
     // If any error occurs during data fetching, return notFound

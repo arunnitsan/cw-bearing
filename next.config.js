@@ -1,9 +1,13 @@
-const { i18n } = require("./next-i18next.config");
+const { i18n } = require("../faf-cw-bearing/next-i18next.config");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   i18n,
   reactStrictMode: true,
+  // Optimize for content updates
+  generateEtags: false, // Disable ETags for better cache control
+  compress: true,
+  poweredByHeader: false,
   // Enable Turbopack for faster development (Next.js 14 feature)
   experimental: {
     turbo: {
