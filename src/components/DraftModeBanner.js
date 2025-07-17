@@ -24,7 +24,7 @@ const DraftModeBanner = () => {
         fontWeight: '500',
       }}
     >
-      <span>Preview Mode - Auto-refresh every 15s - </span>
+      <span>Preview Mode - </span>
       <button
         onClick={forceRefresh}
         disabled={isRefreshing}

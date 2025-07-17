@@ -35,21 +35,7 @@ export const useDraftMode = () => {
     }, 1000); // 1 second debounce
   }, [isRefreshing]);
 
-  // Auto-refresh for draft mode
-  useEffect(() => {
-    if (!isDraftMode) return;
-
-    const interval = setInterval(() => {
-      debouncedRefresh();
-    }, 15000); // 15 seconds
-
-    return () => {
-      clearInterval(interval);
-      if (refreshTimeoutRef.current) {
-        clearTimeout(refreshTimeoutRef.current);
-      }
-    };
-  }, [isDraftMode, debouncedRefresh]);
+  // Removed automatic refresh interval - no more auto-refresh after 15 seconds
 
   const enterDraftMode = (slug) => {
     const currentPath = router.asPath.split('?')[0]; // Remove existing query params
