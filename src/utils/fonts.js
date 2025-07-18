@@ -1,4 +1,4 @@
-import { Inter, Lato } from 'next/font/google';
+import { Inter } from 'next/font/google';
 
 // Configure Inter font for general use
 export const inter = Inter({
@@ -7,13 +7,13 @@ export const inter = Inter({
   variable: '--font-inter',
 });
 
-// Configure Lato font (similar to your existing typography fonts)
-export const lato = Lato({
-  weight: ['300', '400', '700', '900'],
-  subsets: ['latin'],
-  display: 'swap',
+// Custom Lato font configuration - using local font files instead of Google Fonts
+export const lato = {
   variable: '--font-lato',
-});
+  style: {
+    fontFamily: 'lato, sans-serif',
+  },
+};
 
 // Custom font loader for FontAwesome and other custom fonts
 export const customFonts = {

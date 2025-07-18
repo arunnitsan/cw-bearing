@@ -2,14 +2,14 @@
 //  Fonts
 //***************************************************************************/
 :root {
-  --font-lato: 'Lato', sans-serif;
+  --font-lato: 'lato', sans-serif;
   --font-inter: 'Inter', sans-serif;
 }
 
 //****************************************************************************
 //  Bootsrap variables overrides
 //***************************************************************************/
-$font-family-sans-serif: var(--font-lato), 'Lato', sans-serif;
+$font-family-sans-serif: var(--font-lato), 'lato', sans-serif;
 $font-primary: $font-family-sans-serif;
 $body-color: #373737;
 $btn-box-shadow: none;
