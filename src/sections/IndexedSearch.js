@@ -16,9 +16,16 @@ const IndexedSearch = () => {
   const router = useRouter();
   const { t } = useTranslation(router.locale);
   const searchInput = useRef(null);
-  const [searchTerm, setSearchTerm] = useState(
-    router.asPath ? router.asPath.split("=")[1].replaceAll("+", " ") : ""
-  );
+  const [searchTerm, setSearchTerm] = useState(() => {
+    // Safely extract search term from URL with proper null checks
+    if (router.asPath && router.asPath.includes("=")) {
+      const pathParts = router.asPath.split("=");
+      if (pathParts.length > 1 && pathParts[1]) {
+        return pathParts[1].replaceAll("+", " ");
+      }
+    }
+    return "";
+  });
   const [searchData, setSearchData] = useState(null);
   const [resultSearchTerm, setResultSearchTerm] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -107,8 +114,13 @@ const IndexedSearch = () => {
     setSearchData(null);
     setResultSearchTerm("");
     setLoading(false);
-    // Clear both slug and query parameters
-    router.push("/search", undefined, { shallow: true });
+
+    // Preserve locale when clearing search
+    const currentLocale = router.locale;
+    const localePath = currentLocale && currentLocale !== 'de' ? `/${currentLocale}` : '';
+    const clearPath = `${localePath}/search?search_query=`;
+
+    router.push(clearPath, undefined, { shallow: true });
   };
 
   useEffect(() => {
@@ -138,6 +150,8 @@ const IndexedSearch = () => {
   }, [router.asPath, router.query.search_query]);
 
   const renderMarkdown = (str) => {
+    if (!str) return null;
+
     const withoutRNT = str
       .replaceAll("\r", "")
       .replaceAll("\n", "")
