@@ -215,10 +215,9 @@ const StepThree = ({
           country: Yup.string().required(
             `${t("data.stepThree.country")} ${requiredText}`
           ),
-          phone: Yup.number("Invalid Number").typeError(
-            // "Telefon must be a number"
-            `${t("data.telNumberRequired")}`
-          ),
+          phone: Yup.number()
+            .typeError(`${t("data.telNumberRequired")}`)
+            .nullable(),
           requiredVolume: Yup.string().required(
             `${t("data.stepThree.requiredQuantity")} ${requiredText}`
           ),
@@ -492,9 +491,9 @@ const StepThree = ({
           country: Yup.string().required(
             `${t("data.stepThree.country")} ${requiredText}`
           ),
-          phone: Yup.number(`${t("data.invalidNumber")}`).typeError(
-            `${t("data.telNumberRequired")}`
-          ),
+          phone: Yup.number()
+            .typeError(`${t("data.telNumberRequired")}`)
+            .nullable(),
           requiredVolume: Yup.string().required(
             `${t("data.stepThree.requiredQuantity")} ${requiredText}`
           ),

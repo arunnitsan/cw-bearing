@@ -19,6 +19,7 @@ const Header = () => {
     <>
       <header
         className={`${isBigHeader ? "header-big" : ""} header-aurora-outer`}
+        suppressHydrationWarning
       >
         {!isBigHeader && (
           <>

@@ -3,7 +3,7 @@ import { Row } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import { renderComponents } from "../utils/renderComponents";
-import Form from "../sections/Form";
+import Form from "./Form";
 import Link from "next/link";
 
 const renderHeader = (content) => {

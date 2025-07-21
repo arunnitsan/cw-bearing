@@ -6,6 +6,7 @@ import { AOSRefresh } from "../utils/AOSRefresh";
 import { renderComponents } from "../utils/renderComponents";
 import rehypeRaw from "rehype-raw";
 import Link from "next/link";
+import React from "react";
 
 const ContextAwareToggle = ({ handleKey, children, eventKey, callback }) => {
   const currentEventKey = useContext(AccordionContext);
@@ -90,7 +91,7 @@ const FullAccordion = ({ id, data }) => {
         column.elements[0].content.bodytext
       ) {
         return (
-          <Col xs={12} sm={6} key={column + id}>
+          <Col xs={12} sm={6} key={`content-col-${id}`}>
             <ReactMarkdown
               children={column.elements[0].content.bodytext}
               rehypePlugins={[rehypeRaw]}
@@ -99,7 +100,7 @@ const FullAccordion = ({ id, data }) => {
           </Col>
         );
       } else {
-        return <></>;
+        return <React.Fragment key={`empty-col-${id}`}></React.Fragment>;
       }
     });
   };
@@ -137,22 +138,22 @@ const FullAccordion = ({ id, data }) => {
                           accordion.content.structure.rows.length ? (
                           <>
                             {accordion.content.structure.rows.map(
-                              (row, id) => {
+                              (row, rowId) => {
                                 return row.columns && row.columns.length ? (
-                                  <>
-                                    {row.columns.map((column, id) => {
+                                  <React.Fragment key={`row-${rowId}`}>
+                                    {row.columns.map((column, columnId) => {
                                       return (
-                                        <>
+                                        <React.Fragment key={`column-${rowId}-${columnId}`}>
                                           {column.elements &&
                                             column.elements.length ? (
-                                            <>
+                                            <React.Fragment key={`elements-${rowId}-${columnId}`}>
                                               {column.elements.map(
-                                                (element, id) => {
+                                                (element, elementId) => {
                                                   return (
-                                                    <>
+                                                    <React.Fragment key={`element-${rowId}-${columnId}-${elementId}`}>
                                                       {element.type ===
                                                         "image" && (
-                                                          <Row>
+                                                          <Row key={`image-row-${elementId}`}>
                                                             {renderImage(
                                                               element.content
                                                                 .gallery.rows[1]
@@ -163,7 +164,7 @@ const FullAccordion = ({ id, data }) => {
                                                         )}
                                                       {element.type ===
                                                         "text" && (
-                                                          <Row>
+                                                          <Row key={`text-row-${elementId}`}>
                                                             {element.content
                                                               .bodytext
                                                               ? renderText(
@@ -176,16 +177,14 @@ const FullAccordion = ({ id, data }) => {
                                                         )}
                                                       {element.type ===
                                                         "structured_content" && (
-                                                          <>
+                                                          <React.Fragment key={`structured-${elementId}`}>
                                                             {element.content.structure.rows.map(
                                                               (
                                                                 innerRow,
-                                                                id
+                                                                innerRowId
                                                               ) => (
                                                                 <Row
-                                                                  key={
-                                                                    innerRow.columns
-                                                                  }
+                                                                  key={`inner-row-${elementId}-${innerRowId}`}
                                                                 >
                                                                   {renderContent(
                                                                     innerRow.columns
@@ -193,7 +192,7 @@ const FullAccordion = ({ id, data }) => {
                                                                 </Row>
                                                               )
                                                             )}
-                                                          </>
+                                                          </React.Fragment>
                                                         )}
                                                       {renderComponents(
                                                         element.id,
@@ -202,18 +201,18 @@ const FullAccordion = ({ id, data }) => {
                                                         //   .pi_flexform_content
                                                         element.content
                                                       )}
-                                                    </>
+                                                    </React.Fragment>
                                                   );
                                                 }
                                               )}
-                                            </>
+                                            </React.Fragment>
                                           ) : (
                                             ""
                                           )}
-                                        </>
+                                        </React.Fragment>
                                       );
                                     })}
-                                  </>
+                                  </React.Fragment>
                                 ) : (
                                   ""
                                 );

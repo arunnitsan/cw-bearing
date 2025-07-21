@@ -100,10 +100,20 @@ const Video = dynamic(() => import("../sections/Video"), {
 });
 
 const ContentType = ({ pageContentProps }) => {
+  // Add error handling for missing or invalid props
+  if (!pageContentProps || !Array.isArray(pageContentProps)) {
+    console.warn('ContentType: pageContentProps is missing or not an array');
+    return null;
+  }
+
   return (
     <>
       {pageContentProps.map((items, index) => {
-        if (items) {
+        if (!items) {
+          return null;
+        }
+
+        try {
           let contentType = items.type;
           // let contentData = findValuesObject(
           //   items.content,
@@ -116,6 +126,7 @@ const ContentType = ({ pageContentProps }) => {
           let outerData = findValuesObject(items.content, "data");
           // let frameSelector = items.appearance.frameClass;
           let frameData = findValuesObject(items, "content");
+
           return (
             <React.Fragment key={index}>
               {(() => {
@@ -152,7 +163,7 @@ const ContentType = ({ pageContentProps }) => {
                     );
 
                   case "structured_content":
-                    if (items.appearance.frameClass === "accordion") {
+                    if (items.appearance?.frameClass === "accordion") {
                       return (
                         <FullContentAccordion
                           id={items.id}
@@ -160,7 +171,7 @@ const ContentType = ({ pageContentProps }) => {
                         />
                       );
                     } else if (
-                      items.appearance.frameClass === "accordion-download"
+                      items.appearance?.frameClass === "accordion-download"
                     ) {
                       return (
                         <AccordionDownloads id={items.id} data={frameData[0]} />
@@ -197,7 +208,7 @@ const ContentType = ({ pageContentProps }) => {
                   case "menu_subpages":
                     return (
                       <SubMenuPages id={items.id} data={frameData[0]} />
-                  );
+                    );
 
                   case "mask_ns_introindustriesoverview":
                     return (
@@ -274,10 +285,17 @@ const ContentType = ({ pageContentProps }) => {
                     return (
                       <ContentType pageContentProps={items.content.shortcut} />
                     );
+
+                  default:
+                    console.warn(`ContentType: Unknown content type: ${contentType}`);
+                    return null;
                 }
               })()}
             </React.Fragment>
           );
+        } catch (error) {
+          console.error(`ContentType: Error rendering content item at index ${index}:`, error);
+          return null;
         }
       })}
     </>
@@ -288,26 +306,33 @@ export default ContentType;
 
 // Recusive read json array object
 function findValuesObject(obj, key) {
-  return findValuesObjectHelper(obj, key, []);
+  try {
+    return findValuesObjectHelper(obj, key, []);
+  } catch (error) {
+    console.error('findValuesObject: Error processing object:', error);
+    return [];
+  }
 }
 
 function findValuesObjectHelper(obj, key, list) {
   if (!obj) return list;
-  if (obj instanceof Array) {
-    for (var i in obj) {
-      list = list.concat(findValuesObjectHelper(obj[i], key, []));
-    }
-    return list;
-  }
-  if (obj[key]) list.push(obj[key]);
 
-  if (typeof obj == "object" && obj !== null) {
-    var children = Object.keys(obj);
-    if (children.length > 0) {
-      for (i = 0; i < children.length; i++) {
-        list = list.concat(findValuesObjectHelper(obj[children[i]], key, []));
+  try {
+    if (obj instanceof Array) {
+      for (var i in obj) {
+        list = list.concat(findValuesObjectHelper(obj[i], key, []));
+      }
+    } else if (obj instanceof Object) {
+      if (obj.hasOwnProperty(key)) {
+        list.push(obj[key]);
+      }
+      for (var j in obj) {
+        list = list.concat(findValuesObjectHelper(obj[j], key, []));
       }
     }
+  } catch (error) {
+    console.error('findValuesObjectHelper: Error processing object:', error);
   }
+
   return list;
 }

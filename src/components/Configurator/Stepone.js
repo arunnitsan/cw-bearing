@@ -227,6 +227,7 @@ const Stepone = ({
                   handleBlur,
                   handleSubmit,
                   handleReset,
+                  setFieldValue,
                 } = props;
                 return (
                   <form className="item-no-form" onClick={handleSubmit}>
@@ -253,7 +254,7 @@ const Stepone = ({
                               }}
                               onChange={(selectedOption) => {
                                 itemNoChange(selectedOption, values);
-                                handleChange("itemNo")(selectedOption.value);
+                                setFieldValue("itemNo", selectedOption.value);
                               }}
                             />
                             <fieldset>
@@ -322,34 +323,28 @@ const Stepone = ({
                     setError(`${t("data.stepOne.noProducts")}`);
                   });
               }}
-              validationSchema={Yup.object().shape(
-                {
-                  bearingType: Yup.string().required(
-                    `${t("data.stepOne.bearingTypeValidation")}`
-                  ),
-                  inner: Yup.number()
-                    .typeError(`${t("data.stepOne.innerDTypeValidation")}`)
-                    .when("outer", {
-                      is: (outer) => !outer || outer.length === 0,
-                      then: Yup.number()
-                        .typeError(`${t("data.stepOne.innerDTypeValidation")}`)
-                        .required(`${t("data.stepOne.innerDValidation")}`),
-                    }),
-                  outer: Yup.number()
-                    .typeError(`${t("data.stepOne.outerDTypeValidation")}`)
-                    .when("inner", {
-                      is: (inner) => !inner || inner.length === 0,
-                      then: Yup.number()
-                        .typeError(`${t("data.stepOne.outerDTypeValidation")}`)
-                        .required(`${t("data.stepOne.outerDValidation")}`),
-                    }),
-                  // .required("Außenring is Required"),
-                  width: Yup.number(
-                    `${t("data.stepOne.widthTypeValidation")}`
-                  ).typeError(`${t("data.stepOne.widthTypeValidation")}`),
-                },
-                ["inner", "outer"]
-              )}
+              validationSchema={Yup.object().shape({
+                bearingType: Yup.string().required(
+                  `${t("data.stepOne.bearingTypeValidation")}`
+                ),
+                inner: Yup.number()
+                  .typeError(`${t("data.stepOne.innerDTypeValidation")}`)
+                  .nullable(),
+                outer: Yup.number()
+                  .typeError(`${t("data.stepOne.outerDTypeValidation")}`)
+                  .nullable(),
+                width: Yup.number()
+                  .typeError(`${t("data.stepOne.widthTypeValidation")}`)
+                  .nullable(),
+              })}
+              validate={(values) => {
+                const errors = {};
+                if (!values.inner && !values.outer) {
+                  errors.inner = `${t("data.stepOne.innerDValidation")}`;
+                  errors.outer = `${t("data.stepOne.outerDValidation")}`;
+                }
+                return errors;
+              }}
             >
               {(props) => {
                 const {
@@ -362,6 +357,7 @@ const Stepone = ({
                   handleBlur,
                   handleSubmit,
                   handleReset,
+                  setFieldValue,
                 } = props;
                 return (
                   <form className="text-form" onSubmit={handleSubmit}>
@@ -381,7 +377,7 @@ const Stepone = ({
                             classNamePrefix="custom-select"
                             onChange={(selectedOption) => {
                               bearingTypeChange(selectedOption, values);
-                              handleChange("bearingType", selectedOption.value);
+                              setFieldValue("bearingType", selectedOption.value);
                             }}
                             options={Object.keys(bearingTypes).map(
                               (bearingType) => ({
@@ -411,7 +407,7 @@ const Stepone = ({
                           legend={`${t("data.stepOne.innerD")} ⌀`}
                           name="inner"
                           placeholder="mm"
-                          handleChange={handleChange("inner")}
+                          handleChange={handleChange}
                           error={errors.inner && touched.inner && errors.inner}
                         />
                         <Input
@@ -419,15 +415,15 @@ const Stepone = ({
                           legend={`${t("data.stepOne.outerD")} ⌀`}
                           name="outer"
                           placeholder="mm"
-                          handleChange={handleChange("outer")}
+                          handleChange={handleChange}
                           error={errors.outer && touched.outer && errors.outer}
                         />
                         <Input
                           value={values.width}
                           legend={`${t("data.stepOne.width")}`}
-                          name="productwidth"
+                          name="width"
                           placeholder="mm"
-                          handleChange={handleChange("width")}
+                          handleChange={handleChange}
                           error={errors.width && touched.width && errors.width}
                         />
                       </div>

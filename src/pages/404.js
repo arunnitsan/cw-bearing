@@ -74,9 +74,9 @@ const Custom404 = ({ pageData, pageMenuItems }) => {
           src="https://userlike-cdn-widgets.s3-eu-west-1.amazonaws.com/a805f53a53f8473ea7e06bd768d86504f78b13b43177489396baddf8a99d9ee6.js"
         ></script> */}
 
-        
 
-        <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="066c2f59-a1cf-4a05-acd8-2424f005a608" type="text/javascript" async></script>
+
+        {/* <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="066c2f59-a1cf-4a05-acd8-2424f005a608" type="text/javascript" async></script> */}
 
 
       </Head>

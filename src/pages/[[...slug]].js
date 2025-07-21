@@ -299,12 +299,27 @@ const Page = ({
         {pageData && !pageData.error && (
           <main>
             {pageData &&
-            Object.values(pageData.data.content).length &&
             pageData.data &&
-            pageData.data.content.colPos0 ? (
+            pageData.data.content &&
+            pageData.data.content.colPos0 &&
+            Array.isArray(pageData.data.content.colPos0) &&
+            pageData.data.content.colPos0.length > 0 ? (
               <ContentType pageContentProps={pageData.data.content.colPos0} />
             ) : (
-              <></>
+              <div className="content-section pt-11 pb-7 pt-lg-30 pb-lg-28 bg-default-6">
+                <Container>
+                  <Row className="justify-content-center">
+                    <div className="col-xl-6 col-lg-8 col-sm-10">
+                      <div className="section-title text-center mt-12 mt-lg-20 mb-12 mb-lg-23">
+                        <h2>No Content Available</h2>
+                        <p className="gr-text-8 px-lg-7 px-xl-0">
+                          This page has no content to display.
+                        </p>
+                      </div>
+                    </div>
+                  </Row>
+                </Container>
+              </div>
             )}
           </main>
         )}
@@ -317,13 +332,16 @@ const Page = ({
 
 
 
-        <Script
-        id="Cookiebot"
-        src="https://consent.cookiebot.com/uc.js"
-        data-cbid="066c2f59-a1cf-4a05-acd8-2424f005a608"
-        type="text/javascript"
-        async
-      ></Script>
+        {process.env.NODE_ENV === 'production' && (
+          <Script
+            id="Cookiebot"
+            src="https://consent.cookiebot.com/uc.js"
+            data-cbid="066c2f59-a1cf-4a05-acd8-2424f005a608"
+            type="text/javascript"
+            async
+            strategy="afterInteractive"
+          />
+        )}
       <Script
         type="text/plain"
         data-cookieconsent="marketing"
