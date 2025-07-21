@@ -50,7 +50,13 @@ const PersonalContact = ({ id, data }) => {
                   />
                 </h3>}
                 {data.designation && (
-                  <span data-aos="fade-left" className="position">{data.designation}</span>
+                  <span data-aos="fade-left" className="position">
+                    <ReactMarkdown
+                      children={data.designation}
+                      rehypePlugins={[rehypeRaw]}
+                      components={{ a: SafeLink }}
+                    />
+                  </span>
                 )}
                 <div className="btn-wrapper desktop-visible">
                   {data.phone && (
