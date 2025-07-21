@@ -28,6 +28,14 @@ const IndexedSearch = () => {
 
   const searchResults = async (term) => {
     try {
+      // Don't search if term is empty or only whitespace
+      if (!term || !term.trim()) {
+        setLoading(false);
+        setResultSearchTerm("");
+        setSearchData(null);
+        return;
+      }
+
       setLoading(true);
       const { data } = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL
@@ -35,6 +43,10 @@ const IndexedSearch = () => {
       );
 
       setLoading(false);
+
+      // Always set resultSearchTerm when we have a valid search term
+      setResultSearchTerm(term);
+
       if (
         data &&
         data.content &&
@@ -43,11 +55,17 @@ const IndexedSearch = () => {
         data.content.colPos0[1].content &&
         data.content.colPos0[1].content.data
       ) {
-        setResultSearchTerm(term);
         setSearchData(data.content.colPos0[1].content.data.resultrows);
+      } else {
+        // No results found, but search was performed
+        setSearchData([]);
       }
     } catch (e) {
       console.log(e);
+      setLoading(false);
+      // Set resultSearchTerm even when API call fails
+      setResultSearchTerm(term);
+      setSearchData([]);
     }
   };
 
@@ -59,12 +77,17 @@ const IndexedSearch = () => {
   };
 
   useEffect(() => {
-    setSearchTerm(
-      router.asPath ? router.asPath.split("=")[1].replaceAll("+", " ") : ""
-    );
-    searchResults(
-      router.asPath ? router.asPath.split("=")[1].replaceAll("+", " ") : ""
-    );
+    const extractedSearchTerm = router.asPath ? router.asPath.split("=")[1].replaceAll("+", " ") : "";
+    setSearchTerm(extractedSearchTerm);
+
+    // Only search if we have a valid search term
+    if (extractedSearchTerm && extractedSearchTerm.trim()) {
+      searchResults(extractedSearchTerm);
+    } else {
+      setLoading(false);
+      setResultSearchTerm("");
+      setSearchData(null);
+    }
   }, [router.asPath]);
   useEffect(() => {
     if (searchInput) {
@@ -130,10 +153,16 @@ const IndexedSearch = () => {
                 {searchData && searchData.length} hits
               </h3>
             )} */}
-            <h3 className="main-search-title" data-aos="fade">
-              {t("data.YourSearchFor")} „{resultSearchTerm}“ {t("data.resultedIn")}{" "}
-              {searchData && searchData.length} {t("data.hits")}
-            </h3>
+            {resultSearchTerm !== null && resultSearchTerm !== "" ? (
+              <h3 className="main-search-title" data-aos="fade">
+                {t("data.YourSearchFor")} „{resultSearchTerm}" {t("data.resultedIn")}{" "}
+                {searchData && searchData.length} {t("data.hits")}
+              </h3>
+            ) : (
+              <h3 className="main-search-title" data-aos="fade">
+                {t("data.EnterSearchTerm")}
+              </h3>
+            )}
             <div className="search-results">
               {searchData && searchData.length ? (
                 <>
@@ -149,6 +178,10 @@ const IndexedSearch = () => {
                     </div>
                   ))}
                 </>
+              ) : resultSearchTerm !== null && resultSearchTerm !== "" ? (
+                <div className="no-results" data-aos="fade-up">
+                  <p>{t("data.noResultsFound")}</p>
+                </div>
               ) : (
                 ""
               )}
@@ -158,7 +191,7 @@ const IndexedSearch = () => {
       ) : (
         <div className="spinner-wrapper">
           <Spinner animation="border" role="status">
-            <span className="sr-only">{t("data.loading")}</span>
+            <span className="sr-only visually-hidden">{t("data.loading")}</span>
           </Spinner>
         </div>
       )}
