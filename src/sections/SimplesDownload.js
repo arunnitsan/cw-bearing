@@ -17,65 +17,66 @@ const SimpleDownload = ({ id, data, inAccordion }) => {
         key={list.headline && list.headline}
       >
         <div className="download-box">
-          <div className="download-img">
-            <div className="download-img-in">
-              {list.image && list.image.length ? (
-                <img
-                  src={`${list.image[0]?.publicUrl ? list.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${list.image[0]?.properties?.originalUrl}`}`}
-                  alt="Table"
-                />
+          {list.image && list.image.length ? (
+            <div className="download-img">
+              <div className="download-img-in">
+                <img src={`${list.image[0]?.publicUrl ? list.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${list.image[0]?.properties?.originalUrl}`}`} alt="Table"/>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+          {list.headline && list.file2 && list.file2.length ? (
+            <div className="download-content">
+              {list.headline && (
+                <h3
+                  data-content={
+                    list.file2 && list.file2.length
+                      ? list.file2[0]?.properties?.originalUrl
+                          .split(".")
+                          .pop()
+                          .toUpperCase()
+                      : ""
+                  }
+                >
+                  {list.headline}
+                </h3>
+              )}
+              {list.file2 && list.file2.length ? (
+                <button
+                  onClick={() => {
+                    axios
+                      .get(
+                        `${list.file2[0]?.publicUrl ? list.file2[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${list.file2[0]?.properties?.originalUrl}`}`,
+                        {
+                          responseType: "blob",
+                        }
+                      )
+                      .then((res) => {
+                        fileDownload(
+                          res.data,
+                          list.file2[0]?.properties?.originalUrl.replace(
+                            "/Download/",
+                            ""
+                          )
+                        );
+                      });
+                  }}
+                  className="download-link"
+                >
+                  {/* DOWNLOAD */}
+                  {t("data.download")}
+                  <span className="download-icon">
+                    <img src="/images/png/download.svg" alt="Download" />
+                  </span>
+                </button>
               ) : (
                 ""
               )}
             </div>
-          </div>
-          <div className="download-content">
-            {list.headline && (
-              <h3
-                data-content={
-                  list.file2 && list.file2.length
-                    ? list.file2[0]?.properties?.originalUrl
-                        .split(".")
-                        .pop()
-                        .toUpperCase()
-                    : ""
-                }
-              >
-                {list.headline}
-              </h3>
-            )}
-            {list.file2 && list.file2.length ? (
-              <button
-                onClick={() => {
-                  axios
-                    .get(
-                      `${list.file2[0]?.publicUrl ? list.file2[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${list.file2[0]?.properties?.originalUrl}`}`,
-                      {
-                        responseType: "blob",
-                      }
-                    )
-                    .then((res) => {
-                      fileDownload(
-                        res.data,
-                        list.file2[0]?.properties?.originalUrl.replace(
-                          "/Download/",
-                          ""
-                        )
-                      );
-                    });
-                }}
-                className="download-link"
-              >
-                {/* DOWNLOAD */}
-                {t("data.download")}
-                <span className="download-icon">
-                  <img src="/images/png/download.svg" alt="Download" />
-                </span>
-              </button>
-            ) : (
-              ""
-            )}
-          </div>
+          ) : (
+            ""
+          )}
         </div>
       </Col>
     ));
