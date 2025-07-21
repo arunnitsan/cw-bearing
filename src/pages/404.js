@@ -16,7 +16,9 @@ const Custom404 = ({ pageData, pageMenuItems }) => {
 
   const router = useRouter();
   const {t} = useTranslation(router.locale);
-  const siteLanguage = pageData.data.i18n[0].twoLetterIsoCode;
+
+  // Add error handling for missing pageData
+  const siteLanguage = pageData?.data?.i18n?.[0]?.twoLetterIsoCode || 'en';
   const { handleMenuItems, handleCopyright, handleSocialMedia } =
     useContext(GlobalContext);
 
@@ -26,7 +28,9 @@ const Custom404 = ({ pageData, pageMenuItems }) => {
   // );
 
   React.useEffect(() => {
-    handleMenuItems(pageMenuItems);
+    if (pageMenuItems) {
+      handleMenuItems(pageMenuItems);
+    }
   }, [pageMenuItems]);
 
   // React.useEffect(() => {
@@ -34,21 +38,31 @@ const Custom404 = ({ pageData, pageMenuItems }) => {
   // }, [siteLanguage]);
 
   React.useEffect(() => {
-    const ns_seo = pageData.data.page.constants.ns_seo;
-    const ns_basetheme = pageData.data.page.constants.ns_basetheme;
-    let spreadSocialMedia;
-    if (ns_seo && ns_basetheme) {
-      spreadSocialMedia = {
-        linkedin: ns_seo.seo_linkedin_link,
-        facebook: ns_seo.seo_facebook_link,
-        xing: ns_seo.seo_xing_link,
-        twitter: ns_seo.seo_twitter_link,
-      };
+    // Add error handling for missing page data
+    if (!pageData?.data?.page?.constants) {
+      console.warn('404 page: Missing page data or constants');
+      return;
     }
-    handleCopyright(ns_basetheme.copyright);
-    handleSocialMedia({
-      ...spreadSocialMedia,
-    });
+
+    try {
+      const ns_seo = pageData.data.page.constants.ns_seo;
+      const ns_basetheme = pageData.data.page.constants.ns_basetheme;
+      let spreadSocialMedia;
+      if (ns_seo && ns_basetheme) {
+        spreadSocialMedia = {
+          linkedin: ns_seo.seo_linkedin_link,
+          facebook: ns_seo.seo_facebook_link,
+          xing: ns_seo.seo_xing_link,
+          twitter: ns_seo.seo_twitter_link,
+        };
+      }
+      handleCopyright(ns_basetheme.copyright);
+      handleSocialMedia({
+        ...spreadSocialMedia,
+      });
+    } catch (error) {
+      console.error('404 page: Error processing page data:', error);
+    }
   }, [pageData]);
 
   return (
@@ -111,18 +125,30 @@ const Custom404 = ({ pageData, pageMenuItems }) => {
 };
 
 export const getStaticProps = async (context) => {
-  let pageData = await getAPIData("");
+  try {
+    let pageData = await getAPIData("");
 
-  const menuItems = await getAPIData(
-    !isGerman(context.locale) ? `${context.locale}/` : ""
-  );
+    const menuItems = await getAPIData(
+      !isGerman(context.locale) ? `${context.locale}/` : ""
+    );
 
-  return {
-    props: {
-      pageData,
-      pageMenuItems: menuItems.data.page,
-    },
-  };
+    return {
+      props: {
+        pageData,
+        pageMenuItems: menuItems?.data?.page || null,
+      },
+    };
+  } catch (error) {
+    console.error('404 getStaticProps: Error fetching data:', error);
+
+    // Return fallback props if API fails
+    return {
+      props: {
+        pageData: { data: { i18n: [{ twoLetterIsoCode: 'en' }] } },
+        pageMenuItems: null,
+      },
+    };
+  }
 };
 
 export default Custom404;

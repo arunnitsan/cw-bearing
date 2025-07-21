@@ -374,22 +374,32 @@ export const getStaticProps = async (context) => {
         notFound: true,
       };
     }
-    var newsData = await getAPIData("news/detail/" + paramSlug, isDraftMode);
-    if (!newsData.error) {
-      var pageData = newsData;
-    } else {
-      var slug;
-      if (paramSlug && paramSlug.length > 2) {
-        slug = paramSlug.toString().replace(/,/g, "/");
-      } else if (paramSlug && paramSlug.length > 1) {
-        slug = paramSlug.toString().replace(",", "/");
-      } else if (!paramSlug) {
-        slug = "";
+
+    let pageData;
+    try {
+      var newsData = await getAPIData("news/detail/" + paramSlug, isDraftMode);
+      if (!newsData.error) {
+        pageData = newsData;
       } else {
-        slug = paramSlug[0];
+        var slug;
+        if (paramSlug && paramSlug.length > 2) {
+          slug = paramSlug.toString().replace(/,/g, "/");
+        } else if (paramSlug && paramSlug.length > 1) {
+          slug = paramSlug.toString().replace(",", "/");
+        } else if (!paramSlug) {
+          slug = "";
+        } else {
+          slug = paramSlug[0];
+        }
+        const url = !isGerman(context.locale) ? `${context.locale}/${slug}` : slug;
+        pageData = await getAPIData(url, isDraftMode);
       }
-      const url = !isGerman(context.locale) ? `${context.locale}/${slug}` : slug;
-      var pageData = await getAPIData(url, isDraftMode);
+    } catch (apiError) {
+      console.error(`API Error for locale ${context.locale}:`, apiError);
+      // Return notFound instead of crashing
+      return {
+        notFound: true,
+      };
     }
 
     // If pageData has an error, return notFound to trigger 404
@@ -400,66 +410,84 @@ export const getStaticProps = async (context) => {
     }
 
     // Only fetch menu data for current locale to reduce payload
-    const menuItems = await getAPIData(
-      !isGerman(context.locale) ? `${context.locale}/` : "",
-      isDraftMode
-    );
+    let menuItems;
+    try {
+      menuItems = await getAPIData(
+        !isGerman(context.locale) ? `${context.locale}/` : "",
+        isDraftMode
+      );
+    } catch (menuError) {
+      console.error(`Menu API Error for locale ${context.locale}:`, menuError);
+      menuItems = { data: { page: {} } };
+    }
 
     // For draft mode, fetch all languages. For production, only fetch current locale
     let enData, usData, deData, itData, frData, plData;
 
     if (isDraftMode) {
       // Draft mode: fetch all languages for complete preview
-      [enData, usData, deData, itData, frData, plData] = await Promise.all([
-        getAPIData("en", isDraftMode),
-        getAPIData("us", isDraftMode),
-        getAPIData("", isDraftMode),
-        getAPIData("it", isDraftMode),
-        getAPIData("fr", isDraftMode),
-        getAPIData("pl", isDraftMode)
-      ]);
+      try {
+        [enData, usData, deData, itData, frData, plData] = await Promise.all([
+          getAPIData("en", isDraftMode),
+          getAPIData("us", isDraftMode),
+          getAPIData("", isDraftMode),
+          getAPIData("it", isDraftMode),
+          getAPIData("fr", isDraftMode),
+          getAPIData("pl", isDraftMode)
+        ]);
+      } catch (draftError) {
+        console.error('Draft mode API error:', draftError);
+        // Set fallback data
+        enData = usData = deData = itData = frData = plData = { data: { page: {} } };
+      }
     } else {
       // Production: only fetch current locale and default
       const currentLocale = context.locale;
       const defaultLocale = "de";
 
-      if (currentLocale === defaultLocale) {
-        deData = await getAPIData("", isDraftMode);
-        enData = usData = itData = frData = plData = { data: { page: {} } };
-      } else {
-        const [currentData, defaultData] = await Promise.all([
-          getAPIData(currentLocale, isDraftMode),
-          getAPIData(defaultLocale === "de" ? "" : defaultLocale, isDraftMode)
-        ]);
+      try {
+        if (currentLocale === defaultLocale) {
+          deData = await getAPIData("", isDraftMode);
+          enData = usData = itData = frData = plData = { data: { page: {} } };
+        } else {
+          const [currentData, defaultData] = await Promise.all([
+            getAPIData(currentLocale, isDraftMode),
+            getAPIData(defaultLocale === "de" ? "" : defaultLocale, isDraftMode)
+          ]);
 
-        // Assign based on current locale
-        if (currentLocale === "en") enData = currentData;
-        else if (currentLocale === "us") usData = currentData;
-        else if (currentLocale === "it") itData = currentData;
-        else if (currentLocale === "fr") frData = currentData;
-        else if (currentLocale === "pl") plData = currentData;
+          // Assign based on current locale
+          if (currentLocale === "en") enData = currentData;
+          else if (currentLocale === "us") usData = currentData;
+          else if (currentLocale === "it") itData = currentData;
+          else if (currentLocale === "fr") frData = currentData;
+          else if (currentLocale === "pl") plData = currentData;
 
-        deData = defaultData;
+          deData = defaultData;
 
-        // Set others to empty
-        enData = enData || { data: { page: {} } };
-        usData = usData || { data: { page: {} } };
-        itData = itData || { data: { page: {} } };
-        frData = frData || { data: { page: {} } };
-        plData = plData || { data: { page: {} } };
+          // Set others to empty
+          enData = enData || { data: { page: {} } };
+          usData = usData || { data: { page: {} } };
+          itData = itData || { data: { page: {} } };
+          frData = frData || { data: { page: {} } };
+          plData = plData || { data: { page: {} } };
+        }
+      } catch (productionError) {
+        console.error(`Production API error for locale ${currentLocale}:`, productionError);
+        // Set fallback data
+        enData = usData = deData = itData = frData = plData = { data: { page: {} } };
       }
     }
 
     return {
       props: {
         pageData,
-        pageMenuItems: menuItems.data.page,
-        siteEnData: enData.data.page,
-        siteUsData: usData.data.page,
-        siteDeData: deData.data.page,
-        siteItData: itData.data.page,
-        siteFrData: frData.data.page,
-        sitePlData: plData.data.page,
+        pageMenuItems: menuItems?.data?.page || {},
+        siteEnData: enData?.data?.page || {},
+        siteUsData: usData?.data?.page || {},
+        siteDeData: deData?.data?.page || {},
+        siteItData: itData?.data?.page || {},
+        siteFrData: frData?.data?.page || {},
+        sitePlData: plData?.data?.page || {},
       },
       // Enable ISR - faster revalidation for draft mode, slower for production
       revalidate: isDraftMode ? 10 : 60, // 10 seconds for draft, 60 for production

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/router";
 import ReactMarkdown from "react-markdown";
 import axios from "axios";
@@ -25,6 +25,17 @@ const IndexedSearch = () => {
   // const [configData, setConfigData] = useState(
   //   router.locale === "de" ? deData : router.locale === "it" ? itData : enData
   // );
+
+  // Callback ref to handle focus after DOM is ready
+  const setSearchInputRef = useCallback((element) => {
+    searchInput.current = element;
+    if (element) {
+      // Focus the input after it's mounted
+      setTimeout(() => {
+        element.focus();
+      }, 0);
+    }
+  }, []);
 
   const searchResults = async (term) => {
     try {
@@ -73,11 +84,47 @@ const IndexedSearch = () => {
     e.preventDefault();
     if (!searchTerm && !searchTerm.trim()) return;
 
-    searchResults(searchTerm);
+    // Create URL-friendly slug from search term
+    const searchSlug = searchTerm.trim().toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '') // Remove special characters except spaces and hyphens
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+      .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
+
+    // Update URL with both slug and query parameters
+    const searchQuery = encodeURIComponent(searchTerm.trim());
+    const newPath = `/search?search_query=${searchQuery}`;
+
+    // Update URL without triggering a page reload
+    await router.push(newPath, undefined, { shallow: true });
+
+    // Perform the search
+    searchResults(searchTerm.trim());
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    setSearchData(null);
+    setResultSearchTerm("");
+    setLoading(false);
+    // Clear both slug and query parameters
+    router.push("/search", undefined, { shallow: true });
   };
 
   useEffect(() => {
-    const extractedSearchTerm = router.asPath ? router.asPath.split("=")[1].replaceAll("+", " ") : "";
+    // Try to get search term from query parameters first
+    let extractedSearchTerm = "";
+
+    if (router.query.search_query) {
+      extractedSearchTerm = decodeURIComponent(router.query.search_query);
+    } else if (router.asPath) {
+      // Fallback to parsing from URL path (for backward compatibility)
+      const pathParts = router.asPath.split("=");
+      if (pathParts.length > 1) {
+        extractedSearchTerm = pathParts[1].replaceAll("+", " ");
+      }
+    }
+
     setSearchTerm(extractedSearchTerm);
 
     // Only search if we have a valid search term
@@ -88,12 +135,7 @@ const IndexedSearch = () => {
       setResultSearchTerm("");
       setSearchData(null);
     }
-  }, [router.asPath]);
-  useEffect(() => {
-    if (searchInput) {
-      searchInput.current.focus();
-    }
-  }, [searchInput]);
+  }, [router.asPath, router.query.search_query]);
 
   const renderMarkdown = (str) => {
     const withoutRNT = str
@@ -116,7 +158,7 @@ const IndexedSearch = () => {
               <input
                 type="text"
                 value={searchTerm}
-                ref={searchInput}
+                ref={setSearchInputRef}
                 name="tx_indexedsearch_pi2[search][sword]"
                 placeholder={t("data.searchFieldPlaceholder")}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -128,7 +170,7 @@ const IndexedSearch = () => {
               </span>
             </button>
             <div className="close-wrapper">
-              <div className="close" onClick={() => setSearchTerm("")}></div>
+              <div className="close" onClick={handleClearSearch}></div>
             </div>
           </form>
         </div>
