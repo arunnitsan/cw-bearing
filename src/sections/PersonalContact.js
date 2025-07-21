@@ -32,7 +32,7 @@ const PersonalContact = ({ id, data }) => {
               <div className="profile-img">
                 {data.image && data.image.length ? (
                   <RoundedImage
-                    image={`${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`}
+                    image={`${data.image[0]?.publicUrl ? data.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`}`}
                     imageAlt="Profile"
                     aosAnimation={true}
                     nameClass="br-blue"
@@ -51,23 +51,25 @@ const PersonalContact = ({ id, data }) => {
                 <div className="btn-wrapper desktop-visible">
                   {data.phone && (
                     <>
-                      {data.phone.href && typeof data.phone.href === 'string' ? (
+                      {data.phone.href && data.phone.title ? (
                         <Link
                           data-aos="fade-left"
                           href={data.phone.href}
                           className="tel-no"
                         >
-                          {data.phone.title}
+                          {data.phone.title ? data.phone.title : ''}
                         </Link>
                       ) : (
                         <>
-                          <Link
-                            data-aos="fade-left"
-                            href={`tel: ${typeof data.phone === 'string' ? data.phone : data.phone.title || ''}`}
-                            className="tel-no"
-                          >
-                            {data.phone.title}
-                          </Link>
+                          {data.phone.href  && (
+                           <Link
+                           data-aos="fade-left"
+                           href={`tel: ${data.phone.href ? data.phone.href : ''}`}
+                           className="tel-no"
+                         >
+                           {data.phone.title ? data.phone.title : ''}
+                         </Link>
+                          )}
                         </>
                       )}
                     </>
@@ -91,7 +93,8 @@ const PersonalContact = ({ id, data }) => {
                                   </Link>
                                 ) : (
                                   <SecondaryButton
-                                    link={b.btnlink.linkText}
+                                    link={b.btnlink.href}
+                                    targetBlank={b.btnlink.target === '_blank' ? true : false}
                                     key={b + id}
                                   >
                                     {b.btntext}
@@ -141,6 +144,7 @@ const PersonalContact = ({ id, data }) => {
                                 ) : (
                                   <SecondaryButton
                                     link={b.btnlink.href}
+                                    targetBlank={b.btnlink.target === '_blank' ? true : false}
                                     key={b + id}
                                   >
                                     {b.btntext}

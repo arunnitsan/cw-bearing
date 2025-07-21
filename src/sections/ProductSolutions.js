@@ -13,7 +13,7 @@ const renderProducts = (list) => {
               <div className="img-in">
                 {product.image && product.image.length ? (
                   <LazyLoadImage
-                    src={`${process.env.NEXT_PUBLIC_API_URL}${product.image[0]?.properties?.originalUrl}`}
+                    src={`${product.image[0]?.publicUrl ? product.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${product.image[0]?.properties?.originalUrl}`}`}
                     afterLoad={AOSRefresh}
                     alt="Product"
                   />
@@ -26,7 +26,7 @@ const renderProducts = (list) => {
               <div className="img-in">
                 {product.image && product.image.length ? (
                   <LazyLoadImage
-                    src={`${process.env.NEXT_PUBLIC_API_URL}${product.image[0]?.properties?.originalUrl}`}
+                    src={`${product.image[0]?.publicUrl ? product.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${product.image[0]?.properties?.originalUrl}`}`}
                     afterLoad={AOSRefresh}
                     alt="Product"
                   />

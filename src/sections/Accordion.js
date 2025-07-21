@@ -164,7 +164,7 @@ const CustomAccordion = ({ id, data }) => {
                           <div className="img-in">
                             {accordion.image && accordion.image.length ? (
                               <LazyLoadImage
-                                src={`${process.env.NEXT_PUBLIC_API_URL}${accordion.image[0]?.properties?.originalUrl}`}
+                                src={`${accordion.image[0]?.publicUrl ? accordion.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${accordion.image[0]?.properties?.originalUrl}`}`}
                                 afterLoad={AOSRefresh}
                                 alt={t("data.accordianItem")}
                               />

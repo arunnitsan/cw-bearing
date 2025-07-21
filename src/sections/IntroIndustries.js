@@ -37,7 +37,7 @@ const IntroIndustries = ({ id, data }) => {
                     } */}
                     {data.media && data.media.length ? (
                       <img
-                        src={`${process.env.NEXT_PUBLIC_API_URL}${data.media[0]?.properties?.originalUrl}`}
+                        src={`${data.media[0]?.publicUrl ? data.media[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${data.media[0]?.properties?.originalUrl}`}`}
                         alt="Bike"
                       />
                     ) : (
@@ -60,7 +60,7 @@ const IntroIndustries = ({ id, data }) => {
               <div className="rounded-image-wrapper">
                 {data.image && data.image.length ? (
                   <RoundedImage
-                    image={`${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`}
+                    image={`${data.image[0]?.publicUrl ? data.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`}`}
                     alt="Rider"
                   />
                 ) : (

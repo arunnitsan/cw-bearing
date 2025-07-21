@@ -44,7 +44,7 @@ const IntroProducts = ({ data, id }) => {
             <div className="product-img-in" data-aos="fade-left">
               {data.image && data.image.length ? (
                 <LazyLoadImage
-                  src={`${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`}
+                  src={`${data.image[0]?.publicUrl ? data.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`}`}
                   afterLoad={AOSRefresh}
                   alt="Product"
                 />

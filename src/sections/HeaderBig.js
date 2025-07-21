@@ -38,7 +38,7 @@ const HeaderBig = ({ data }) => {
         >
           {i && (
             <LazyLoadImage
-              src={`${process.env.NEXT_PUBLIC_API_URL}${i?.properties?.originalUrl}`}
+              src={`${i?.publicUrl ? i?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${i?.properties?.originalUrl}`}`}
               afterLoad={AOSRefresh}
               alt="Solution"
             />
@@ -74,7 +74,7 @@ const HeaderBig = ({ data }) => {
             <span
               className={`spining-circle`}
               style={{
-                backgroundImage: `url(${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl})`,
+                backgroundImage: `url(${data.image[0]?.publicUrl ? data.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`})`,
               }}
             ></span>
           ) : (

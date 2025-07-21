@@ -21,7 +21,7 @@ const SimpleDownload = ({ id, data, inAccordion }) => {
             <div className="download-img-in">
               {list.image && list.image.length ? (
                 <img
-                  src={`${process.env.NEXT_PUBLIC_API_URL}${list.image[0]?.properties?.originalUrl}`}
+                  src={`${list.image[0]?.publicUrl ? list.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${list.image[0]?.properties?.originalUrl}`}`}
                   alt="Table"
                 />
               ) : (
@@ -49,7 +49,7 @@ const SimpleDownload = ({ id, data, inAccordion }) => {
                 onClick={() => {
                   axios
                     .get(
-                      `${process.env.NEXT_PUBLIC_API_URL}${list.file2[0]?.properties?.originalUrl}`,
+                      `${list.file2[0]?.publicUrl ? list.file2[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${list.file2[0]?.properties?.originalUrl}`}`,
                       {
                         responseType: "blob",
                       }

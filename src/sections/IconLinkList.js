@@ -11,7 +11,7 @@ const renderIconLinkList = (data) => {
               <div className="img-in">
                 {l.image && l.image.length ? (
                   <img
-                    src={`${process.env.NEXT_PUBLIC_API_URL}${l.image[0]?.properties?.originalUrl}`}
+                    src={`${l.image[0]?.publicUrl ? l.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${l.image[0]?.properties?.originalUrl}`}`}
                     alt="Icon"
                   />
                 ) : (

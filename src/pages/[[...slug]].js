@@ -53,15 +53,15 @@ const Page = ({
     twitterTitle,
     twitterDescription,
     ogDescription;
-  if (pageData && !pageData.error) {
+  if (pageData && !pageData.error && pageData.data && pageData.data.i18n && pageData.data.i18n.length > 0) {
     siteLanguage = pageData.data.i18n[0].twoLetterIsoCode;
-    pageTitle = pageData.data.page.title;
+    pageTitle = pageData.data.page?.title;
     generalMetaDescription =
-      pageData.data.page.constants.ns_seo.seo_meta_description.value;
+      pageData.data.page?.constants?.ns_seo?.seo_meta_description?.value;
     generalMetaKeywords =
-      pageData.data.page.constants.ns_seo.seo_meta_keywords.value;
+      pageData.data.page?.constants?.ns_seo?.seo_meta_keywords?.value;
     ogImage = pageData.data?.meta?.ogImage?.publicUrl;
-    twitterImage = pageData.data?.meta.twitterImage?.publicUrl;
+    twitterImage = pageData.data?.meta?.twitterImage?.publicUrl;
     twitterTitle = pageData.data?.meta?.twitterTitle;
     twitterDescription = pageData?.data?.meta?.twitterDescription;
     ogDescription = pageData.data?.meta?.ogDescription;
@@ -349,6 +349,13 @@ export const getStaticProps = async (context) => {
                        (context.params && context.params.draft === 'true');
 
     const paramSlug = context.params.slug;
+
+    // Prevent certain paths from being treated as pages (like API endpoints)
+    if (paramSlug && paramSlug.length === 1 && paramSlug[0] === 'typo3') {
+      return {
+        notFound: true,
+      };
+    }
     var newsData = await getAPIData("news/detail/" + paramSlug, isDraftMode);
     if (!newsData.error) {
       var pageData = newsData;

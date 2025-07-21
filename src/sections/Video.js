@@ -25,7 +25,7 @@ const Video = ({ id, data }) => {
         className="react-player"
         playing={true}
         // url={`${process.env.NEXT_PUBLIC_API_URL}${process.env.NEXT_PUBLIC_TYPO3_MEDIA}${media[0]}`}
-        url={`${process.env.NEXT_PUBLIC_API_URL}${media[0]?.properties?.originalUrl}`}
+        url={`${media[0]?.publicUrl ? media[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${media[0]?.properties?.originalUrl}`}`}
         loop={isLoop}
         muted={isMute}
         controls={isControlsDisabled}
@@ -39,7 +39,7 @@ const Video = ({ id, data }) => {
         light={
           isAutoplay
             ? false
-            : `${process.env.NEXT_PUBLIC_API_URL}${image[0]?.properties?.originalUrl}`
+            : `${image[0]?.publicUrl ? image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${image[0]?.properties?.originalUrl}`}`
         }
         width="100%"
         height="100%"

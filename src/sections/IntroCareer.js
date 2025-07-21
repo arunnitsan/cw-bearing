@@ -30,7 +30,7 @@ const IntroCareer = ({ id, data }) => {
               <div className="rounded-image-wrapper">
                 {data.image && data.image.length ? (
                   <RoundedImage
-                    image={`${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`}
+                    image={`${data.image[0]?.publicUrl ? data.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`}`}
                     alt="Rider"
                   />
                 ) : (

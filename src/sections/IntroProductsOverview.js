@@ -19,7 +19,7 @@ const IntroProductsOverview = ({ id, data }) => {
                 <div
                   className="img"
                   style={{
-                    backgroundImage: `url(${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl})`,
+                    backgroundImage: `url(${data.image[0]?.publicUrl ? data.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`})`,
                   }}
                 ></div>
               ) : ("")}

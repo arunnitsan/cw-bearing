@@ -13,7 +13,7 @@ const ImageIconText = ({ id, data }) => {
             <div className="desktop-visible img-in" data-aos="fade-right">
               {data.image && data.image.length ? (
                 <img
-                  src={`${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`}
+                  src={`${data.image[0]?.publicUrl ? data.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`}`}
                 />
               ) : ("")}
             </div>
@@ -25,7 +25,7 @@ const ImageIconText = ({ id, data }) => {
                   {parseInt(data.check) && data.icon && data.icon.length ? (
                     <span data-aos="fade-right" className="icon-in">
                       <img
-                        src={`${process.env.NEXT_PUBLIC_API_URL}${data.icon[0]?.properties?.originalUrl}`}
+                        src={`${data.icon[0]?.publicUrl ? data.icon[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${data.icon[0]?.properties?.originalUrl}`}`}
                         alt="Icon"
                       />
                     </span>
@@ -38,7 +38,7 @@ const ImageIconText = ({ id, data }) => {
               <div className="mobile-visible img-in" data-aos="fade-right">
                 {data.image && data.image.length ? (
                   <img
-                    src={`${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`}
+                    src={`${data.image[0]?.publicUrl ? data.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`}`}
                     afterLoad={AOSRefresh}
                     alt="Image Icon"
                   />

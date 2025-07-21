@@ -5,7 +5,7 @@ const MoreLink = ({ children, link, targetBlank, diffDomain }) => {
     <>
       {diffDomain ? (
         <a
-          href={`${process.env.NEXT_PUBLIC_API_URL1}${link}`}
+          href={`${link}`}
           className="more-link"
           target="_blank"
         >

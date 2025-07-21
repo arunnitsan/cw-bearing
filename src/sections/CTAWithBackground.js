@@ -29,7 +29,7 @@ const CTAWithBackground = ({ id, data }) => {
             <span
               className="cta-bg container-md"
               style={{
-                backgroundImage: `url(${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl})`,
+                backgroundImage: `url(${data.image[0]?.publicUrl ? data.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`})`,
               }}
             ></span>
           ) : (
@@ -42,7 +42,7 @@ const CTAWithBackground = ({ id, data }) => {
             <span
               className="cta-bg"
               style={{
-                backgroundImage: `url(${process.env.NEXT_PUBLIC_API_URL}${data.media[0]?.properties?.originalUrl})`,
+                backgroundImage: `url(${data.media[0]?.publicUrl ? data.media[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${data.media[0]?.properties?.originalUrl}`})`,
               }}
             ></span>
           ):(<></>)}

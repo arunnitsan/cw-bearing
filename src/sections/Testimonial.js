@@ -16,7 +16,7 @@ const Testimonial = ({ id, data }) => {
             {data.image && data.image.length ? (
               <RoundedImage
                 aosAnimation={true}
-                image={`${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`}
+                image={`${data.image[0]?.publicUrl ? data.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`}`}
                 imageAlt="Testimonial"
               />
             ) : (

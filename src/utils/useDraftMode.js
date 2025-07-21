@@ -16,24 +16,7 @@ export const useDraftMode = () => {
     setIsDraftMode(isDraft);
   }, [router.query.draft]);
 
-  // Debounced refresh function
-  const debouncedRefresh = useCallback(() => {
-    if (refreshTimeoutRef.current) {
-      clearTimeout(refreshTimeoutRef.current);
-    }
 
-    refreshTimeoutRef.current = setTimeout(() => {
-      if (!isRefreshing) {
-        setIsRefreshing(true);
-        try {
-          window.location.reload();
-        } catch (error) {
-          console.error('Refresh error:', error);
-          setIsRefreshing(false);
-        }
-      }
-    }, 1000); // 1 second debounce
-  }, [isRefreshing]);
 
   // Removed automatic refresh interval - no more auto-refresh after 15 seconds
 
