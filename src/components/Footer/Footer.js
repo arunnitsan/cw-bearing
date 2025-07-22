@@ -12,7 +12,7 @@ import { useTranslation } from 'next-i18next';
 
 const Footer = ({ pageData }) => {
   const router = useRouter();
-  const { t } = useTranslation(router.locale);
+  const { t } = useTranslation('common');
   const {
     configuratorData,
     setConfiguratorData,

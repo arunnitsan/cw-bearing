@@ -22,7 +22,7 @@ const Steptwo = ({
   handleIsCustomize,
 }) => {
   const router = useRouter();
-  const { t } = useTranslation(router.locale);
+  const { t } = useTranslation('common');
   const modalWrapper = useRef(null);
   const dropdownWrapper = useRef(null);
   const [modalData, setModalData] = useState(null);

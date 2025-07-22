@@ -9,7 +9,7 @@ import { useTranslation } from 'next-i18next';
 
 const SuccessModal = () => {
   const router = useRouter();
-  const {t} = useTranslation(router.locale);
+  const {t} = useTranslation('common');
   const { successModal, handleSuccessModal } = useContext(GlobalContext);
 
   if (successModal.notConfigModal) {

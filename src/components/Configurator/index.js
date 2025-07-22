@@ -134,7 +134,7 @@ const initialVariantTwoValues = {
 const Configurator = () => {
 
   const router = useRouter();
-  const { t } = useTranslation(router.locale);
+  const { t } = useTranslation('common');
   const url =
     router.locale === router.defaultLocale && isGerman(router.locale)
       ? `${process.env.NEXT_PUBLIC_API_URL}`

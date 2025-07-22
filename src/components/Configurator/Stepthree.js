@@ -42,7 +42,7 @@ const StepThree = ({
   isCustomized,
 }) => {
   const router = useRouter();
-  const { t } = useTranslation(router.locale);
+  const { t } = useTranslation('common');
   let requiredText = `${t("data.required")}`;
   // router.locale === "de"
   //   ? (requiredText = "ist ein Pflichtfeld") :
