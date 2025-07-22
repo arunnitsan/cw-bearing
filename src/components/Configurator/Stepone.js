@@ -8,8 +8,9 @@ import Input from "../Core/Input";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
 import GlobalContext from "../../context/GlobalContext";
+import { useTranslation } from 'next-i18next';
 // import { useTranslation } from "../../pages/i18n/client";
-import { useTranslation } from "../i18n/client";
+// import { useTranslation } from "../i18n/client";
 
 const Stepone = ({
   // data,

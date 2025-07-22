@@ -1,12 +1,10 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import { Modal, Button } from "react-bootstrap";
+import Link from "next/link";
 import { useRouter } from "next/router";
-import AuroraInner from "../Shared/AuroraInner";
-// import deData from "../../assets/translations/de.json";
-// import enData from "../../assets/translations/en.json";
-// import itData from "../../assets/translations/it.json";
-// import axios from "axios";
+import { useTranslation } from 'next-i18next';
 // import { useTranslation } from "../../pages/i18n/client";
-import { useTranslation } from "../i18n/client";
+// import { useTranslation } from "../i18n/client";
 
 const SearchOverlay = ({
   searchOverlayShow,

@@ -1,14 +1,12 @@
-import React, { useState, useContext, useRef } from "react";
-import {
-  AccordionContext,
-  useAccordionButton,
-  Accordion,
-  Card,
-} from "react-bootstrap";
-import SimpleDownload from "./SimplesDownload";
+import React, { useState, useRef } from "react";
+import { Card, Accordion } from "react-bootstrap";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 import { useRouter } from "next/router";
+import { useTranslation } from 'next-i18next';
 // import { useTranslation } from "../pages/i18n/client";
-import { useTranslation } from "../components/i18n/client";
+// import { useTranslation } from "../components/i18n/client";
+import SimpleDownload from "./SimplesDownload";
 
 const ContextAwareToggle = ({ handleKey, children, eventKey, callback }) => {
   const router = useRouter();

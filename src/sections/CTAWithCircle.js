@@ -8,8 +8,9 @@ import GlobalContext from "../context/GlobalContext";
 import rehypeRaw from "rehype-raw";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useTranslation } from 'next-i18next';
 // import { useTranslation } from "../pages/i18n/client";
-import { useTranslation } from "../components/i18n/client";
+// import { useTranslation } from "../components/i18n/client";
 
 const CTAWithCircle = ({ id, contactVariant, data }) => {
   const { width } = useContext(GlobalContext);

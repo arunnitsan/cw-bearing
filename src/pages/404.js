@@ -5,14 +5,14 @@ import { Container, Row, Col } from "react-bootstrap";
 import getAPIData from "../utils/API";
 import { isGerman } from "../utils/checkLanguage";
 import GlobalContext from "../context/GlobalContext";
-import { useTranslation } from "../components/i18n/client";
+import { useTranslation } from 'next-i18next';
 import { useRouter } from "next/router";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Custom404 = ({ pageData, pageMenuItems }) => {
 
   const router = useRouter();
-  const {t} = useTranslation(router.locale);
+  const {t} = useTranslation('common');
 
   // Add error handling for missing pageData
   const siteLanguage = pageData?.data?.i18n?.[0]?.twoLetterIsoCode || 'en';

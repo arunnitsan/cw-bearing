@@ -8,8 +8,9 @@ import Link from "next/link";
 import { convertDateToNum } from "../../utils/date";
 import MoreLink from "../Shared/MoreLink";
 import rehypeRaw from "rehype-raw";
+import { useTranslation } from 'next-i18next';
 // import { useTranslation } from "../../pages/i18n/client";
-import { useTranslation } from "../i18n/client";
+// import { useTranslation } from "../i18n/client";
 
 const NewsDetails = ({ data }) => {
   const router = useRouter();

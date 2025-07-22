@@ -1,7 +1,9 @@
+import React from "react";
+import { useTranslation } from 'next-i18next';
 import { Row, Col } from "react-bootstrap";
 import axios from "axios";
 import fileDownload from "js-file-download";
-import { useTranslation } from "../components/i18n/client";
+// import { useTranslation } from "../components/i18n/client";
 import { useRouter } from "next/router";
 
 const SimpleDownload = ({ id, data, inAccordion }) => {

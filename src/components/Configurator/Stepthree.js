@@ -9,8 +9,9 @@ import { Row, Col } from "react-bootstrap";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import GlobalContext from "../../context/GlobalContext";
+import { useTranslation } from 'next-i18next';
 // import { useTranslation } from "../../pages/i18n/client";
-import { useTranslation } from "../i18n/client";
+// import { useTranslation } from "../i18n/client";
 
 const initialVariantOneValues = {
   specificationDoc: {

@@ -3,8 +3,9 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { Modal } from "react-bootstrap";
 import GlobalContext from "../../context/GlobalContext";
+import { useTranslation } from 'next-i18next';
 // import { useTranslation } from "../../pages/i18n/client";
-import { useTranslation } from "../i18n/client";
+// import { useTranslation } from "../i18n/client";
 
 const SuccessModal = () => {
   const router = useRouter();

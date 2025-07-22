@@ -13,14 +13,15 @@ import { AOSRefresh } from "../utils/AOSRefresh";
 import MoreLink from "../components/Shared/MoreLink";
 import rehypeRaw from "rehype-raw";
 import Link from "next/link";
+import { useTranslation } from 'next-i18next';
 // import enData from '../assets/translations/en.json';
 // import deData from '../assets/translations/de.json';
 // import { useTranslation } from "../pages/i18n/client";
-import { useTranslation } from "../components/i18n/client";
+// import { useTranslation } from "../components/i18n/client";
 
 const ContextAwareToggle = ({ handleKey, children, eventKey, callback }) => {
   const router = useRouter();
-  const { t } = useTranslation(router.locale);
+  const { t } = useTranslation('common');
   const currentEventKey = useContext(AccordionContext);
 
   const decoratedOnClick = useAccordionButton(eventKey, () => {
@@ -45,7 +46,7 @@ const ContextAwareToggle = ({ handleKey, children, eventKey, callback }) => {
 
 const CustomAccordion = ({ id, data }) => {
   const router = useRouter();
-  const { t } = useTranslation(router.locale);
+  const { t } = useTranslation('common');
   const [accordionKey, setAccordionKey] = useState("0");
   const [count, setCount] = useState(0);
   const accordionEl = useRef();

@@ -9,8 +9,9 @@ import rehypeRaw from "rehype-raw";
 // import deData from "../assets/translations/de.json";
 // import itData from "../assets/translations/it.json";
 import Link from "next/link";
+import { useTranslation } from 'next-i18next';
 // import { useTranslation } from "../pages/i18n/client";
-import { useTranslation } from "../components/i18n/client";
+// import { useTranslation } from "../components/i18n/client";
 
 const IndexedSearch = () => {
   const router = useRouter();

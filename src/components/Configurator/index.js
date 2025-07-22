@@ -10,8 +10,9 @@ import Steptwo from "./Steptwo";
 // import enData from "../../assets/translations/en.json";
 // import itData from "../../assets/translations/it.json";
 import { isGerman } from "../../utils/checkLanguage";
+import { useTranslation } from 'next-i18next';
 // import { useTranslation } from "../../pages/i18n/client";
-import { useTranslation } from "../i18n/client";
+// import { useTranslation } from "../i18n/client";
 
 const initialStepOneValues = {
   itemNo: "",
@@ -131,7 +132,7 @@ const initialVariantTwoValues = {
 };
 
 const Configurator = () => {
-  
+
   const router = useRouter();
   const { t } = useTranslation(router.locale);
   const url =
