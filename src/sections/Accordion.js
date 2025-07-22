@@ -50,6 +50,30 @@ const CustomAccordion = ({ id, data }) => {
   const [count, setCount] = useState(0);
   const accordionEl = useRef();
 
+  // Handle accordion expansion and scroll into view
+  const handleAccordionToggle = (newKey) => {
+    setAccordionKey(newKey);
+
+    // Only scroll if the accordion is being expanded (not collapsed)
+    if (newKey !== accordionKey) {
+      // Use setTimeout to ensure the accordion content is rendered before scrolling
+      setTimeout(() => {
+        const activeCard = accordionEl.current?.querySelector(".active-card");
+        if (activeCard) {
+          // Calculate the position to scroll to (with some offset for better UX)
+          const cardRect = activeCard.getBoundingClientRect();
+          const offsetTop = window.pageYOffset + cardRect.top - 100; // 100px offset from top
+
+          // Smooth scroll to bring the accordion into view
+          window.scrollTo({
+            top: offsetTop,
+            behavior: "smooth",
+          });
+        }
+      }, 300); // Wait for accordion animation to start
+    }
+  };
+
   useEffect(() => {
     setTimeout(() => {
       // const imageEl = document.querySelectorAll(".collapse.show .img-in");
@@ -57,8 +81,10 @@ const CustomAccordion = ({ id, data }) => {
       const imageEls = Array.from(
         document.querySelectorAll(".collapse.show .card-body-wrapper > .img-in")
       );
-      const accordionPos = accordionEl.current.getBoundingClientRect();
-      imageEls.map((imageEl) => {
+      const accordionPos = accordionEl.current?.getBoundingClientRect();
+      if (!accordionPos) return;
+
+      imageEls.forEach((imageEl) => {
         const imageElTop = parseInt(imageEl.style.top, 10);
         if (imageEl) {
           if (imageElTop * 2 + imageEl.clientHeight > accordionPos.height) {
@@ -78,28 +104,11 @@ const CustomAccordion = ({ id, data }) => {
           }
           imageEl.style.top = `${Math.abs(accordionPos.top)}px`;
         }
-      }, 1000);
-    });
-
-    setCount(count + 1);
-
-    if (!count) return;
-
-    setTimeout(() => {
-      let activeCard = accordionEl.current.querySelector(".active-card");
-      let distance = 0;
-      do {
-        distance += activeCard.offsetTop;
-        activeCard = activeCard.offsetParent;
-      } while (activeCard);
-      distance = distance < 0 ? 0 : distance;
-
-      window.scrollTo({
-        top: distance - 20,
-        left: 0,
-        behavior: "smooth",
       });
-    }, 300);
+    }, 1000);
+
+    // Use functional update to avoid dependency on count
+    setCount(prevCount => prevCount + 1);
   }, [accordionKey]);
 
   useScrollPosition(({ prevPos, currPos }) => {
@@ -151,7 +160,7 @@ const CustomAccordion = ({ id, data }) => {
                     <Card.Header as={Card.Header} eventKey={`${id}`}>
                       {accordion.headline && (
                         <ContextAwareToggle
-                          handleKey={(num) => setAccordionKey(num)}
+                          handleKey={(num) => handleAccordionToggle(num)}
                           eventKey={`${id}`}
                         >
                           {accordion.headline}

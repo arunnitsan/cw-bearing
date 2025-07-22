@@ -74,7 +74,10 @@ const SearchOverlay = ({
           </span>
         </button>
         <div className="close-wrapper">
-          <div className="close" onClick={() => setSearchTerm("")}></div>
+          <div className="close" onClick={() => {
+            setSearchTerm("");
+            handleClose();
+          }}></div>
         </div>
       </form>
     </div>

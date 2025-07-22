@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 
 export const useContentRefresh = (refreshInterval = 30000) => {
@@ -6,7 +6,7 @@ export const useContentRefresh = (refreshInterval = 30000) => {
   const [lastRefresh, setLastRefresh] = useState(Date.now());
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const refreshContent = async () => {
+  const refreshContent = useCallback(async () => {
     if (isRefreshing) return;
 
     setIsRefreshing(true);
@@ -19,7 +19,7 @@ export const useContentRefresh = (refreshInterval = 30000) => {
     } finally {
       setIsRefreshing(false);
     }
-  };
+  }, [isRefreshing, router]);
 
   useEffect(() => {
     // Only enable auto-refresh in development
@@ -30,7 +30,7 @@ export const useContentRefresh = (refreshInterval = 30000) => {
     }, refreshInterval);
 
     return () => clearInterval(interval);
-  }, [refreshInterval]);
+  }, [refreshInterval, refreshContent]);
 
   return {
     refreshContent,

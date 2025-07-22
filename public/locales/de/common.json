@@ -1,0 +1,14 @@
+{
+  "welcome": "Willkommen",
+  "home": "Startseite",
+  "about": "Über uns",
+  "contact": "Kontakt",
+  "products": "Produkte",
+  "services": "Dienstleistungen",
+  "data": {
+    "pageNotFoundErrMsg": "Seite nicht gefunden",
+    "pageNotFound": "Seite nicht gefunden",
+    "sorryMsg": "Entschuldigung, die gesuchte Seite existiert nicht.",
+    "backToHomeText": "Zurück zur Startseite"
+  }
+}

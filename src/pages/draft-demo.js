@@ -2,6 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useDraftMode } from '../utils/useDraftMode';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const DraftDemo = () => {
   const { enterDraftMode } = useDraftMode();
@@ -101,6 +102,14 @@ const DraftDemo = () => {
       </Container>
     </>
   );
+};
+
+export const getStaticProps = async ({ locale }) => {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
 };
 
 export default DraftDemo;

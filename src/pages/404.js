@@ -5,12 +5,9 @@ import { Container, Row, Col } from "react-bootstrap";
 import getAPIData from "../utils/API";
 import { isGerman } from "../utils/checkLanguage";
 import GlobalContext from "../context/GlobalContext";
-// import enData from "../assets/translations/en.json";
-// import deData from "../assets/translations/de.json";
-// import itData from "../assets/translations/it.json";
-// import { useTranslation } from "./i18n/client";
 import { useTranslation } from "../components/i18n/client";
 import { useRouter } from "next/router";
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Custom404 = ({ pageData, pageMenuItems }) => {
 
@@ -22,20 +19,11 @@ const Custom404 = ({ pageData, pageMenuItems }) => {
   const { handleMenuItems, handleCopyright, handleSocialMedia } =
     useContext(GlobalContext);
 
-  // const [configData, setConfigData] = useState(
-  //   // siteLanguage === "de" ? deData : enData
-  //   siteLanguage === "de" ? deData : siteLanguage === "it" ? itData : enData
-  // );
-
   React.useEffect(() => {
     if (pageMenuItems) {
       handleMenuItems(pageMenuItems);
     }
   }, [pageMenuItems]);
-
-  // React.useEffect(() => {
-  //   setConfigData(siteLanguage === "de" ? deData : enData);
-  // }, [siteLanguage]);
 
   React.useEffect(() => {
     // Add error handling for missing page data
@@ -82,17 +70,6 @@ const Custom404 = ({ pageData, pageMenuItems }) => {
           type="image/png"
           href="/images/favicon_package/favicon-16x16.png"
         />
-        {/* <script
-          async
-          type="text/javascript"
-          src="https://userlike-cdn-widgets.s3-eu-west-1.amazonaws.com/a805f53a53f8473ea7e06bd768d86504f78b13b43177489396baddf8a99d9ee6.js"
-        ></script> */}
-
-
-
-        {/* <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="066c2f59-a1cf-4a05-acd8-2424f005a608" type="text/javascript" async></script> */}
-
-
       </Head>
       <div
         className="content-section pt-11 pb-7 pt-lg-30 pb-lg-28 bg-default-6 lg:min-h-vh-100 align-items-center d-flex"
@@ -126,27 +103,35 @@ const Custom404 = ({ pageData, pageMenuItems }) => {
 
 export const getStaticProps = async (context) => {
   try {
-    let pageData = await getAPIData("");
+    // Only fetch minimal data for 404 page to reduce bundle size
+    const locale = context.locale || 'de';
 
-    const menuItems = await getAPIData(
-      !isGerman(context.locale) ? `${context.locale}/` : ""
-    );
+    // Fetch only essential data
+    const [pageData, menuItems] = await Promise.all([
+      getAPIData("").catch(() => ({ data: { i18n: [{ twoLetterIsoCode: locale }] } })),
+      getAPIData(!isGerman(locale) ? `${locale}/` : "").catch(() => ({ data: { page: {} } }))
+    ]);
 
     return {
       props: {
-        pageData,
+        ...(await serverSideTranslations(locale, ['common'])),
+        pageData: pageData || { data: { i18n: [{ twoLetterIsoCode: locale }] } },
         pageMenuItems: menuItems?.data?.page || null,
       },
+      // Reduce revalidation time for 404 page
+      revalidate: 3600, // 1 hour
     };
   } catch (error) {
     console.error('404 getStaticProps: Error fetching data:', error);
 
-    // Return fallback props if API fails
+    // Return minimal fallback props if API fails
     return {
       props: {
-        pageData: { data: { i18n: [{ twoLetterIsoCode: 'en' }] } },
+        ...(await serverSideTranslations(context.locale || 'de', ['common'])),
+        pageData: { data: { i18n: [{ twoLetterIsoCode: context.locale || 'de' }] } },
         pageMenuItems: null,
       },
+      revalidate: 3600,
     };
   }
 };

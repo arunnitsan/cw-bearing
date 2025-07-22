@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useCallback } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Script from "next/script";
@@ -6,7 +6,7 @@ import Head from "next/head";
 import { Container, Row } from "react-bootstrap";
 import Routes, { getRoute } from "../utils/Routes";
 import getAPIData from "../utils/API";
-import smoothScroll from "../utils/smoothScroll";
+import smoothScroll, { cleanupSmoothScroll } from "../utils/smoothScroll";
 import { isGerman } from "../utils/checkLanguage";
 import ContentType from "../utils/ContentType";
 import PageWrapper from "../components/PageWrapper";
@@ -67,14 +67,32 @@ const Page = ({
     ogDescription = pageData.data?.meta?.ogDescription;
   }
 
-  useEffect(() => {
-    setTimeout(() => {
-      smoothScroll();
-    }, 1500);
-  });
+  // Disable all scroll behavior for now to prevent unwanted scrolling
+  // const handleSmoothScroll = useCallback(() => {
+  //   // Only initialize smooth scroll for same-page navigation
+  //   // Don't run on initial page load or cross-page navigation
+  //   if (typeof window !== 'undefined' && window.location.hash) {
+  //     setTimeout(() => {
+  //       smoothScroll();
+  //     }, 1500);
+  //   }
+  // }, []);
 
-  useEffect(() => {
-    (async function () {
+  // useEffect(() => {
+  //   // Only run smooth scroll if there's a hash in the URL
+  //   if (router.asPath.includes('#')) {
+  //     handleSmoothScroll();
+  //   }
+
+  //   // Cleanup function to remove event listeners when component unmounts
+  //   return () => {
+  //     cleanupSmoothScroll();
+  //   };
+  // }, [handleSmoothScroll, router.asPath]);
+
+  // Memoize the configurator data fetch
+  const fetchConfiguratorData = useCallback(async () => {
+    try {
       let res;
       if (router.locale === "de") {
         res = await axios.get(
@@ -85,127 +103,143 @@ const Page = ({
           `${process.env.NEXT_PUBLIC_API_URL}${router.locale}/product-configurator`
         );
       }
-      setConfiguratorData({
-        ...configuratorData,
-        sendButton: res.data.content?.colPos0[0].content.data.send_button,
-      });
-    })();
 
-    if (typeof window !== "undefined") {
-      const language =
-        window.navigator.userLanguage || window.navigator.language;
-      // if (localStorage.getItem("locale")) {
-      //   if (localStorage.getItem("locale") === router.locale) return;
-      //   router.push(
-      //     `${router.asPath}`,
-      //     getRoute({
-      //       lang: localStorage.getItem("locale"),
-      //       langPages: pageData.data.languages,
-      //       defaultLocale: "de",
-      //     }),
-      //     {
-      //       locale: localStorage.getItem("locale"),
-      //     }
-      //   );
-      // } else if (router.locale === language) {
-      //   return;
-      // } else if (router.locale !== language) {
-      //   if (isGerman(language)) {
-      //     router.push(
-      //       `${router.asPath}`,
-      //       getRoute({
-      //         lang: "de",
-      //         langPages: pageData.data.languages,
-      //         defaultLocale: "de",
-      //       }),
-      //       {
-      //         locale: "de",
-      //       }
-      //     );
-      //   } else {
-      //     router.push(
-      //       `${router.asPath}`,
-      //       getRoute({
-      //         lang: "en",
-      //         langPages: pageData.data.languages,
-      //         defaultLocale: "de",
-      //       }),
-      //       {
-      //         locale: "en",
-      //       }
-      //     );
-      //   }
-      // }
-    }
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener("click", (event) => {
-      if (event.target.tagName.toLowerCase() === "a") {
-        let href = event.target.href;
-        if (href.includes("variant1") || href.includes("variant2")) {
-          event.preventDefault();
-          handleConfigurator({
-            ...configurator,
-            isVisible: true,
-            data: {
-              step: href.includes("#variant1") ? 1 : 3,
-            },
-          });
-        }
+      if (res.data?.content?.colPos0?.[0]?.content?.data?.send_button) {
+        setConfiguratorData(prevData => ({
+          ...prevData,
+          sendButton: res.data.content.colPos0[0].content.data.send_button,
+        }));
       }
-    });
-  }, []);
+    } catch (error) {
+      console.error('Error fetching configurator data:', error);
+    }
+  }, [router.locale, setConfiguratorData]);
 
   useEffect(() => {
-    if (pageData && pageData.error) return;
+    fetchConfiguratorData();
+  }, [fetchConfiguratorData]);
+
+  // Memoize the click handler
+  const handleClick = useCallback((event) => {
+    if (event.target.tagName.toLowerCase() === "a") {
+      let href = event.target.href;
+      if (href.includes("variant1") || href.includes("variant2")) {
+        event.preventDefault();
+        handleConfigurator({
+          ...configurator,
+          isVisible: true,
+          data: {
+            step: href.includes("#variant1") ? 1 : 3,
+          },
+        });
+      }
+    }
+  }, [configurator, handleConfigurator]);
+
+  useEffect(() => {
+    window.addEventListener("click", handleClick);
+    return () => window.removeEventListener("click", handleClick);
+  }, [handleClick]);
+
+  // Handle SEO and social media data
+  useEffect(() => {
+    if (!pageData || pageData.error || !pageData.data?.page?.constants) return;
+
     const ns_seo = pageData.data.page.constants.ns_seo;
     const ns_basetheme = pageData.data.page.constants.ns_basetheme;
-    let spreadSocialMedia;
+
     if (ns_seo) {
-      spreadSocialMedia = {
+      const spreadSocialMedia = {
         linkedin: ns_seo.seo_linkedin_link,
         facebook: ns_seo.seo_facebook_link,
         xing: ns_seo.seo_xing_link,
         twitter: ns_seo.seo_twitter_link,
       };
-    }
-    handleCopyright(ns_basetheme.copyright);
-    handleSocialMedia({
-      ...spreadSocialMedia,
-    });
-  }, []);
-
-  useEffect(() => {
-    let timer = setInterval(scrollToEl, 500);
-
-    function scrollToEl() {
-      const target = router.asPath.split("#")[1];
-      const targetEl = document.getElementById(`${target}`);
-      if (!targetEl) return;
-      const offsetTop =
-        window.pageYOffset + targetEl.getBoundingClientRect().top;
-      scroll({
-        top: offsetTop,
-        behavior: "smooth",
-      });
-      clearInterval(timer);
+      handleSocialMedia(spreadSocialMedia);
     }
 
-    setTimeout(() => {
-      timer && clearInterval(timer);
-    }, 3000);
-  }, [pageData]);
+    if (ns_basetheme?.copyright) {
+      handleCopyright(ns_basetheme.copyright);
+    }
+  }, [pageData, handleSocialMedia, handleCopyright]);
+
+  // Handle scroll to element - only for hash fragments
+  // Disabled to prevent unwanted scrolling
+  // const scrollToEl = useCallback(() => {
+  //   const target = router.asPath.split("#")[1];
+  //   if (!target) return;
+
+  //   const targetEl = document.getElementById(target);
+  //   if (!targetEl) return;
+
+  //   // Only scroll if the element is not already in view
+  //   const rect = targetEl.getBoundingClientRect();
+  //   const isInView = rect.top >= 0 && rect.bottom <= window.innerHeight;
+
+  //   if (isInView) return;
+
+  //   const offsetTop = window.pageYOffset + rect.top;
+  //   scroll({
+  //     top: offsetTop,
+  //     behavior: "smooth",
+  //   });
+  // }, [router.asPath]);
+
+  // useEffect(() => {
+  //   if (!pageData) return;
+
+  //   // Only set up the interval if there's a hash fragment
+  //   const target = router.asPath.split("#")[1];
+  //   if (!target) return;
+
+  //   // Additional check: only proceed if the target starts with 'c' (content sections)
+  //   if (!/^c/.test(target)) return;
+
+  //   let timer = setInterval(scrollToEl, 500);
+
+  //   const cleanup = setTimeout(() => {
+  //     if (timer) {
+  //       clearInterval(timer);
+  //     }
+  //   }, 3000);
+
+  //   return () => {
+  //     if (timer) clearInterval(timer);
+  //     clearTimeout(cleanup);
+  //   };
+  // }, [pageData, scrollToEl]);
+
+  // Handle menu data updates
+  useEffect(() => {
+    if (pageMenuItems) {
+      handleMenuItems(pageMenuItems);
+    }
+  }, [pageMenuItems, handleMenuItems]);
+
+  // Handle site data updates separately to prevent unnecessary re-renders
+  useEffect(() => {
+    if (siteEnData) setEnMenuData(siteEnData);
+  }, [siteEnData, setEnMenuData]);
 
   useEffect(() => {
-    setEnMenuData(siteEnData);
-    setDeMenuData(siteDeData);
-    setUsMenuData(siteUsData);
-    setItMenuData(siteItData);
-    setFrMenuData(siteFrData);
-    setPlMenuData(sitePlData);
-    handleMenuItems(pageMenuItems);
-  }, [pageMenuItems]);
+    if (siteDeData) setDeMenuData(siteDeData);
+  }, [siteDeData, setDeMenuData]);
+
+  useEffect(() => {
+    if (siteUsData) setUsMenuData(siteUsData);
+  }, [siteUsData, setUsMenuData]);
+
+  useEffect(() => {
+    if (siteItData) setItMenuData(siteItData);
+  }, [siteItData, setItMenuData]);
+
+  useEffect(() => {
+    if (siteFrData) setFrMenuData(siteFrData);
+  }, [siteFrData, setFrMenuData]);
+
+  useEffect(() => {
+    if (sitePlData) setPlMenuData(sitePlData);
+  }, [sitePlData, setPlMenuData]);
 
   return (
     <>
