@@ -16,7 +16,7 @@ const MainMenuModal = ({
   setSearchOverlayShow,
 }) => {
   const router = useRouter();
-  const { t } = useTranslation(router.locale);
+  const { t } = useTranslation('common');
   const [nestedShow, setNestedShow] = useState(false);
   const [activeLink, setActiveLink] = useState(false);
   const [subMenu, setSubMenu] = useState([]);

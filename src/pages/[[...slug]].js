@@ -14,8 +14,7 @@ import GlobalContext from "../context/GlobalContext";
 import Configurator from "../components/Configurator";
 import SuccessModal from "../components/SuccessModal/SuccessModal";
 import DraftModeBanner from "../components/DraftModeBanner";
-// import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-// import useTranslation from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Page = ({
   pageData,
@@ -514,6 +513,7 @@ export const getStaticProps = async (context) => {
 
     return {
       props: {
+        ...(await serverSideTranslations(context.locale, ['common'])),
         pageData,
         pageMenuItems: menuItems?.data?.page || {},
         siteEnData: enData?.data?.page || {},

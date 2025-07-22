@@ -13,7 +13,7 @@ const SearchOverlay = ({
 }) => {
   const searchInput = useRef(null);
   const router = useRouter();
-  const {t} = useTranslation(router.locale)
+  const {t} = useTranslation('common')
   const [searchTerm, setSearchTerm] = useState("");
   // const [configData, setConfigData] = useState(
   //   // router.locale === "de" ? deData : enData
