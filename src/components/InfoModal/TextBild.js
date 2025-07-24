@@ -1,14 +1,15 @@
-import React from "react";
-import { useTranslation } from 'next-i18next';
+import { useContext } from "react";
+import { Modal, Row, Col } from "react-bootstrap";
+import GlobalContext from "../../context/GlobalContext";
 // import { useTranslation } from "../../pages/i18n/client";
-// import { useTranslation } from "../i18n/client";
+import { useTranslation } from "../i18n/client";
 import { useRouter } from "next/router";
 import DOMPurify from "dompurify";
 
 const TextBild = ({ translation, handleStepTwoSelectChange, data }) => {
   const router = useRouter();
   const { t } = useTranslation(router.locale);
-  // const { showInfo, handleShowInfo } = useContext(GlobalContext); // This line is removed as per the new_code
+  const { showInfo, handleShowInfo } = useContext(GlobalContext);
 
   const renderInfobox = (infobox) => {
     return infobox.map((box, id) => (
@@ -32,7 +33,7 @@ const TextBild = ({ translation, handleStepTwoSelectChange, data }) => {
                 .querySelector(`#dropdown${box.dependency_hide}`)
                 .classList.add("d-none");
             }
-            // handleShowInfo({ isVisible: false }); // This line is removed as per the new_code
+            handleShowInfo({ isVisible: false });
             handleStepTwoSelectChange(
               data.uid,
               box.name,

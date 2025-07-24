@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Modal, Button } from "react-bootstrap";
-import Link from "next/link";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/router";
-import { useTranslationDebug } from '../../utils/useTranslationDebug';
 import AuroraInner from "../Shared/AuroraInner";
+// import deData from "../../assets/translations/de.json";
+// import enData from "../../assets/translations/en.json";
+// import itData from "../../assets/translations/it.json";
+// import axios from "axios";
 // import { useTranslation } from "../../pages/i18n/client";
-// import { useTranslation } from "../i18n/client";
+import { useTranslation } from "../i18n/client";
 
 const SearchOverlay = ({
   searchOverlayShow,
@@ -14,7 +15,7 @@ const SearchOverlay = ({
 }) => {
   const searchInput = useRef(null);
   const router = useRouter();
-  const {t} = useTranslationDebug('common')
+  const {t} = useTranslation(router.locale)
   const [searchTerm, setSearchTerm] = useState("");
   // const [configData, setConfigData] = useState(
   //   // router.locale === "de" ? deData : enData
@@ -43,7 +44,7 @@ const SearchOverlay = ({
       handleClose();
       router.push("/[...slug]", `/search?search_query=${searchQuery}`);
     } catch (e) {
-      // Handle search error silently
+      console.log(e, "e");
     }
   };
 
@@ -73,10 +74,7 @@ const SearchOverlay = ({
           </span>
         </button>
         <div className="close-wrapper">
-          <div className="close" onClick={() => {
-            setSearchTerm("");
-            handleClose();
-          }}></div>
+          <div className="close" onClick={() => setSearchTerm("")}></div>
         </div>
       </form>
     </div>

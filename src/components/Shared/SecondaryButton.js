@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { extractTextFromHtml } from "../../utils/htmlUtils";
 
-const SecondaryButton = ({ diffDomain, targetBlank, children = "Button", link, className = "", ...props }) => {
+const SecondaryButton = ({ diffDomain, targetBlank, children, link, className, ...props }) => {
   return (
     <>
       {diffDomain ? (
@@ -8,7 +9,7 @@ const SecondaryButton = ({ diffDomain, targetBlank, children = "Button", link, c
           {children}
         </a>
       ) : (<>
-        <Link href={`${new DOMParser().parseFromString(link, "text/html").documentElement.textContent}`} className={`btn test btn-red btn-br-red ${className}`} target={`${targetBlank ? '_blank' : ""}`} {...props}>
+        <Link href={extractTextFromHtml(link)} className={`btn test btn-red btn-br-red ${className}`} target={`${targetBlank ? '_blank' : ""}`} {...props}>
           {children}
         </Link>
       </>
@@ -21,6 +22,11 @@ const SecondaryButton = ({ diffDomain, targetBlank, children = "Button", link, c
     //   </a>
     // </Link>
   );
+};
+
+SecondaryButton.defaultProps = {
+  children: "Button",
+  className: "",
 };
 
 export default SecondaryButton;

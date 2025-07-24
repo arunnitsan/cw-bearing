@@ -5,99 +5,35 @@ import { LazyLoadComponent } from "react-lazy-load-image-component";
 import dynamic from "next/dynamic";
 
 // Load Component Whenever It's Calling from CMS Page
-const HeaderBig = dynamic(() => import("../sections/HeaderBig"), {
-  ssr: false,
-});
-const Spacer = dynamic(() => import("../sections/Spacer"), {
-  ssr: false,
-});
-const IconLinkList = dynamic(() => import("../sections/IconLinkList"), {
-  ssr: false,
-});
+const HeaderBig = dynamic(() => import("../sections/HeaderBig"));
+const Spacer = dynamic(() => import("../sections/Spacer"));
+const IconLinkList = dynamic(() => import("../sections/IconLinkList"));
 const Form = dynamic(() => import("../sections/Form"), {
-  ssr: false,
+  ssr: false, // Keep this as client-side only due to form validation
 });
-const ProductSolutions = dynamic(() => import("../sections/ProductSolutions"), {
-  ssr: false,
-});
-const Accordion = dynamic(() => import("../sections/Accordion"), {
-  ssr: false,
-});
-const FullContentAccordion = dynamic(
-  () => import("../sections/FullContentAccordion"),
-  {
-    ssr: false,
-  }
-);
-const Testimonial = dynamic(() => import("../sections/Testimonial"), {
-  ssr: false,
-});
-const IntroProductsOverview = dynamic(
-  () => import("../sections/IntroProductsOverview"),
-  {
-    ssr: false,
-  }
-);
-const ImageIconText = dynamic(() => import("../sections/ImageIconText"), {
-  ssr: false,
-});
-const IntroIndustriesOverview = dynamic(
-  () => import("../sections/IntroIndustriesOverview"),
-  {
-    ssr: false,
-  }
-);
-const IntroIndustries = dynamic(() => import("../sections/IntroIndustries"), {
-  ssr: false,
-});
-const IntroProducts = dynamic(() => import("../sections/IntroProducts"), {
-  ssr: false,
-});
-const PersonalContact = dynamic(() => import("../sections/PersonalContact"), {
-  ssr: false,
-});
-const CTAWithBackground = dynamic(
-  () => import("../sections/CTAWithBackground"),
-  {
-    ssr: false,
-  }
-);
-const CTAWithCircle = dynamic(() => import("../sections/CTAWithCircle"), {
-  ssr: false,
-});
-const ProductTypes = dynamic(() => import("../sections/ProductTypes"), {
-  ssr: false,
-});
-const NewsTeaser = dynamic(() => import("../sections/NewsTeaser"), {
-  ssr: false,
-});
+const ProductSolutions = dynamic(() => import("../sections/ProductSolutions"));
+const Accordion = dynamic(() => import("../sections/Accordion"));
+const FullContentAccordion = dynamic(() => import("../sections/FullContentAccordion"));
+const Testimonial = dynamic(() => import("../sections/Testimonial"));
+const IntroProductsOverview = dynamic(() => import("../sections/IntroProductsOverview"));
+const ImageIconText = dynamic(() => import("../sections/ImageIconText"));
+const IntroIndustriesOverview = dynamic(() => import("../sections/IntroIndustriesOverview"));
+const IntroIndustries = dynamic(() => import("../sections/IntroIndustries"));
+const IntroProducts = dynamic(() => import("../sections/IntroProducts"));
+const PersonalContact = dynamic(() => import("../sections/PersonalContact"));
+const CTAWithBackground = dynamic(() => import("../sections/CTAWithBackground"));
+const CTAWithCircle = dynamic(() => import("../sections/CTAWithCircle"));
+const ProductTypes = dynamic(() => import("../sections/ProductTypes"));
+const NewsTeaser = dynamic(() => import("../sections/NewsTeaser"));
 const IndexedSearch = dynamic(() => import("../sections/IndexedSearch"), {
-  ssr: false,
+  ssr: false, // Keep this as client-side only due to search functionality
 });
-const IntroCareer = dynamic(() => import("../sections/IntroCareer"), {
-  ssr: false,
-});
-const SimplesDownload = dynamic(() => import("../sections/SimplesDownload"), {
-  ssr: false,
-});
-const SubMenuPages = dynamic(() => import("../sections/SubMenuPages"), {
-  ssr: false,
-});
-const AccordionDownloads = dynamic(
-  () => import("../sections/AccordionDownloads"),
-  {
-    ssr: false,
-  }
-);
-const StructuredContent = dynamic(
-  () => import("../sections/StructuredContent"),
-  {
-    ssr: false,
-  }
-);
-const Video = dynamic(() => import("../sections/Video"), {
-  ssr: false,
-});
+const IntroCareer = dynamic(() => import("../sections/IntroCareer"));
+const SimplesDownload = dynamic(() => import("../sections/SimplesDownload"));
+const SubMenuPages = dynamic(() => import("../sections/SubMenuPages"));
+const AccordionDownloads = dynamic(() => import("../sections/AccordionDownloads"));
+const StructuredContent = dynamic(() => import("../sections/StructuredContent"));
+const Video = dynamic(() => import("../sections/Video"));
 
 const ContentType = ({ pageContentProps }) => {
   // Add error handling for missing or invalid props
@@ -115,6 +51,7 @@ const ContentType = ({ pageContentProps }) => {
 
         try {
           let contentType = items.type;
+          console.log(`ContentType: Processing item ${index} with type: ${contentType}`);
           // let contentData = findValuesObject(
           //   items.content,
           //   "pi_flexform_content"
@@ -126,6 +63,12 @@ const ContentType = ({ pageContentProps }) => {
           let outerData = findValuesObject(items.content, "data");
           // let frameSelector = items.appearance.frameClass;
           let frameData = findValuesObject(items, "content");
+
+          // Add validation for contentData
+          if (!contentData || !Array.isArray(contentData) || contentData.length === 0) {
+            console.warn(`ContentType: Invalid contentData for item ${index} with type ${contentType}`);
+            return null;
+          }
 
           return (
             <React.Fragment key={index}>
@@ -250,7 +193,7 @@ const ContentType = ({ pageContentProps }) => {
                       <CTAWithCircle
                         id={items.id}
                         data={contentData[0]}
-                        contactVariant={parseInt(contentData[0].style)}
+                        contactVariant={contentData[0]?.style ? parseInt(contentData[0].style) : 0}
                       />
                     );
 
@@ -295,6 +238,8 @@ const ContentType = ({ pageContentProps }) => {
           );
         } catch (error) {
           console.error(`ContentType: Error rendering content item at index ${index}:`, error);
+          console.error(`ContentType: Item data:`, items);
+          console.error(`ContentType: Error stack:`, error.stack);
           return null;
         }
       })}

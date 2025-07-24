@@ -1,5 +1,6 @@
 import { Row, Col } from "react-bootstrap";
 import Link from "next/link";
+import { extractTextFromHtml } from "../utils/htmlUtils";
 
 const renderIconLinkList = (data) => {
   return Object.values(data.list).map((l, id) => {
@@ -25,7 +26,7 @@ const renderIconLinkList = (data) => {
           </div>
           <div className="choose-wrapper">
             {l.btnlink && l.btntext ? (
-              <Link href={`${new DOMParser().parseFromString(l.btnlink.href, "text/html").documentElement.textContent}`}>
+                              <Link href={extractTextFromHtml(l.btnlink.href)}>
                   {l.btntext}
                   <span className="mobile-visible">
                     <img

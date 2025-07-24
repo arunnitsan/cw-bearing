@@ -36,33 +36,26 @@ const FullAccordion = ({ id, data }) => {
   const [count, setCount] = useState(0);
   const accordionEl = useRef();
 
-  // Handle accordion expansion and scroll into view
-  const handleAccordionToggle = (newKey) => {
-    setAccordionKey(newKey);
-
-    // Only scroll if the accordion is being expanded (not collapsed)
-    if (newKey !== accordionKey) {
-      // Use setTimeout to ensure the accordion content is rendered before scrolling
-      setTimeout(() => {
-        const activeCard = accordionEl.current?.querySelector(".active-card");
-        if (activeCard) {
-          // Calculate the position to scroll to (with some offset for better UX)
-          const cardRect = activeCard.getBoundingClientRect();
-          const offsetTop = window.pageYOffset + cardRect.top - 100; // 100px offset from top
-
-          // Smooth scroll to bring the accordion into view
-          window.scrollTo({
-            top: offsetTop,
-            behavior: "smooth",
-          });
-        }
-      }, 400); // Wait for accordion animation to start
-    }
-  };
-
   useEffect(() => {
-    // Use functional update to avoid dependency on count
-    setCount(prevCount => prevCount + 1);
+    setCount(count + 1);
+
+    if (!count) return;
+
+    setTimeout(() => {
+      let activeCard = accordionEl.current.querySelector(".active-card");
+      let distance = 0;
+      do {
+        distance += activeCard.offsetTop;
+        activeCard = activeCard.offsetParent;
+      } while (activeCard);
+      distance = distance < 0 ? 0 : distance;
+
+      window.scrollTo({
+        top: distance - 20,
+        left: 0,
+        behavior: "smooth",
+      });
+    }, 400);
   }, [accordionKey]);
 
   const renderImage = (url) => {
@@ -83,7 +76,9 @@ const FullAccordion = ({ id, data }) => {
     return (
       <Col xs={12} sm={12} key={text}>
         <div className="text-wrapper">
-          <ReactMarkdown children={text} rehypePlugins={[rehypeRaw]} components={{ a: Link }} />
+          <ReactMarkdown rehypePlugins={[rehypeRaw]} components={{ a: Link }}>
+            {text}
+          </ReactMarkdown>
         </div>
       </Col>
     );
@@ -100,10 +95,11 @@ const FullAccordion = ({ id, data }) => {
         return (
           <Col xs={12} sm={6} key={`content-col-${id}`}>
             <ReactMarkdown
-              children={column.elements[0].content.bodytext}
               rehypePlugins={[rehypeRaw]}
               components={{ a: Link }}
-            />
+            >
+              {column.elements[0].content.bodytext}
+            </ReactMarkdown>
           </Col>
         );
       } else {
@@ -131,7 +127,7 @@ const FullAccordion = ({ id, data }) => {
                 >
                   <Card.Header>
                     <ContextAwareToggle
-                      handleKey={(num) => handleAccordionToggle(num)}
+                      handleKey={(num) => setAccordionKey(num)}
                       eventKey={`${id}`}
                     >
                       {accordion.content.header}

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useCallback } from "react";
+import React, { useEffect, useContext } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Script from "next/script";
@@ -6,15 +6,17 @@ import Head from "next/head";
 import { Container, Row } from "react-bootstrap";
 import Routes, { getRoute } from "../utils/Routes";
 import getAPIData from "../utils/API";
-import smoothScroll, { cleanupSmoothScroll } from "../utils/smoothScroll";
+import smoothScroll from "../utils/smoothScroll";
 import { isGerman } from "../utils/checkLanguage";
 import ContentType from "../utils/ContentType";
 import PageWrapper from "../components/PageWrapper";
 import GlobalContext from "../context/GlobalContext";
+import ErrorBoundary from "../components/ErrorBoundary";
 import Configurator from "../components/Configurator";
 import SuccessModal from "../components/SuccessModal/SuccessModal";
 import DraftModeBanner from "../components/DraftModeBanner";
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+// import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+// import useTranslation from 'next-i18next';
 
 const Page = ({
   pageData,
@@ -66,32 +68,14 @@ const Page = ({
     ogDescription = pageData.data?.meta?.ogDescription;
   }
 
-  // Disable all scroll behavior for now to prevent unwanted scrolling
-  // const handleSmoothScroll = useCallback(() => {
-  //   // Only initialize smooth scroll for same-page navigation
-  //   // Don't run on initial page load or cross-page navigation
-  //   if (typeof window !== 'undefined' && window.location.hash) {
-  //     setTimeout(() => {
-  //       smoothScroll();
-  //     }, 1500);
-  //   }
-  // }, []);
+  useEffect(() => {
+    setTimeout(() => {
+      smoothScroll();
+    }, 1500);
+  });
 
-  // useEffect(() => {
-  //   // Only run smooth scroll if there's a hash in the URL
-  //   if (router.asPath.includes('#')) {
-  //     handleSmoothScroll();
-  //   }
-
-  //   // Cleanup function to remove event listeners when component unmounts
-  //   return () => {
-  //     cleanupSmoothScroll();
-  //   };
-  // }, [handleSmoothScroll, router.asPath]);
-
-  // Memoize the configurator data fetch
-  const fetchConfiguratorData = useCallback(async () => {
-    try {
+  useEffect(() => {
+    (async function () {
       let res;
       if (router.locale === "de") {
         res = await axios.get(
@@ -102,143 +86,127 @@ const Page = ({
           `${process.env.NEXT_PUBLIC_API_URL}${router.locale}/product-configurator`
         );
       }
+      setConfiguratorData({
+        ...configuratorData,
+        sendButton: res.data.content?.colPos0[0].content.data.send_button,
+      });
+    })();
 
-      if (res.data?.content?.colPos0?.[0]?.content?.data?.send_button) {
-        setConfiguratorData(prevData => ({
-          ...prevData,
-          sendButton: res.data.content.colPos0[0].content.data.send_button,
-        }));
-      }
-    } catch (error) {
-      // Handle configurator data fetch error silently
+    if (typeof window !== "undefined") {
+      const language =
+        window.navigator.userLanguage || window.navigator.language;
+      // if (localStorage.getItem("locale")) {
+      //   if (localStorage.getItem("locale") === router.locale) return;
+      //   router.push(
+      //     `${router.asPath}`,
+      //     getRoute({
+      //       lang: localStorage.getItem("locale"),
+      //       langPages: pageData.data.languages,
+      //       defaultLocale: "de",
+      //     }),
+      //     {
+      //       locale: localStorage.getItem("locale"),
+      //     }
+      //   );
+      // } else if (router.locale === language) {
+      //   return;
+      // } else if (router.locale !== language) {
+      //   if (isGerman(language)) {
+      //     router.push(
+      //       `${router.asPath}`,
+      //       getRoute({
+      //         lang: "de",
+      //         langPages: pageData.data.languages,
+      //         defaultLocale: "de",
+      //       }),
+      //       {
+      //         locale: "de",
+      //       }
+      //     );
+      //   } else {
+      //     router.push(
+      //       `${router.asPath}`,
+      //       getRoute({
+      //         lang: "en",
+      //         langPages: pageData.data.languages,
+      //         defaultLocale: "de",
+      //       }),
+      //       {
+      //         locale: "en",
+      //       }
+      //     );
+      //   }
+      // }
     }
-  }, [router.locale, setConfiguratorData]);
+  }, []);
 
   useEffect(() => {
-    fetchConfiguratorData();
-  }, [fetchConfiguratorData]);
-
-  // Memoize the click handler
-  const handleClick = useCallback((event) => {
-    if (event.target.tagName.toLowerCase() === "a") {
-      let href = event.target.href;
-      if (href.includes("variant1") || href.includes("variant2")) {
-        event.preventDefault();
-        handleConfigurator({
-          ...configurator,
-          isVisible: true,
-          data: {
-            step: href.includes("#variant1") ? 1 : 3,
-          },
-        });
+    window.addEventListener("click", (event) => {
+      if (event.target.tagName.toLowerCase() === "a") {
+        let href = event.target.href;
+        if (href.includes("variant1") || href.includes("variant2")) {
+          event.preventDefault();
+          handleConfigurator({
+            ...configurator,
+            isVisible: true,
+            data: {
+              step: href.includes("#variant1") ? 1 : 3,
+            },
+          });
+        }
       }
-    }
-  }, [configurator, handleConfigurator]);
+    });
+  }, []);
 
   useEffect(() => {
-    window.addEventListener("click", handleClick);
-    return () => window.removeEventListener("click", handleClick);
-  }, [handleClick]);
-
-  // Handle SEO and social media data
-  useEffect(() => {
-    if (!pageData || pageData.error || !pageData.data?.page?.constants) return;
-
+    if (pageData && pageData.error) return;
     const ns_seo = pageData.data.page.constants.ns_seo;
     const ns_basetheme = pageData.data.page.constants.ns_basetheme;
-
+    let spreadSocialMedia;
     if (ns_seo) {
-      const spreadSocialMedia = {
+      spreadSocialMedia = {
         linkedin: ns_seo.seo_linkedin_link,
         facebook: ns_seo.seo_facebook_link,
         xing: ns_seo.seo_xing_link,
         twitter: ns_seo.seo_twitter_link,
       };
-      handleSocialMedia(spreadSocialMedia);
+    }
+    handleCopyright(ns_basetheme.copyright);
+    handleSocialMedia({
+      ...spreadSocialMedia,
+    });
+  }, []);
+
+  useEffect(() => {
+    let timer = setInterval(scrollToEl, 500);
+
+    function scrollToEl() {
+      const target = router.asPath.split("#")[1];
+      const targetEl = document.getElementById(`${target}`);
+      if (!targetEl) return;
+      const offsetTop =
+        window.pageYOffset + targetEl.getBoundingClientRect().top;
+      scroll({
+        top: offsetTop,
+        behavior: "smooth",
+      });
+      clearInterval(timer);
     }
 
-    if (ns_basetheme?.copyright) {
-      handleCopyright(ns_basetheme.copyright);
-    }
-  }, [pageData, handleSocialMedia, handleCopyright]);
-
-  // Handle scroll to element - only for hash fragments
-  // Disabled to prevent unwanted scrolling
-  // const scrollToEl = useCallback(() => {
-  //   const target = router.asPath.split("#")[1];
-  //   if (!target) return;
-
-  //   const targetEl = document.getElementById(target);
-  //   if (!targetEl) return;
-
-  //   // Only scroll if the element is not already in view
-  //   const rect = targetEl.getBoundingClientRect();
-  //   const isInView = rect.top >= 0 && rect.bottom <= window.innerHeight;
-
-  //   if (isInView) return;
-
-  //   const offsetTop = window.pageYOffset + rect.top;
-  //   scroll({
-  //     top: offsetTop,
-  //     behavior: "smooth",
-  //   });
-  // }, [router.asPath]);
-
-  // useEffect(() => {
-  //   if (!pageData) return;
-
-  //   // Only set up the interval if there's a hash fragment
-  //   const target = router.asPath.split("#")[1];
-  //   if (!target) return;
-
-  //   // Additional check: only proceed if the target starts with 'c' (content sections)
-  //   if (!/^c/.test(target)) return;
-
-  //   let timer = setInterval(scrollToEl, 500);
-
-  //   const cleanup = setTimeout(() => {
-  //     if (timer) {
-  //       clearInterval(timer);
-  //     }
-  //   }, 3000);
-
-  //   return () => {
-  //     if (timer) clearInterval(timer);
-  //     clearTimeout(cleanup);
-  //   };
-  // }, [pageData, scrollToEl]);
-
-  // Handle menu data updates
-  useEffect(() => {
-    if (pageMenuItems) {
-      handleMenuItems(pageMenuItems);
-    }
-  }, [pageMenuItems, handleMenuItems]);
-
-  // Handle site data updates separately to prevent unnecessary re-renders
-  useEffect(() => {
-    if (siteEnData) setEnMenuData(siteEnData);
-  }, [siteEnData, setEnMenuData]);
+    setTimeout(() => {
+      timer && clearInterval(timer);
+    }, 3000);
+  }, [pageData]);
 
   useEffect(() => {
-    if (siteDeData) setDeMenuData(siteDeData);
-  }, [siteDeData, setDeMenuData]);
-
-  useEffect(() => {
-    if (siteUsData) setUsMenuData(siteUsData);
-  }, [siteUsData, setUsMenuData]);
-
-  useEffect(() => {
-    if (siteItData) setItMenuData(siteItData);
-  }, [siteItData, setItMenuData]);
-
-  useEffect(() => {
-    if (siteFrData) setFrMenuData(siteFrData);
-  }, [siteFrData, setFrMenuData]);
-
-  useEffect(() => {
-    if (sitePlData) setPlMenuData(sitePlData);
-  }, [sitePlData, setPlMenuData]);
+    setEnMenuData(siteEnData);
+    setDeMenuData(siteDeData);
+    setUsMenuData(siteUsData);
+    setItMenuData(siteItData);
+    setFrMenuData(siteFrData);
+    setPlMenuData(sitePlData);
+    handleMenuItems(pageMenuItems);
+  }, [pageMenuItems]);
 
   return (
     <>
@@ -337,7 +305,9 @@ const Page = ({
             pageData.data.content.colPos0 &&
             Array.isArray(pageData.data.content.colPos0) &&
             pageData.data.content.colPos0.length > 0 ? (
-              <ContentType pageContentProps={pageData.data.content.colPos0} />
+              <ErrorBoundary>
+                <ContentType pageContentProps={pageData.data.content.colPos0} />
+              </ErrorBoundary>
             ) : (
               <div className="content-section pt-11 pb-7 pt-lg-30 pb-lg-28 bg-default-6">
                 <Container>
@@ -424,30 +394,11 @@ export const getStaticProps = async (context) => {
         } else {
           slug = paramSlug[0];
         }
-
-        // Special handling for French locale
-        let url;
-        if (context.locale === "fr") {
-          // For French, try both with and without locale prefix
-          try {
-            url = `fr/${slug}`;
-            pageData = await getAPIData(url, isDraftMode);
-            if (pageData && pageData.error) {
-              // If French fails, try without locale prefix as fallback
-              url = slug;
-              pageData = await getAPIData(url, isDraftMode);
-            }
-          } catch (frError) {
-            // Fallback to German version for French
-            url = slug;
-            pageData = await getAPIData(url, isDraftMode);
-          }
-        } else {
-          url = !isGerman(context.locale) ? `${context.locale}/${slug}` : slug;
-          pageData = await getAPIData(url, isDraftMode);
-        }
+        const url = !isGerman(context.locale) ? `${context.locale}/${slug}` : slug;
+        pageData = await getAPIData(url, isDraftMode);
       }
     } catch (apiError) {
+      console.error(`API Error for locale ${context.locale}:`, apiError);
       // Return notFound instead of crashing
       return {
         notFound: true,
@@ -464,25 +415,12 @@ export const getStaticProps = async (context) => {
     // Only fetch menu data for current locale to reduce payload
     let menuItems;
     try {
-      // Special handling for French locale
-      if (context.locale === "fr") {
-        try {
-          menuItems = await getAPIData("fr/", isDraftMode);
-          if (menuItems && menuItems.error) {
-            // If French menu fails, fallback to German
-            menuItems = await getAPIData("", isDraftMode);
-          }
-        } catch (frMenuError) {
-          // Fallback to German menu for French
-          menuItems = await getAPIData("", isDraftMode);
-        }
-      } else {
-        menuItems = await getAPIData(
-          !isGerman(context.locale) ? `${context.locale}/` : "",
-          isDraftMode
-        );
-      }
+      menuItems = await getAPIData(
+        !isGerman(context.locale) ? `${context.locale}/` : "",
+        isDraftMode
+      );
     } catch (menuError) {
+      console.error(`Menu API Error for locale ${context.locale}:`, menuError);
       menuItems = { data: { page: {} } };
     }
 
@@ -501,6 +439,7 @@ export const getStaticProps = async (context) => {
           getAPIData("pl", isDraftMode)
         ]);
       } catch (draftError) {
+        console.error('Draft mode API error:', draftError);
         // Set fallback data
         enData = usData = deData = itData = frData = plData = { data: { page: {} } };
       }
@@ -536,76 +475,14 @@ export const getStaticProps = async (context) => {
           plData = plData || { data: { page: {} } };
         }
       } catch (productionError) {
+        console.error(`Production API error for locale ${currentLocale}:`, productionError);
         // Set fallback data
         enData = usData = deData = itData = frData = plData = { data: { page: {} } };
       }
     }
 
-    // Load translations with proper error handling and domain-specific locale support
-    let translations;
-    try {
-      // Get the current locale and determine the appropriate default locale based on domain
-      const currentLocale = context.locale;
-      const host = context.req?.headers?.host || '';
-
-      // Determine default locale based on domain
-      let defaultLocale = 'de'; // fallback default
-      if (host.includes('cwbearing.de')) {
-        defaultLocale = 'de';
-      } else if (host.includes('www.cwbearing.com')) {
-        defaultLocale = 'us';
-      }
-
-      // First, try to load translations for the current locale
-      translations = await serverSideTranslations(currentLocale, ['common']);
-
-      // Verify translations were loaded properly
-      if (!translations._nextI18Next?.initialI18nStore?.[currentLocale]?.common) {
-        // Try to load domain-specific default locale as fallback
-        translations = await serverSideTranslations(defaultLocale, ['common']);
-      }
-
-      // Additional fallback: if still not working, try German as ultimate fallback
-      if (!translations._nextI18Next?.initialI18nStore?.[currentLocale]?.common &&
-          !translations._nextI18Next?.initialI18nStore?.[defaultLocale]?.common) {
-        translations = await serverSideTranslations('de', ['common']);
-      }
-
-    } catch (translationError) {
-      // Determine fallback locale based on domain
-      const host = context.req?.headers?.host || '';
-      let fallbackLocale = 'de';
-      if (host.includes('www.cwbearing.com')) {
-        fallbackLocale = 'us';
-      }
-
-      // Fallback to domain-specific default locale translations
-      try {
-        translations = await serverSideTranslations(fallbackLocale, ['common']);
-      } catch (fallbackError) {
-        // Ultimate fallback: try German
-        try {
-          translations = await serverSideTranslations('de', ['common']);
-        } catch (ultimateError) {
-          // Return empty translations object as last resort
-          translations = {
-            _nextI18Next: {
-              initialI18nStore: {
-                [context.locale]: { common: {} },
-                'de': { common: {} },
-                'us': { common: {} }
-              },
-              initialLocale: context.locale,
-              userConfig: null
-            }
-          };
-        }
-      }
-    }
-
     return {
       props: {
-        ...translations,
         pageData,
         pageMenuItems: menuItems?.data?.page || {},
         siteEnData: enData?.data?.page || {},
@@ -620,6 +497,7 @@ export const getStaticProps = async (context) => {
     };
   } catch (error) {
     // If any error occurs during data fetching, return notFound
+    console.error('Error in getStaticProps:', error);
     return {
       notFound: true,
     };

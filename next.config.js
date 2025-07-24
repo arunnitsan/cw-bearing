@@ -19,7 +19,7 @@ const nextConfig = {
       },
     },
   },
-  webpack: (config, { isServer, dev }) => {
+  webpack: (config, { isServer }) => {
     // Handle font files and other assets
     config.module.rules.push({
       test: /\.(woff|woff2|eot|ttf|svg)$/,
@@ -37,26 +37,6 @@ const nextConfig = {
         filename: 'static/fonts/slick/[name][ext]',
       },
     });
-
-    // Optimize bundle splitting for better performance
-    if (!isServer && !dev) {
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-          },
-          reactBootstrap: {
-            test: /[\\/]node_modules[\\/]react-bootstrap[\\/]/,
-            name: 'react-bootstrap',
-            chunks: 'all',
-            priority: 10,
-          },
-        },
-      };
-    }
 
     return config;
   },

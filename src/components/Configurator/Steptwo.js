@@ -5,9 +5,8 @@ import InfoModal from "../InfoModal";
 import GlobalContext from "../../context/GlobalContext";
 import CTAWithBackground from "../../sections/CTAWithBackground";
 import PersonalContact from "../../sections/PersonalContact";
-import { useTranslation } from 'next-i18next';
 // import { useTranslation } from "../../pages/i18n/client";
-// import { useTranslation } from "../i18n/client";
+import { useTranslation } from "../i18n/client";
 import { useRouter } from "next/router";
 import DOMPurify from "dompurify";
 
@@ -22,7 +21,7 @@ const Steptwo = ({
   handleIsCustomize,
 }) => {
   const router = useRouter();
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(router.locale);
   const modalWrapper = useRef(null);
   const dropdownWrapper = useRef(null);
   const [modalData, setModalData] = useState(null);

@@ -52,7 +52,9 @@ const IntroIndustries = ({ id, data }) => {
                 style={contentStyle}
               >
                 {data.text && (
-                  <ReactMarkdown children={data.text} rehypePlugins={[rehypeRaw]} components={{ a: Link }}/>
+                  <ReactMarkdown rehypePlugins={[rehypeRaw]} components={{ a: Link }}>
+                    {data.text}
+                  </ReactMarkdown>
                 )}
               </div>
             </Col>

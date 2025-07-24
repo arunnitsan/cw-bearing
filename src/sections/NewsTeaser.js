@@ -14,9 +14,8 @@ import NewsDetails from "../components/NewsDetails";
 // import enData from "../assets/translations/en.json";
 // import deData from "../assets/translations/de.json";
 // import itData from "../assets/translations/it.json";
-import { useTranslation } from 'next-i18next';
 // import { useTranslation } from "../pages/i18n/client";
-// import { useTranslation } from "../components/i18n/client";
+import { useTranslation } from "../components/i18n/client";
 
 const renderSlides = (list, readMore) => {
   const [mouseMoved, setMouseMoved] = useState(false);
@@ -27,7 +26,7 @@ const renderSlides = (list, readMore) => {
   //   // router.locale === "de" ? deData : enData
   //   router.locale === "de" ? deData : router.locale === "it" ? itData : enData
   // );
-
+  
   return list.map((news, id) => {
     const handleClick = (e) => {
       if (!mouseMoved) {

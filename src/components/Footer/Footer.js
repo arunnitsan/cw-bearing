@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { Dropdown } from "react-bootstrap";
@@ -7,12 +7,11 @@ import { triggerRouterChange } from "../../utils/triggerRouteChange";
 import GlobalContext from "../../context/GlobalContext";
 import AuroraInner from "../Shared/AuroraInner";
 import { getRoute } from "../../utils/Routes";
-import { useTranslation } from 'next-i18next';
-// import { useTranslation } from "../i18n/client";
+import { useTranslation } from "../i18n/client";
 
 const Footer = ({ pageData }) => {
   const router = useRouter();
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(router.locale);
   const {
     configuratorData,
     setConfiguratorData,

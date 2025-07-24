@@ -8,10 +8,8 @@ import Input from "../Core/Input";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
 import GlobalContext from "../../context/GlobalContext";
-import { useTranslationDebug } from "../../utils/useTranslationDebug";
-// import { useTranslation } from 'next-i18next';
 // import { useTranslation } from "../../pages/i18n/client";
-// import { useTranslation } from "../i18n/client";
+import { useTranslation } from "../i18n/client";
 
 const Stepone = ({
   // data,
@@ -26,7 +24,7 @@ const Stepone = ({
   handleActiveProduct,
 }) => {
   const router = useRouter();
-  const { t } = useTranslationDebug('common');
+  const { t } = useTranslation(router.locale);
   const modalWrapper = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [bearingType, setBearingType] = useState(

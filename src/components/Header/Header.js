@@ -1,23 +1,13 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Link from "next/link";
 import MainMenuModal from "./MainMenuModal";
 import GlobalContext from "../../context/GlobalContext";
-import { useCleanupAttributes } from "../../utils/useHydrationFix";
 
 const Header = () => {
   const [show, setShow] = useState(false);
-  const { isBigHeader = false, menuItems } = useContext(GlobalContext);
+  const { isBigHeader, menuItems } = useContext(GlobalContext);
   const [searchOverlayShow, setSearchOverlayShow] = useState(false);
-  const headerRef = useRef(null);
-  const containerRef = useRef(null);
-  const innerRef = useRef(null);
-  const rightRef = useRef(null);
 
-  // Clean up attributes on all header elements
-  useCleanupAttributes(headerRef);
-  useCleanupAttributes(containerRef);
-  useCleanupAttributes(innerRef);
-  useCleanupAttributes(rightRef);
   const handleClose = () => {
     setShow(false);
     if (searchOverlayShow) {
@@ -29,42 +19,38 @@ const Header = () => {
   return (
     <>
       <header
-        ref={headerRef}
         className={`${isBigHeader ? "header-big" : ""} header-aurora-outer`}
-        suppressHydrationWarning
       >
         {!isBigHeader && (
           <>
-            <div className="aurora-inner-4" suppressHydrationWarning></div>
-            <div className="aurora-inner-5" suppressHydrationWarning></div>
+            <div className="aurora-inner-4"></div>
+            <div className="aurora-inner-5"></div>
           </>
         )}
-        <div ref={containerRef} className="header-container container-md" suppressHydrationWarning>
-          <div ref={innerRef} className="header-inner" suppressHydrationWarning>
+        <div className="header-container container-md">
+          <div className="header-inner">
             <Link href={"/"} className="logo">
               <img src="/images/png/logo.svg" alt="Logo" />
             </Link>
-            <div ref={rightRef} className="header-right" suppressHydrationWarning>
+            <div className="header-right">
               <nav>
                 <ul>
-                  {Object.keys(menuItems).length
-                    ? menuItems.mainNavigation.map((link, id) => {
-                      const uid = link.data.uid;
-                      return (
-                        <li
-                          key={link.link}
-                          className={`${uid === 140 || uid === 23 || uid === 128
-                              ? "d-none"
-                              : ""
-                            }`}
-                        >
-                          <Link href={`${link.link}`}>
-                            {link.title}
-                          </Link>
-                        </li>
-                      );
-                    })
-                    : ""}
+                  {(menuItems.mainNavigation || []).map((link, id) => {
+                    const uid = link.data?.uid;
+                    return (
+                      <li
+                        key={link.link || id}
+                        className={`${uid === 140 || uid === 23 || uid === 128
+                            ? "d-none"
+                            : ""
+                          }`}
+                      >
+                        <Link href={`${link.link}`}>
+                          {link.title}
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
               </nav>
               <div className="menu-box" onClick={handleShow}>
@@ -85,6 +71,10 @@ const Header = () => {
       />
     </>
   );
+};
+
+Header.defaultProps = {
+  isBigHeader: false,
 };
 
 export default Header;

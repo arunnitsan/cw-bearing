@@ -1,14 +1,15 @@
 import Link from "next/link";
 import { useContext } from "react";
 import GlobalContext from "../../context/GlobalContext";
+import { extractTextFromHtml } from "../../utils/htmlUtils";
 
 const Button = ({
   targetBlank,
   diffDomain,
-  children = "Button",
-  className = "",
-  btnWithArrow = false,
-  whiteHover = false,
+  children,
+  className,
+  btnWithArrow,
+  whiteHover,
   link,
   ...props
 }) => {
@@ -45,7 +46,7 @@ const Button = ({
               )}
             </a> : (
               <>
-                <Link href={`${new DOMParser().parseFromString(link, "text/html").documentElement.textContent}`} className={`btn btn-red ${className} ${btnWithArrow ? "btn-w-arrow" : ""} ${whiteHover ? "br-hover-white" : ""}`} target={`${targetBlank ? '_blank' : ""}`} {...props} >
+                <Link href={extractTextFromHtml(link)} className={`btn btn-red ${className} ${btnWithArrow ? "btn-w-arrow" : ""} ${whiteHover ? "br-hover-white" : ""}`} target={`${targetBlank ? '_blank' : ""}`} {...props} >
                   {btnWithArrow ? (
                     <span className="text-wrapper">
                       {children}
@@ -101,6 +102,13 @@ const Button = ({
       )}
     </>
   );
+};
+
+Button.defaultProps = {
+  children: "Button",
+  className: "",
+  btnWithArrow: false,
+  whiteHover: false,
 };
 
 export default Button;

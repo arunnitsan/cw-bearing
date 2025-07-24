@@ -5,25 +5,37 @@ import { Container, Row, Col } from "react-bootstrap";
 import getAPIData from "../utils/API";
 import { isGerman } from "../utils/checkLanguage";
 import GlobalContext from "../context/GlobalContext";
-import { useTranslationDebug } from '../utils/useTranslationDebug';
+// import enData from "../assets/translations/en.json";
+// import deData from "../assets/translations/de.json";
+// import itData from "../assets/translations/it.json";
+// import { useTranslation } from "./i18n/client";
+import { useTranslation } from "../components/i18n/client";
 import { useRouter } from "next/router";
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const Custom404 = ({ pageData, pageMenuItems }) => {
 
   const router = useRouter();
-  const {t} = useTranslationDebug('common');
+  const {t} = useTranslation(router.locale);
 
   // Add error handling for missing pageData
   const siteLanguage = pageData?.data?.i18n?.[0]?.twoLetterIsoCode || 'en';
   const { handleMenuItems, handleCopyright, handleSocialMedia } =
     useContext(GlobalContext);
 
+  // const [configData, setConfigData] = useState(
+  //   // siteLanguage === "de" ? deData : enData
+  //   siteLanguage === "de" ? deData : siteLanguage === "it" ? itData : enData
+  // );
+
   React.useEffect(() => {
     if (pageMenuItems) {
       handleMenuItems(pageMenuItems);
     }
   }, [pageMenuItems]);
+
+  // React.useEffect(() => {
+  //   setConfigData(siteLanguage === "de" ? deData : enData);
+  // }, [siteLanguage]);
 
   React.useEffect(() => {
     // Add error handling for missing page data
@@ -63,13 +75,24 @@ const Custom404 = ({ pageData, pageMenuItems }) => {
           name="viewport"
           content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no, viewport-fit=cover"
         />
-        <title>{t('data.pageNotFoundErrMsg') || '404: Diese Seite konnte nicht gefunden werden'}</title>
+        <title>{t('data.pageNotFoundErrMsg')}</title>
         <meta name="theme-color" content="#2012e6" />
         <link
           rel="icon"
           type="image/png"
           href="/images/favicon_package/favicon-16x16.png"
         />
+        {/* <script
+          async
+          type="text/javascript"
+          src="https://userlike-cdn-widgets.s3-eu-west-1.amazonaws.com/a805f53a53f8473ea7e06bd768d86504f78b13b43177489396baddf8a99d9ee6.js"
+        ></script> */}
+
+
+
+        {/* <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="066c2f59-a1cf-4a05-acd8-2424f005a608" type="text/javascript" async></script> */}
+
+
       </Head>
       <div
         className="content-section pt-11 pb-7 pt-lg-30 pb-lg-28 bg-default-6 lg:min-h-vh-100 align-items-center d-flex"
@@ -81,16 +104,16 @@ const Custom404 = ({ pageData, pageMenuItems }) => {
               <div className="section-title text-center mt-12 mt-lg-20 mb-12 mb-lg-23">
                 <div className="notfound-404"></div>
                 <h1 className="title mb-6">404</h1>
-                <h2>{t('data.pageNotFound') || 'Oops! Seite nicht gefunden'}</h2>
+                <h2>{t('data.pageNotFound')}</h2>
                 <p className="gr-text-8 px-lg-7 px-xl-0">
-                  {t('data.sorryMsg') || 'Sorry, die Seite, die Sie suchen, existiert nicht, wurde entfernt, der Name wurde geändert oder ist vorübergehend nicht verfügbar.'}
+                  {t('data.sorryMsg')}
                 </p>
                 <Link href="/" className="back-to-home">
                   <img
                     src="/images/png/arrowhead-left-blue.svg"
                     alt="Arrow"
                   />
-                  {t('data.backToHomeText') || 'Zurück zur Startseite'}
+                  {t('data.backToHomeText')}
                 </Link>
               </div>
             </div>
@@ -103,59 +126,28 @@ const Custom404 = ({ pageData, pageMenuItems }) => {
 
 export const getStaticProps = async (context) => {
   try {
-    // Determine locale with fallback
-    const locale = context.locale || 'de';
+    let pageData = await getAPIData("");
 
-    // Load translations with robust error handling
-    let translations;
-    try {
-      translations = await serverSideTranslations(locale, ['common']);
-    } catch (translationError) {
-      console.error('404 getStaticProps: Translation loading failed, falling back to German:', translationError);
-      // Fallback to German if translation loading fails
-      translations = await serverSideTranslations('de', ['common']);
-    }
-
-    // Fetch only essential data with timeout
-    const [pageData, menuItems] = await Promise.all([
-      getAPIData("").catch(() => ({ data: { i18n: [{ twoLetterIsoCode: locale }] } })),
-      getAPIData(!isGerman(locale) ? `${locale}/` : "").catch(() => ({ data: { page: {} } }))
-    ]);
+    const menuItems = await getAPIData(
+      !isGerman(context.locale) ? `${context.locale}/` : ""
+    );
 
     return {
       props: {
-        ...translations,
-        pageData: pageData || { data: { i18n: [{ twoLetterIsoCode: locale }] } },
+        pageData,
         pageMenuItems: menuItems?.data?.page || null,
       },
-      // Reduce revalidation time for 404 page
-      revalidate: 3600, // 1 hour
     };
   } catch (error) {
     console.error('404 getStaticProps: Error fetching data:', error);
 
-    // Return minimal fallback props if everything fails
-    try {
-      const fallbackTranslations = await serverSideTranslations('de', ['common']);
-      return {
-        props: {
-          ...fallbackTranslations,
-          pageData: { data: { i18n: [{ twoLetterIsoCode: 'de' }] } },
-          pageMenuItems: null,
-        },
-        revalidate: 3600,
-      };
-    } catch (finalError) {
-      console.error('404 getStaticProps: Final fallback failed:', finalError);
-      // Last resort - return without translations
-      return {
-        props: {
-          pageData: { data: { i18n: [{ twoLetterIsoCode: 'de' }] } },
-          pageMenuItems: null,
-        },
-        revalidate: 3600,
-      };
-    }
+    // Return fallback props if API fails
+    return {
+      props: {
+        pageData: { data: { i18n: [{ twoLetterIsoCode: 'en' }] } },
+        pageMenuItems: null,
+      },
+    };
   }
 };
 

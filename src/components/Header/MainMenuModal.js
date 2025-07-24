@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { useRef, useEffect, useState, useTransition } from "react";
 import Link from "next/link";
 import AOS from "aos";
 import { useRouter } from "next/router";
 import AuroraInner from "../Shared/AuroraInner";
 import SearchOverlay from "./SearchOverlay";
-import { useTranslation } from 'next-i18next';
-// import { useTranslation } from "../i18n/client";
+import { useTranslation } from "../i18n/client";
 
 const MainMenuModal = ({
   menuItems,
@@ -16,7 +14,7 @@ const MainMenuModal = ({
   setSearchOverlayShow,
 }) => {
   const router = useRouter();
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(router.locale);
   const [nestedShow, setNestedShow] = useState(false);
   const [activeLink, setActiveLink] = useState(false);
   const [subMenu, setSubMenu] = useState([]);
@@ -196,7 +194,7 @@ const MainMenuModal = ({
                   href={`${link.link}`}
                   className={`${
                     link.active === 1 && link.current === 1 ? "active" : ""
-                  }
+                  } 
 					${
             link.data.uid === 140 ||
             link.data.uid === 23 ||
@@ -260,7 +258,7 @@ const MainMenuModal = ({
               ) : (
                 <Link
                   href={`${link.data.slug}`}
-                  className={`${activeLink === link.title ? "active" : ""}
+                  className={`${activeLink === link.title ? "active" : ""} 
 					${
             link.data.uid === 140 ||
             link.data.uid === 23 ||

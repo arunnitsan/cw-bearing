@@ -4,9 +4,8 @@ import axios from "axios";
 import { Row, Col, Dropdown } from "react-bootstrap";
 import { validateText } from "../utils/validation";
 import GlobalContext from "../context/GlobalContext";
-import { useTranslation } from 'next-i18next';
 // import { useTranslation } from "../pages/i18n/client";
-// import { useTranslation } from "../components/i18n/client";
+import { useTranslation } from "../components/i18n/client";
 
 const InputGroup = ({
   error,
@@ -566,9 +565,9 @@ const Form = ({ id, data }) => {
             },
           });
         }
-          } catch (e) {
-      // Handle form error silently
-    }
+      } catch (e) {
+        console.log(e, "e");
+      }
     }
   };
 

@@ -2,6 +2,7 @@ import { Row, Col } from "react-bootstrap";
 import Link from "next/link";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { AOSRefresh } from "../utils/AOSRefresh";
+import { extractTextFromHtml } from "../utils/htmlUtils";
 
 const renderProducts = (list) => {
   return list.map((product, id) => {
@@ -42,7 +43,7 @@ const renderProducts = (list) => {
           <div className="choose-wrapper">
             {product.btnlink && product.btntext && (
               // <Link href={`${product.btnlink.href}`}>
-              <Link href={`${new DOMParser().parseFromString(product.btnlink.href, "text/html").documentElement.textContent}`}>
+              <Link href={extractTextFromHtml(product.btnlink.href)}>
                 {product.btntext}
                 <span className="mobile-visible">
                   <img

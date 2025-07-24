@@ -12,6 +12,7 @@ import GlobalContext from "../context/GlobalContext";
 import { AOSRefresh } from "../utils/AOSRefresh";
 import rehypeRaw from "rehype-raw";
 import Link from "next/link";
+import { extractTextFromHtml } from "../utils/htmlUtils";
 
 const HeaderBig = ({ data }) => {
   const hero = useRef();
@@ -97,7 +98,9 @@ const HeaderBig = ({ data }) => {
           <div className="container-sm">
             <div data-aos="fade-up">
               {data.text && (
-                <ReactMarkdown children={data.text} rehypePlugins={[rehypeRaw]} components={{ a: Link }}/>
+                <ReactMarkdown rehypePlugins={[rehypeRaw]} components={{ a: Link }}>
+                  {data.text}
+                </ReactMarkdown>
               )}
             </div>
             <div className="btn-box" style={{ paddingTop: "40px" }}>
@@ -150,7 +153,7 @@ const HeaderBig = ({ data }) => {
                           )}
                           {l.link && l.btntext && (
                             // <MoreLink link={l.link.href}>{l.btntext}</MoreLink>
-                            <MoreLink link={`${new DOMParser().parseFromString(l.link.href, "text/html").documentElement.textContent}`}>{l.btntext}</MoreLink>
+                            <MoreLink link={extractTextFromHtml(l.link.href)}>{l.btntext}</MoreLink>
                           )}
                         </div>
                       </div>

@@ -1,7 +1,7 @@
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { AOSRefresh } from "../../utils/AOSRefresh";
 
-const RoundedImage = ({ nameClass = "", image = "", imageAlt = "", aosAnimation = false }) => {
+const RoundedImage = ({ nameClass, image, imageAlt, aosAnimation }) => {
   const dataAos = aosAnimation ? "fade-right" : "fade-left";
 
   return (
@@ -19,6 +19,13 @@ const RoundedImage = ({ nameClass = "", image = "", imageAlt = "", aosAnimation 
       </span>
     </div>
   );
+};
+
+RoundedImage.defaultProps = {
+  nameClass: "",
+  image: "",
+  imageAlt: "",
+  aosAnimation: false,
 };
 
 export default RoundedImage;

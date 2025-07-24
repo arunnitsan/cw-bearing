@@ -8,11 +8,10 @@ import GlobalContext from "../context/GlobalContext";
 import rehypeRaw from "rehype-raw";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useTranslation } from 'next-i18next';
 // import { useTranslation } from "../pages/i18n/client";
-// import { useTranslation } from "../components/i18n/client";
+import { useTranslation } from "../components/i18n/client";
 
-const CTAWithCircle = ({ id, contactVariant = false, data }) => {
+const CTAWithCircle = ({ id, contactVariant, data }) => {
   const { width } = useContext(GlobalContext);
   const router = useRouter();
   const { t } = useTranslation(router.locale);
@@ -56,7 +55,9 @@ const CTAWithCircle = ({ id, contactVariant = false, data }) => {
               )}
               <div data-aos="fade-up">
                 {data.text && (
-                  <ReactMarkdown children={data.text} rehypePlugins={[rehypeRaw]} components={{ a: Link }} />
+                  <ReactMarkdown rehypePlugins={[rehypeRaw]} components={{ a: Link }}>
+                    {data.text}
+                  </ReactMarkdown>
                 )}
               </div>
               {contactVariant && data.phone?.href ? (
@@ -210,6 +211,10 @@ const CTAWithCircle = ({ id, contactVariant = false, data }) => {
       </div>
     </section>
   );
+};
+
+CTAWithCircle.defaultProps = {
+  contactVariant: false,
 };
 
 export default CTAWithCircle;

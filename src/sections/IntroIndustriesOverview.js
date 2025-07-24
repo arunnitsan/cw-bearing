@@ -15,9 +15,11 @@ const IntroIndustriesOverview = ({ id, data }) => {
           </div>
           <div className="industries-overview-right">
             <div className="io-content" data-aos="fade-up">
-              {data.text && (
-                <ReactMarkdown children={data.text} rehypePlugins={[rehypeRaw]} components={{ a: Link }}/>
-              )}
+                        {data.text && (
+            <ReactMarkdown rehypePlugins={[rehypeRaw]} components={{ a: Link }}>
+              {data.text}
+            </ReactMarkdown>
+          )}
             </div>
           </div>
         </div>

@@ -1,12 +1,15 @@
-import React, { useContext, useState } from "react";
-import { Modal, Button } from "react-bootstrap";
-import Link from "next/link";
+import { useState } from "react";
 import { useRouter } from "next/router";
-import GlobalContext from "../../context/GlobalContext";
-import AuroraInner from "../Shared/AuroraInner";
-import { useTranslation } from 'next-i18next';
+import TextBild from "./TextBild";
+import TextBildTwo from "./TextBildtwo";
+import TextImageVariant from "./TextImageVariant";
+import TextOnly from "./TextOnly";
+import TextVariant from "./TextVariant";
+// import deData from "../../assets/translations/de.json";
+// import enData from "../../assets/translations/en.json";
+// import itData from "../../assets/translations/it.json";
 // import { useTranslation } from "../../pages/i18n/client";
-// import { useTranslation } from "../i18n/client";
+import { useTranslation } from "../i18n/client";
 
 const InfoModal = ({ handleStepTwoSelectChange, data }) => {
   const router = useRouter();

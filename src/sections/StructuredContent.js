@@ -20,7 +20,9 @@ const renderText = (content) => {
       {content && content.header && <h1 data-aos="fade">{content.header}</h1>}
       {content && content.bodytext && (
         <div data-aos="fade-up">
-          <ReactMarkdown children={content.bodytext} rehypePlugins={[rehypeRaw]} components={{ a: Link }}/>
+          <ReactMarkdown rehypePlugins={[rehypeRaw]} components={{ a: Link }}>
+            {content.bodytext}
+          </ReactMarkdown>
         </div>
       )}
     </div>

@@ -9,9 +9,8 @@ import rehypeRaw from "rehype-raw";
 // import deData from "../assets/translations/de.json";
 // import itData from "../assets/translations/it.json";
 import Link from "next/link";
-import { useTranslation } from 'next-i18next';
 // import { useTranslation } from "../pages/i18n/client";
-// import { useTranslation } from "../components/i18n/client";
+import { useTranslation } from "../components/i18n/client";
 
 const IndexedSearch = () => {
   const router = useRouter();
@@ -80,6 +79,7 @@ const IndexedSearch = () => {
         setSearchData([]);
       }
     } catch (e) {
+      console.log(e);
       setLoading(false);
       // Set resultSearchTerm even when API call fails
       setResultSearchTerm(term);
@@ -156,7 +156,11 @@ const IndexedSearch = () => {
       .replaceAll("\r", "")
       .replaceAll("\n", "")
       .replaceAll("\t", "");
-    return <ReactMarkdown children={withoutRNT} rehypePlugins={[rehypeRaw]} components={{ a: Link }} />;
+    return (
+    <ReactMarkdown rehypePlugins={[rehypeRaw]} components={{ a: Link }}>
+      {withoutRNT}
+    </ReactMarkdown>
+  );
   };
 
   return (

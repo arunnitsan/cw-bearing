@@ -6,9 +6,13 @@
   "private": true,
   "proxy": "${NEXT_PUBLIC_API_URL}",
   "scripts": {
-    "dev": "next dev",
+    "dev": "node server.js",
+    "dev:no-auth": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@n8tb1t/use-scroll-position": "^2.0.3",
@@ -43,8 +47,16 @@
     "yup": "^1.3.3"
   },
   "devDependencies": {
+    "@next/eslint-plugin-next": "^15.4.3",
     "@svgr/webpack": "^8.1.0",
+    "@types/node": "^24.1.0",
+    "@types/react": "^19.1.8",
     "babel-plugin-styled-components": "^2.1.4",
-    "sharp": "^0.33.2"
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^15.4.3",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "sharp": "^0.33.2",
+    "typescript": "^5.8.3"
   }
 }

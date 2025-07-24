@@ -4,6 +4,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { AOSRefresh } from "../utils/AOSRefresh";
 import NextArrow from "../components/SliderArrows/NextArrow";
 import PrevArrow from "../components/SliderArrows/PrevArrow";
+import { extractTextFromHtml } from "../utils/htmlUtils";
 
 const renderSlides = (products) => {
   return products.map((product, id) => {
@@ -22,12 +23,7 @@ const renderSlides = (products) => {
               {product.btnlink && (
                 // <Link href={`${product.btnlink.href}`} className="product-slide-overlay d-xl-flex align-items-center justify-content-center">
                 <Link
-                  href={`${
-                    new DOMParser().parseFromString(
-                      product.btnlink.href,
-                      "text/html"
-                    ).documentElement.textContent
-                  }`}
+                  href={extractTextFromHtml(product.btnlink.href)}
                   className="product-slide-overlay d-xl-flex align-items-center justify-content-center"
                 >
                   {product.headline && (
@@ -122,12 +118,7 @@ const ProductTypes = ({ id, data }) => {
             <div className="text-link" data-aos="fade-up">
               {/* <Link href={`${data.btnlink.href}`}> */}
               <Link
-                href={`${
-                  new DOMParser().parseFromString(
-                    data.btnlink.href,
-                    "text/html"
-                  ).documentElement.textContent
-                }`}
+                href={extractTextFromHtml(data.btnlink.href)}
               >
                 {data.btntext}
               </Link>

@@ -8,9 +8,8 @@ import Link from "next/link";
 import { convertDateToNum } from "../../utils/date";
 import MoreLink from "../Shared/MoreLink";
 import rehypeRaw from "rehype-raw";
-import { useTranslation } from 'next-i18next';
 // import { useTranslation } from "../../pages/i18n/client";
-// import { useTranslation } from "../i18n/client";
+import { useTranslation } from "../i18n/client";
 
 const NewsDetails = ({ data }) => {
   const router = useRouter();
@@ -40,7 +39,9 @@ const NewsDetails = ({ data }) => {
             {data.title && <h1 data-aos="fade">{data.title}</h1>}
             {data.bodytext && (
               <div data-aos="fade-up">
-                <ReactMarkdown children={data.teaser} rehypePlugins={[rehypeRaw]} components={{ a: Link }}/>
+                <ReactMarkdown rehypePlugins={[rehypeRaw]} components={{ a: Link }}>
+                  {data.teaser}
+                </ReactMarkdown>
               </div>
             )}
           </div>
@@ -73,7 +74,9 @@ const NewsDetails = ({ data }) => {
             ""
           )}
           <div className="news-details-content" data-aos="fade-up">
-            <ReactMarkdown children={data.bodytext} rehypePlugins={[rehypeRaw]} components={{ a: Link }}/>
+            <ReactMarkdown rehypePlugins={[rehypeRaw]} components={{ a: Link }}>
+              {data.bodytext}
+            </ReactMarkdown>
           </div>
           <Row
             className={`${(data.falRelatedLinks && data.falRelatedLinks.length) ||

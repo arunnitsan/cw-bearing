@@ -36,7 +36,9 @@ const IntroProductsOverview = ({ id, data }) => {
             >
               <div className="overview-content">
                 {data.text && (
-                  <ReactMarkdown children={data.text} rehypePlugins={[rehypeRaw]} components={{ a: Link }}/>
+                  <ReactMarkdown rehypePlugins={[rehypeRaw]} components={{ a: Link }}>
+                    {data.text}
+                  </ReactMarkdown>
                 )}
               </div>
               {data.btntext && <Button>{data.btntext}</Button>}

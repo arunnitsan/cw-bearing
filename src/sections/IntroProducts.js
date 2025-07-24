@@ -5,6 +5,7 @@ import ReactMarkdown from "react-markdown";
 import MoreLink from "../components/Shared/MoreLink";
 import rehypeRaw from "rehype-raw";
 import Link from "next/link";
+import { extractTextFromHtml } from "../utils/htmlUtils";
 
 const IntroProducts = ({ data, id }) => {
   return (
@@ -20,7 +21,9 @@ const IntroProducts = ({ data, id }) => {
               <div className="content-wrapper" data-aos="fade-up">
                 <div className="content-in">
                   {data.text && (
-                    <ReactMarkdown children={data.text} rehypePlugins={[rehypeRaw]} components={{ a: Link }}/>
+                    <ReactMarkdown rehypePlugins={[rehypeRaw]} components={{ a: Link }}>
+                      {data.text}
+                    </ReactMarkdown>
                   )}
                 </div>
                 {data.list && data.list.length ? (
@@ -29,7 +32,7 @@ const IntroProducts = ({ data, id }) => {
                       return(
                         btn.btntext && btn.btnlink && (
                           // <MoreLink key={btn + id} link={btn.btnlink.href}>
-                          <MoreLink key={btn + id} link={`${new DOMParser().parseFromString(btn.btnlink.href, "text/html").documentElement.textContent}`}>
+                          <MoreLink key={btn + id} link={extractTextFromHtml(btn.btnlink.href)}>
                             {btn.btntext}
                           </MoreLink>
                         )

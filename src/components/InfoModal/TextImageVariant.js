@@ -1,9 +1,8 @@
-import React from "react";
-import { useTranslation } from 'next-i18next';
+import { useContext } from "react";
 import { Modal, Row, Col } from "react-bootstrap";
 import GlobalContext from "../../context/GlobalContext";
 // import { useTranslation } from "../../pages/i18n/client";
-// import { useTranslation } from "../i18n/client";
+import { useTranslation } from "../i18n/client";
 import { useRouter } from "next/router";
 
 const TextImageVariant = ({ translation, handleStepTwoSelectChange, data }) => {

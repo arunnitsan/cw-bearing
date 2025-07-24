@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { isGerman } from "../utils/checkLanguage";
 import axios from "axios";
@@ -43,156 +43,100 @@ const GlobalProvider = ({ children }) => {
   const [plMenuData, setPlMenuData] = useState(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       setWidth(window.innerWidth);
+      window.addEventListener("resize", updateWidth);
+
+      return () => window.removeEventListener("resize", updateWidth);
     }
-
-    window.addEventListener("resize", updateWidth);
-
-    return () => window.removeEventListener("resize", updateWidth);
   }, []);
-
-  // Memoize the API calls to prevent recreation on every render
-  const fetchConfiguratorData = useCallback(async () => {
-    try {
-      const url =
-        router.locale === router.defaultLocale && isGerman(router.locale)
-          ? `${process.env.NEXT_PUBLIC_API_URL}`
-          : `${process.env.NEXT_PUBLIC_API_URL}${router.locale}/`;
-
-      const configRes = await axios.get(`${url}product-configurator`);
-
-      // Handle configurator data
-      if (
-        configRes.status === 200 &&
-        configRes.data?.content?.colPos0?.[0]?.content?.data?.send_button
-      ) {
-        setConfiguratorData(prevData => ({
-          ...prevData,
-          sendButton: configRes.data.content.colPos0[0].content.data.send_button,
-        }));
-      }
-
-      // Handle bearing types
-      if (
-        configRes.status === 200 &&
-        configRes.data?.content?.colPos0?.[1]?.content?.data?.bearing_types
-      ) {
-        const bearings = {};
-        configRes.data.content.colPos0[1].content.data.bearing_types.forEach(
-          (bearing) => {
-            bearings[bearing.name] = bearing.uid;
-          }
-        );
-        setBearingTypes(bearings);
-      }
-
-      // Handle products - extract from the same product-configurator response
-      if (
-        configRes.status === 200 &&
-        configRes.data?.content?.colPos0?.[0]?.content?.data?.products
-      ) {
-        setOptionProducts(
-          configRes.data.content.colPos0[0].content.data.products
-        );
-      }
-    } catch (error) {
-      // Handle configurator data fetch error silently
-    }
-  }, [router.locale, router.defaultLocale]);
 
   useEffect(() => {
-    fetchConfiguratorData();
-  }, [fetchConfiguratorData]);
+    const url =
+      router.locale === router.defaultLocale && isGerman(router.locale)
+        ? `${process.env.NEXT_PUBLIC_API_URL}`
+        : `${process.env.NEXT_PUBLIC_API_URL}${router.locale}/`;
 
-  const updateWidth = useCallback(() => {
-    if (typeof window !== "undefined") {
+    axios.get(`${url}product-configurator`).then((res) => {
+      if (!res.data.content) return;
+      var bearings = {};
+      var labels = {};
+      res.data.content.colPos0[0].content.data.bearingTypes.map((bearing) => {
+        labels = { ...labels, [bearing["slug"]]: bearing["name"] };
+        bearings = { ...bearings, [bearing["name"]]: bearing["uid"] };
+      });
+
+      setBearingTypes({ ...bearings });
+    });
+
+    (async function () {
+      const resProducts = await axios.get(
+        `${url}product-configurator?productName`
+      );
+      if (
+        resProducts.status === 200 &&
+        resProducts.data &&
+        resProducts.data.content &&
+        resProducts.data.content.colPos0 &&
+        resProducts.data.content.colPos0.length &&
+        resProducts.data.content.colPos0[0].content &&
+        resProducts.data.content.colPos0[0].content.data
+      ) {
+        setOptionProducts(
+          resProducts.data.content.colPos0[0].content.data.products
+        );
+      }
+    })();
+  }, [router]);
+
+  const updateWidth = () => {
+    if (typeof window !== undefined) {
       setWidth(window.innerWidth);
     }
-  }, []);
-
-  // Memoize all handler functions to prevent infinite loops
-  const handleSocialMedia = useCallback((val) => setSocialMedia(val), []);
-  const handleCopyright = useCallback((val) => setCopyright(val), []);
-  const handleConfigurator = useCallback((val) => setConfigurator({ ...val }), []);
-  const handleShowInfo = useCallback((val) => setShowInfo(prev => ({ ...prev, ...val })), []);
-  const handleBigHeader = useCallback((val) => setisBigHeader(val), []);
-  const handleMenuItems = useCallback((val) => setMenuItems(val), []);
-  const handleSuccessModal = useCallback((val) => setSuccessModal(prev => ({ ...prev, ...val })), []);
-  const handleCTAWithBG = useCallback((val) => setCtaWithBG(val), []);
-  const handlePersonalContactData = useCallback((val) => setPersonalContactData(val), []);
-
-  // Memoize the context value to prevent unnecessary re-renders
-  const contextValue = useMemo(() => ({
-    bearingTypes,
-    configuratorData,
-    setConfiguratorData,
-    width,
-    configurator,
-    socialMedia,
-    handleSocialMedia,
-    copyright,
-    handleCopyright,
-    handleConfigurator,
-    showInfo,
-    handleShowInfo,
-    isBigHeader,
-    handleBigHeader,
-    menuItems,
-    handleMenuItems,
-    successModal,
-    handleSuccessModal,
-    ctaWithBG,
-    handleCTAWithBG,
-    personalContactData,
-    handlePersonalContactData,
-    optionProducts,
-    setOptionProducts,
-    enMenuData,
-    setEnMenuData,
-    deMenuData,
-    setDeMenuData,
-    usMenuData,
-    setUsMenuData,
-    itMenuData,
-    setItMenuData,
-    frMenuData,
-    setFrMenuData,
-    plMenuData,
-    setPlMenuData,
-  }), [
-    bearingTypes,
-    configuratorData,
-    width,
-    configurator,
-    socialMedia,
-    copyright,
-    showInfo,
-    isBigHeader,
-    menuItems,
-    successModal,
-    ctaWithBG,
-    personalContactData,
-    optionProducts,
-    enMenuData,
-    deMenuData,
-    usMenuData,
-    itMenuData,
-    frMenuData,
-    plMenuData,
-    handleSocialMedia,
-    handleCopyright,
-    handleConfigurator,
-    handleShowInfo,
-    handleBigHeader,
-    handleMenuItems,
-    handleSuccessModal,
-    handleCTAWithBG,
-    handlePersonalContactData,
-  ]);
+  };
 
   return (
-    <GlobalContext.Provider value={contextValue}>
+    <GlobalContext.Provider
+      value={{
+        bearingTypes,
+        configuratorData,
+        setConfiguratorData,
+        width,
+        configurator,
+        socialMedia,
+        handleSocialMedia: (val) => setSocialMedia(val),
+        copyright,
+        handleCopyright: (val) => setCopyright(val),
+        handleConfigurator: (val) => setConfigurator({ ...val }),
+        showInfo,
+        handleShowInfo: (val) => setShowInfo({ ...showInfo, ...val }),
+        isBigHeader,
+        handleBigHeader: (val) => setisBigHeader(val),
+        menuItems,
+        handleMenuItems: (val) => setMenuItems(val),
+        successModal,
+        handleSuccessModal: (val) =>
+          setSuccessModal({ ...successModal, ...val }),
+        ctaWithBG,
+        handleCTAWithBG: (val) => setCtaWithBG(val),
+        personalContactData,
+        handlePersonalContactData: (val) => setPersonalContactData(val),
+        optionProducts,
+        setOptionProducts,
+        enMenuData,
+        setEnMenuData,
+        deMenuData,
+        setDeMenuData,
+        usMenuData,
+        setUsMenuData,
+        itMenuData,
+        setItMenuData,
+        frMenuData,
+        setFrMenuData,
+        plMenuData,
+        setPlMenuData,
+      }}
+    >
       {children}
     </GlobalContext.Provider>
   );
