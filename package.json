@@ -6,8 +6,7 @@
   "private": true,
   "proxy": "${NEXT_PUBLIC_API_URL}",
   "scripts": {
-    "dev": "node server.js",
-    "dev:no-auth": "next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start"
   },

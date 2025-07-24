@@ -6,6 +6,7 @@ import { GlobalProvider } from "../context/GlobalContext";
 import { inter, lato } from "../utils/fonts";
 import { appWithTranslation } from 'next-i18next'
 import { useRouter } from 'next/router';
+import { applyGlobalHydrationFix } from "../utils/globalHydrationFix";
 
 // CSS imports for node_modules packages
 import "aos/dist/aos.css";
@@ -27,6 +28,8 @@ const MyApp = ({ Component, pageProps, router }) => {
       initClassName: false,
     });
     TagManager.initialize({ gtmId: "GTM-MFTBM4J" });
+
+    applyGlobalHydrationFix();
 
     // Force scroll to top on initial load
     if (typeof window !== 'undefined') {

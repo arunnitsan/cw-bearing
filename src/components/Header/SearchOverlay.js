@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Modal, Button } from "react-bootstrap";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useTranslation } from 'next-i18next';
+import { useTranslationDebug } from '../../utils/useTranslationDebug';
+import AuroraInner from "../Shared/AuroraInner";
 // import { useTranslation } from "../../pages/i18n/client";
 // import { useTranslation } from "../i18n/client";
 
@@ -13,7 +14,7 @@ const SearchOverlay = ({
 }) => {
   const searchInput = useRef(null);
   const router = useRouter();
-  const {t} = useTranslation('common')
+  const {t} = useTranslationDebug('common')
   const [searchTerm, setSearchTerm] = useState("");
   // const [configData, setConfigData] = useState(
   //   // router.locale === "de" ? deData : enData
@@ -42,7 +43,7 @@ const SearchOverlay = ({
       handleClose();
       router.push("/[...slug]", `/search?search_query=${searchQuery}`);
     } catch (e) {
-      console.log(e, "e");
+      // Handle search error silently
     }
   };
 

@@ -29,7 +29,7 @@ const SafeLink = ({ href, children, ...props }) => {
   }
 
   // Fallback: render as a span if href is invalid
-  console.warn('SafeLink: Invalid href provided:', href);
+      // Invalid href provided
   return <span {...props}>{children}</span>;
 };
 

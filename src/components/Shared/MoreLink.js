@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const MoreLink = ({ children, link, targetBlank, diffDomain }) => {
+const MoreLink = ({ children, link = "home", targetBlank, diffDomain }) => {
   return (
     <>
       {diffDomain ? (
@@ -34,10 +34,6 @@ const MoreLink = ({ children, link, targetBlank, diffDomain }) => {
       )}
     </>
   );
-};
-
-MoreLink.defaultProps = {
-  link: "home",
 };
 
 export default MoreLink;

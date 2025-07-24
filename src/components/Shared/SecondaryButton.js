@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const SecondaryButton = ({ diffDomain, targetBlank, children, link, className, ...props }) => {
+const SecondaryButton = ({ diffDomain, targetBlank, children = "Button", link, className = "", ...props }) => {
   return (
     <>
       {diffDomain ? (
@@ -21,11 +21,6 @@ const SecondaryButton = ({ diffDomain, targetBlank, children, link, className, .
     //   </a>
     // </Link>
   );
-};
-
-SecondaryButton.defaultProps = {
-  children: "Button",
-  className: "",
 };
 
 export default SecondaryButton;

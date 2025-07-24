@@ -5,10 +5,10 @@ import GlobalContext from "../../context/GlobalContext";
 const Button = ({
   targetBlank,
   diffDomain,
-  children,
-  className,
-  btnWithArrow,
-  whiteHover,
+  children = "Button",
+  className = "",
+  btnWithArrow = false,
+  whiteHover = false,
   link,
   ...props
 }) => {
@@ -101,13 +101,6 @@ const Button = ({
       )}
     </>
   );
-};
-
-Button.defaultProps = {
-  children: "Button",
-  className: "",
-  btnWithArrow: false,
-  whiteHover: false,
 };
 
 export default Button;

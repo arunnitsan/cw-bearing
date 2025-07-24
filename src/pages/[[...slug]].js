@@ -110,7 +110,7 @@ const Page = ({
         }));
       }
     } catch (error) {
-      console.error('Error fetching configurator data:', error);
+      // Handle configurator data fetch error silently
     }
   }, [router.locale, setConfiguratorData]);
 
@@ -424,11 +424,30 @@ export const getStaticProps = async (context) => {
         } else {
           slug = paramSlug[0];
         }
-        const url = !isGerman(context.locale) ? `${context.locale}/${slug}` : slug;
-        pageData = await getAPIData(url, isDraftMode);
+
+        // Special handling for French locale
+        let url;
+        if (context.locale === "fr") {
+          // For French, try both with and without locale prefix
+          try {
+            url = `fr/${slug}`;
+            pageData = await getAPIData(url, isDraftMode);
+            if (pageData && pageData.error) {
+              // If French fails, try without locale prefix as fallback
+              url = slug;
+              pageData = await getAPIData(url, isDraftMode);
+            }
+          } catch (frError) {
+            // Fallback to German version for French
+            url = slug;
+            pageData = await getAPIData(url, isDraftMode);
+          }
+        } else {
+          url = !isGerman(context.locale) ? `${context.locale}/${slug}` : slug;
+          pageData = await getAPIData(url, isDraftMode);
+        }
       }
     } catch (apiError) {
-      console.error(`API Error for locale ${context.locale}:`, apiError);
       // Return notFound instead of crashing
       return {
         notFound: true,
@@ -445,12 +464,25 @@ export const getStaticProps = async (context) => {
     // Only fetch menu data for current locale to reduce payload
     let menuItems;
     try {
-      menuItems = await getAPIData(
-        !isGerman(context.locale) ? `${context.locale}/` : "",
-        isDraftMode
-      );
+      // Special handling for French locale
+      if (context.locale === "fr") {
+        try {
+          menuItems = await getAPIData("fr/", isDraftMode);
+          if (menuItems && menuItems.error) {
+            // If French menu fails, fallback to German
+            menuItems = await getAPIData("", isDraftMode);
+          }
+        } catch (frMenuError) {
+          // Fallback to German menu for French
+          menuItems = await getAPIData("", isDraftMode);
+        }
+      } else {
+        menuItems = await getAPIData(
+          !isGerman(context.locale) ? `${context.locale}/` : "",
+          isDraftMode
+        );
+      }
     } catch (menuError) {
-      console.error(`Menu API Error for locale ${context.locale}:`, menuError);
       menuItems = { data: { page: {} } };
     }
 
@@ -469,7 +501,6 @@ export const getStaticProps = async (context) => {
           getAPIData("pl", isDraftMode)
         ]);
       } catch (draftError) {
-        console.error('Draft mode API error:', draftError);
         // Set fallback data
         enData = usData = deData = itData = frData = plData = { data: { page: {} } };
       }
@@ -505,15 +536,76 @@ export const getStaticProps = async (context) => {
           plData = plData || { data: { page: {} } };
         }
       } catch (productionError) {
-        console.error(`Production API error for locale ${currentLocale}:`, productionError);
         // Set fallback data
         enData = usData = deData = itData = frData = plData = { data: { page: {} } };
       }
     }
 
+    // Load translations with proper error handling and domain-specific locale support
+    let translations;
+    try {
+      // Get the current locale and determine the appropriate default locale based on domain
+      const currentLocale = context.locale;
+      const host = context.req?.headers?.host || '';
+
+      // Determine default locale based on domain
+      let defaultLocale = 'de'; // fallback default
+      if (host.includes('cwbearing.de')) {
+        defaultLocale = 'de';
+      } else if (host.includes('www.cwbearing.com')) {
+        defaultLocale = 'us';
+      }
+
+      // First, try to load translations for the current locale
+      translations = await serverSideTranslations(currentLocale, ['common']);
+
+      // Verify translations were loaded properly
+      if (!translations._nextI18Next?.initialI18nStore?.[currentLocale]?.common) {
+        // Try to load domain-specific default locale as fallback
+        translations = await serverSideTranslations(defaultLocale, ['common']);
+      }
+
+      // Additional fallback: if still not working, try German as ultimate fallback
+      if (!translations._nextI18Next?.initialI18nStore?.[currentLocale]?.common &&
+          !translations._nextI18Next?.initialI18nStore?.[defaultLocale]?.common) {
+        translations = await serverSideTranslations('de', ['common']);
+      }
+
+    } catch (translationError) {
+      // Determine fallback locale based on domain
+      const host = context.req?.headers?.host || '';
+      let fallbackLocale = 'de';
+      if (host.includes('www.cwbearing.com')) {
+        fallbackLocale = 'us';
+      }
+
+      // Fallback to domain-specific default locale translations
+      try {
+        translations = await serverSideTranslations(fallbackLocale, ['common']);
+      } catch (fallbackError) {
+        // Ultimate fallback: try German
+        try {
+          translations = await serverSideTranslations('de', ['common']);
+        } catch (ultimateError) {
+          // Return empty translations object as last resort
+          translations = {
+            _nextI18Next: {
+              initialI18nStore: {
+                [context.locale]: { common: {} },
+                'de': { common: {} },
+                'us': { common: {} }
+              },
+              initialLocale: context.locale,
+              userConfig: null
+            }
+          };
+        }
+      }
+    }
+
     return {
       props: {
-        ...(await serverSideTranslations(context.locale, ['common'])),
+        ...translations,
         pageData,
         pageMenuItems: menuItems?.data?.page || {},
         siteEnData: enData?.data?.page || {},
@@ -528,7 +620,6 @@ export const getStaticProps = async (context) => {
     };
   } catch (error) {
     // If any error occurs during data fetching, return notFound
-    console.error('Error in getStaticProps:', error);
     return {
       notFound: true,
     };

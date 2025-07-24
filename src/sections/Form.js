@@ -566,9 +566,9 @@ const Form = ({ id, data }) => {
             },
           });
         }
-      } catch (e) {
-        console.log(e, "e");
-      }
+          } catch (e) {
+      // Handle form error silently
+    }
     }
   };
 

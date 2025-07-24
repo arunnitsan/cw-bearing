@@ -80,7 +80,6 @@ const IndexedSearch = () => {
         setSearchData([]);
       }
     } catch (e) {
-      console.log(e);
       setLoading(false);
       // Set resultSearchTerm even when API call fails
       setResultSearchTerm(term);

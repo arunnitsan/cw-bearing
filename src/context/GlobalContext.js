@@ -97,7 +97,7 @@ const GlobalProvider = ({ children }) => {
         );
       }
     } catch (error) {
-      console.error('Error fetching configurator data:', error);
+      // Handle configurator data fetch error silently
     }
   }, [router.locale, router.defaultLocale]);
 

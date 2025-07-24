@@ -31,4 +31,23 @@ module.exports = {
     //   },
     // ],
   },
+
+  // Ensure proper fallback handling
+  fallbackLng: 'de',
+  // Add interpolation options
+  interpolation: {
+    escapeValue: false,
+  },
+  // Add proper namespace handling
+  defaultNS: 'common',
+  ns: ['common'],
+  // Add proper locale path
+  localePath: path.resolve('./public/locales'),
+
+  // Ensure default locale is always loaded
+  load: 'languageOnly',
+  // Add proper fallback namespaces
+  fallbackNS: 'common',
+  // Ensure proper locale handling
+  supportedLngs: ['en', 'de', 'us', 'it', 'fr', 'pl'],
 };

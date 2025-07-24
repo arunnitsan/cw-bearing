@@ -12,7 +12,7 @@ import { useTranslation } from 'next-i18next';
 // import { useTranslation } from "../pages/i18n/client";
 // import { useTranslation } from "../components/i18n/client";
 
-const CTAWithCircle = ({ id, contactVariant, data }) => {
+const CTAWithCircle = ({ id, contactVariant = false, data }) => {
   const { width } = useContext(GlobalContext);
   const router = useRouter();
   const { t } = useTranslation(router.locale);
@@ -210,10 +210,6 @@ const CTAWithCircle = ({ id, contactVariant, data }) => {
       </div>
     </section>
   );
-};
-
-CTAWithCircle.defaultProps = {
-  contactVariant: false,
 };
 
 export default CTAWithCircle;

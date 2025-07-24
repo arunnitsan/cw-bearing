@@ -1,12 +1,23 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef } from "react";
 import Link from "next/link";
 import MainMenuModal from "./MainMenuModal";
 import GlobalContext from "../../context/GlobalContext";
+import { useCleanupAttributes } from "../../utils/useHydrationFix";
 
 const Header = () => {
   const [show, setShow] = useState(false);
-  const { isBigHeader, menuItems } = useContext(GlobalContext);
+  const { isBigHeader = false, menuItems } = useContext(GlobalContext);
   const [searchOverlayShow, setSearchOverlayShow] = useState(false);
+  const headerRef = useRef(null);
+  const containerRef = useRef(null);
+  const innerRef = useRef(null);
+  const rightRef = useRef(null);
+
+  // Clean up attributes on all header elements
+  useCleanupAttributes(headerRef);
+  useCleanupAttributes(containerRef);
+  useCleanupAttributes(innerRef);
+  useCleanupAttributes(rightRef);
   const handleClose = () => {
     setShow(false);
     if (searchOverlayShow) {
@@ -18,6 +29,7 @@ const Header = () => {
   return (
     <>
       <header
+        ref={headerRef}
         className={`${isBigHeader ? "header-big" : ""} header-aurora-outer`}
         suppressHydrationWarning
       >
@@ -27,12 +39,12 @@ const Header = () => {
             <div className="aurora-inner-5" suppressHydrationWarning></div>
           </>
         )}
-        <div className="header-container container-md" suppressHydrationWarning>
-          <div className="header-inner" suppressHydrationWarning>
+        <div ref={containerRef} className="header-container container-md" suppressHydrationWarning>
+          <div ref={innerRef} className="header-inner" suppressHydrationWarning>
             <Link href={"/"} className="logo">
               <img src="/images/png/logo.svg" alt="Logo" />
             </Link>
-            <div className="header-right" suppressHydrationWarning>
+            <div ref={rightRef} className="header-right" suppressHydrationWarning>
               <nav>
                 <ul>
                   {Object.keys(menuItems).length
@@ -73,10 +85,6 @@ const Header = () => {
       />
     </>
   );
-};
-
-Header.defaultProps = {
-  isBigHeader: false,
 };
 
 export default Header;
