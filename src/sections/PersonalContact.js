@@ -44,18 +44,16 @@ const PersonalContact = ({ id, data }) => {
               <div className="profile-info">
                 {data.name && <h3 data-aos="fade-left">
                   <ReactMarkdown
-                    children={data.name}
                     rehypePlugins={[rehypeRaw]}
-                    components={{ a: SafeLink }}
-                  />
+                    components={{ a: SafeLink, p: 'span' }}
+                  >{data.name}</ReactMarkdown>
                 </h3>}
                 {data.designation && (
                   <span data-aos="fade-left" className="position">
                     <ReactMarkdown
-                      children={data.designation}
                       rehypePlugins={[rehypeRaw]}
-                      components={{ a: SafeLink }}
-                    />
+                      components={{ a: SafeLink, p: 'span' }}
+                    >{data.designation}</ReactMarkdown>
                   </span>
                 )}
                 <div className="btn-wrapper desktop-visible">
@@ -129,10 +127,9 @@ const PersonalContact = ({ id, data }) => {
               <div data-aos="fade-right" className="contact-content">
                 {data.text && (
                   <ReactMarkdown
-                    children={data.text}
                     rehypePlugins={[rehypeRaw]}
                     components={{ a: SafeLink }}
-                  />
+                  >{data.text}</ReactMarkdown>
                 )}
                 <div className="btn-wrapper mobile-visible">
                   {data.list && data.list.length ? (
