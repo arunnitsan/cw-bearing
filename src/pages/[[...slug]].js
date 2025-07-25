@@ -342,10 +342,6 @@ const Page = ({
         {configurator.isVisible && <Configurator />}
 
         {successModal && <SuccessModal />}
-      </PageWrapper>
-
-
-
 
         {process.env.NODE_ENV === 'production' && (
           <Script
@@ -357,12 +353,13 @@ const Page = ({
             strategy="afterInteractive"
           />
         )}
-      <Script
-        type="text/plain"
-        data-cookieconsent="marketing"
-        async
-        src="https://userlike-cdn-widgets.s3-eu-west-1.amazonaws.com/a805f53a53f8473ea7e06bd768d86504f78b13b43177489396baddf8a99d9ee6.js"
-      ></Script>
+        <Script
+          type="text/plain"
+          data-cookieconsent="marketing"
+          async
+          src="https://userlike-cdn-widgets.s3-eu-west-1.amazonaws.com/a805f53a53f8473ea7e06bd768d86504f78b13b43177489396baddf8a99d9ee6.js"
+        ></Script>
+      </PageWrapper>
     </>
   );
 };

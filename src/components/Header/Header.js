@@ -34,8 +34,8 @@ const Header = () => {
               <img src="/images/png/logo.svg" alt="Logo" />
             </Link>
             <div className="header-right" suppressHydrationWarning>
-              <nav>
-                <ul>
+              <nav suppressHydrationWarning>
+                <ul suppressHydrationWarning>
                   {(menuItems.mainNavigation || []).map((link, id) => {
                     const uid = link.data?.uid;
                     return (
@@ -45,6 +45,7 @@ const Header = () => {
                             ? "d-none"
                             : ""
                           }`}
+                        suppressHydrationWarning
                       >
                         <Link href={`${link.link}`}>
                           {link.title}
@@ -54,7 +55,7 @@ const Header = () => {
                   })}
                 </ul>
               </nav>
-              <div className="menu-box" onClick={handleShow}>
+              <div className="menu-box" onClick={handleShow} suppressHydrationWarning>
                 <span></span>
                 <span></span>
                 <span></span>
