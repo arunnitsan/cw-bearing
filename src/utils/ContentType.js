@@ -217,6 +217,9 @@ const ContentType = ({ pageContentProps }) => {
                       <IndexedSearch data={outerData} />
                     );
 
+                  case "ke_search_pi1":
+                    return false;
+
                   case "mask_ns_introcareer":
                     return (
                       <IntroCareer id={items.id} data={contentData[0]} />

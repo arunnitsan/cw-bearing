@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import { isGerman } from "../utils/checkLanguage";
 import axios from "axios";
@@ -90,10 +90,13 @@ const GlobalProvider = ({ children, initialIsBigHeader = false }) => {
   }, [router]);
 
   const updateWidth = () => {
-    if (typeof window !== undefined) {
+    if (typeof window !== 'undefined') {
       setWidth(window.innerWidth);
     }
   };
+
+  // Memoize handleBigHeader to prevent infinite render loops
+  const handleBigHeader = useCallback((val) => setisBigHeader(val), []);
 
   return (
     <GlobalContext.Provider
@@ -111,7 +114,7 @@ const GlobalProvider = ({ children, initialIsBigHeader = false }) => {
         showInfo,
         handleShowInfo: (val) => setShowInfo({ ...showInfo, ...val }),
         isBigHeader,
-        handleBigHeader: (val) => setisBigHeader(val),
+        handleBigHeader,
         menuItems,
         handleMenuItems: (val) => setMenuItems(val),
         successModal,
