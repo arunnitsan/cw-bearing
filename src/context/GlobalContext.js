@@ -17,10 +17,10 @@ const initialConfiguratorInfo = {
   },
 };
 
-const GlobalProvider = ({ children }) => {
+const GlobalProvider = ({ children, initialIsBigHeader = false }) => {
   const router = useRouter();
   const [width, setWidth] = useState(undefined);
-  const [isBigHeader, setisBigHeader] = useState(false);
+  const [isBigHeader, setisBigHeader] = useState(initialIsBigHeader);
   const [configurator, setConfigurator] = useState(initialConfiguratorInfo);
   const [showInfo, setShowInfo] = useState(initialShowInfo);
   const [successModal, setSuccessModal] = useState({

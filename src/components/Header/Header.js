@@ -20,19 +20,20 @@ const Header = () => {
     <>
       <header
         className={`${isBigHeader ? "header-big" : ""} header-aurora-outer`}
+        suppressHydrationWarning
       >
         {!isBigHeader && (
           <>
-            <div className="aurora-inner-4"></div>
-            <div className="aurora-inner-5"></div>
+            <div className="aurora-inner-4" suppressHydrationWarning></div>
+            <div className="aurora-inner-5" suppressHydrationWarning></div>
           </>
         )}
-        <div className="header-container container-md">
-          <div className="header-inner">
+        <div className="header-container container-md" suppressHydrationWarning>
+          <div className="header-inner" suppressHydrationWarning>
             <Link href={"/"} className="logo">
               <img src="/images/png/logo.svg" alt="Logo" />
             </Link>
-            <div className="header-right">
+            <div className="header-right" suppressHydrationWarning>
               <nav>
                 <ul>
                   {(menuItems.mainNavigation || []).map((link, id) => {

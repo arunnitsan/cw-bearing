@@ -5,6 +5,7 @@ import AOS from "aos";
 import { GlobalProvider } from "../context/GlobalContext";
 import { inter, lato } from "../utils/fonts";
 import { appWithTranslation } from 'next-i18next'
+import { hasHeaderBig } from "../utils/ContentType";
 
 // CSS imports for node_modules packages
 import "aos/dist/aos.css";
@@ -26,8 +27,13 @@ const MyApp = ({ Component, pageProps, router }) => {
     TagManager.initialize({ gtmId: "GTM-MFTBM4J" });
   }, []);
 
+  // Detect if HeaderBig exists in page content for initial state
+  const initialIsBigHeader = pageProps.pageData?.data?.content?.colPos0
+    ? hasHeaderBig(pageProps.pageData.data.content.colPos0)
+    : false;
+
   return (
-    <GlobalProvider>
+    <GlobalProvider initialIsBigHeader={initialIsBigHeader}>
       <div className={`${inter.variable} ${lato.variable}`}>
         <Layout pageContext={{}} pageData={pageProps.pageData}>
           <Component {...pageProps} />

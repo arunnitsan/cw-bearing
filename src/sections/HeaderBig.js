@@ -18,17 +18,11 @@ const HeaderBig = ({ data }) => {
   const hero = useRef();
   const [activeIcon, setActiveIcon] = useState(1);
   const [bannerScrolled, setBannerScrolled] = useState(false);
-  const { width, configurator, handleConfigurator, handleBigHeader } =
+  const { width, configurator, handleConfigurator } =
     useContext(GlobalContext);
 
-  useEffect(() => {
-    handleBigHeader(true);
-
-    return () => {
-      handleBigHeader(false);
-      return;
-    };
-  }, []);
+  // Note: Removed useEffect that was setting handleBigHeader(true)
+  // This is now handled during SSR initialization to prevent hydration mismatch
 
   const renderAnimatedIcons = (image) => {
     return (image.map((i, id) => {
@@ -146,10 +140,11 @@ const HeaderBig = ({ data }) => {
                           {l.title && <h3>{l.title}</h3>}
                           {l.content && (
                             <ReactMarkdown
-                              children={l.content}
                               rehypePlugins={[rehypeRaw]}
                               components={{ a: Link }}
-                            />
+                            >
+                              {l.content}
+                            </ReactMarkdown>
                           )}
                           {l.link && l.btntext && (
                             // <MoreLink link={l.link.href}>{l.btntext}</MoreLink>

@@ -4,6 +4,17 @@ import { Container } from "react-bootstrap";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
 import dynamic from "next/dynamic";
 
+// Helper function to detect HeaderBig content type for SSR
+export const hasHeaderBig = (pageContentProps) => {
+  if (!pageContentProps || !Array.isArray(pageContentProps)) {
+    return false;
+  }
+
+  return pageContentProps.some(item =>
+    item && item.type === "mask_ns_headerbig"
+  );
+};
+
 // Load Component Whenever It's Calling from CMS Page
 const HeaderBig = dynamic(() => import("../sections/HeaderBig"));
 const Spacer = dynamic(() => import("../sections/Spacer"));
