@@ -132,9 +132,20 @@ export const getStaticProps = async (context) => {
       !isGerman(context.locale) ? `${context.locale}/` : ""
     );
 
+    // For 404 pages, we only need basic page data, not content that could trigger HeaderBig
+    // Remove content.colPos0 to prevent HeaderBig detection on 404 pages
+    const sanitizedPageData = {
+      ...pageData,
+      data: {
+        ...pageData.data,
+        // Remove content to prevent HeaderBig detection (use null instead of undefined for JSON serialization)
+        content: null
+      }
+    };
+
     return {
       props: {
-        pageData,
+        pageData: sanitizedPageData,
         pageMenuItems: menuItems?.data?.page || null,
       },
     };
