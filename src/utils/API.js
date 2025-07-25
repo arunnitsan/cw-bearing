@@ -8,6 +8,7 @@ import Axios from "axios";
 const fetchData = async (url, isDraftMode = false) => {
   const config = {
     headers: {},
+    timeout: 10000, // 10 second timeout
     // Add cache control for draft mode
     ...(isDraftMode && {
       headers: {
@@ -39,10 +40,13 @@ const fetchData = async (url, isDraftMode = false) => {
       error: false,
       data: res.data,
     }))
-    .catch((err) => ({
-      error: true,
-      data: null,
-    }));
+    .catch((err) => {
+      console.error(`API request failed for ${url}:`, err.message);
+      return {
+        error: true,
+        data: null,
+      };
+    });
 };
 
 // Asyn Component

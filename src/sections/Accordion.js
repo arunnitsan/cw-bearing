@@ -149,7 +149,7 @@ const CustomAccordion = ({ id, data }) => {
                     key={accordion.headline}
                     className={`${id == accordionKey ? "active-card" : ""}`}
                   >
-                    <Card.Header as={Card.Header} eventKey={`${id}`}>
+                    <Card.Header>
                       {accordion.headline && (
                         <ContextAwareToggle
                           handleKey={(num) => setAccordionKey(num)}
@@ -175,10 +175,11 @@ const CustomAccordion = ({ id, data }) => {
                           </div>
                           {accordion.text && (
                             <ReactMarkdown
-                              children={accordion.text}
                               rehypePlugins={[rehypeRaw]}
                               components={{ a: Link }}
-                            />
+                            >
+                              {accordion.text}
+                            </ReactMarkdown>
                           )}
                           {accordion.link && (
                             // <MoreLink link={`${accordion.link.href}`}>
@@ -202,9 +203,7 @@ const CustomAccordion = ({ id, data }) => {
                   </Card>
                 ))}
               </>
-            ) : (
-              ""
-            )}
+            ) : null}
           </Accordion>
         </div>
       </div>

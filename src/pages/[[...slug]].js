@@ -29,6 +29,31 @@ const Page = ({
   sitePlData,
 }) => {
   const router = useRouter();
+
+  // Handle router events to prevent navigation conflicts
+  useEffect(() => {
+    const handleStart = () => {
+      // Optional: Add loading state here
+    };
+
+    const handleComplete = () => {
+      // Optional: Remove loading state here
+    };
+
+    const handleError = (error) => {
+      console.error('Navigation error:', error);
+    };
+
+    router.events.on('routeChangeStart', handleStart);
+    router.events.on('routeChangeComplete', handleComplete);
+    router.events.on('routeChangeError', handleError);
+
+    return () => {
+      router.events.off('routeChangeStart', handleStart);
+      router.events.off('routeChangeComplete', handleComplete);
+      router.events.off('routeChangeError', handleError);
+    };
+  }, [router]);
   const {
     configurator,
     handleConfigurator,
@@ -405,10 +430,12 @@ export const getStaticProps = async (context) => {
 
     let pageData;
     try {
+      // First try to get news data
       var newsData = await getAPIData("news/detail/" + paramSlug, isDraftMode);
       if (!newsData.error) {
         pageData = newsData;
       } else {
+        // If not news, try regular page data
         var slug;
         if (paramSlug && paramSlug.length > 2) {
           slug = paramSlug.toString().replace(/,/g, "/");
@@ -419,8 +446,19 @@ export const getStaticProps = async (context) => {
         } else {
           slug = paramSlug[0];
         }
+
+        // Build the URL for the specific locale
         const url = !isGerman(context.locale) ? `${context.locale}/${slug}` : slug;
+        console.log(`Fetching data for URL: ${url}, Locale: ${context.locale}`);
+
         pageData = await getAPIData(url, isDraftMode);
+
+        // If still error, try fallback
+        if (pageData && pageData.error) {
+          console.log(`Fallback: trying default locale for ${context.locale}`);
+          const fallbackUrl = isGerman(context.locale) ? slug : `de/${slug}`;
+          pageData = await getAPIData(fallbackUrl, isDraftMode);
+        }
       }
     } catch (apiError) {
       console.error(`API Error for locale ${context.locale}:`, apiError);

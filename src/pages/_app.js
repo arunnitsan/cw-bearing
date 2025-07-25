@@ -32,6 +32,21 @@ const MyApp = ({ Component, pageProps, router }) => {
     ? hasHeaderBig(pageProps.pageData.data.content.colPos0)
     : false;
 
+  // Add validation for pageData
+  if (pageProps.pageData && pageProps.pageData.error) {
+    console.error('Invalid pageData:', pageProps.pageData);
+    return (
+      <GlobalProvider initialIsBigHeader={false}>
+        <div className={`${inter.variable} ${lato.variable}`}>
+          <div style={{ padding: '2rem', textAlign: 'center' }}>
+            <h1>Page Not Found</h1>
+            <p>The requested page could not be loaded.</p>
+          </div>
+        </div>
+      </GlobalProvider>
+    );
+  }
+
   return (
     <GlobalProvider initialIsBigHeader={initialIsBigHeader}>
       <div className={`${inter.variable} ${lato.variable}`}>

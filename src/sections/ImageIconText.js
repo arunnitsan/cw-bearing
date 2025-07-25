@@ -12,10 +12,12 @@ const ImageIconText = ({ id, data }) => {
           <div className="ii-text-left">
             <div className="desktop-visible img-in" data-aos="fade-right">
               {data.image && data.image.length ? (
-                <img
+                <LazyLoadImage
                   src={`${data.image[0]?.publicUrl ? data.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`}`}
+                  afterLoad={AOSRefresh}
+                  alt="Image Icon"
                 />
-              ) : ("")}
+              ) : null}
             </div>
           </div>
           <div className="ii-text-right">
@@ -24,27 +26,24 @@ const ImageIconText = ({ id, data }) => {
                 <h1>
                   {parseInt(data.check) && data.icon && data.icon.length ? (
                     <span data-aos="fade-right" className="icon-in">
-                      <img
+                      <LazyLoadImage
                         src={`${data.icon[0]?.publicUrl ? data.icon[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${data.icon[0]?.properties?.originalUrl}`}`}
+                        afterLoad={AOSRefresh}
                         alt="Icon"
                       />
                     </span>
-                  ) : (
-                    ""
-                  )}
+                  ) : null}
                   <span data-aos="fade">{data.headline}</span>
                 </h1>
               )}
               <div className="mobile-visible img-in" data-aos="fade-right">
                 {data.image && data.image.length ? (
-                  <img
+                  <LazyLoadImage
                     src={`${data.image[0]?.publicUrl ? data.image[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${data.image[0]?.properties?.originalUrl}`}`}
                     afterLoad={AOSRefresh}
                     alt="Image Icon"
                   />
-                ) : (
-                  ""
-                )}
+                ) : null}
               </div>
               <div className="content-in" data-aos="fade-up">
                 {data.text && (
