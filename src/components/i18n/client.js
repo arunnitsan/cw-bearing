@@ -9,7 +9,7 @@ import { getOptions,languages } from './settings'
 
 const runsOnServerSide = typeof window === 'undefined'
 
-// 
+//
 i18next
   .use(initReactI18next)
   .use(LanguageDetector)
@@ -26,21 +26,27 @@ i18next
 export function useTranslation(lng, ns, options) {
   const ret = useTranslationOrg(ns, options)
   const { i18n } = ret
+
+  // Always call hooks in the same order (Rules of Hooks)
+  const [activeLng, setActiveLng] = useState(i18n.resolvedLanguage)
+
+  // Server-side language change (synchronous)
   if (runsOnServerSide && lng && i18n.resolvedLanguage !== lng) {
     i18n.changeLanguage(lng)
-  } else {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [activeLng, setActiveLng] = useState(i18n.resolvedLanguage)
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useEffect(() => {
-      if (activeLng === i18n.resolvedLanguage) return
-      setActiveLng(i18n.resolvedLanguage)
-    }, [activeLng, i18n.resolvedLanguage])
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useEffect(() => {
-      if (!lng || i18n.resolvedLanguage === lng) return
-      i18n.changeLanguage(lng)
-    }, [lng, i18n])
   }
+
+  // Client-side effects (only run on client)
+  useEffect(() => {
+    if (runsOnServerSide) return // Skip on server
+    if (activeLng === i18n.resolvedLanguage) return
+    setActiveLng(i18n.resolvedLanguage)
+  }, [activeLng, i18n.resolvedLanguage])
+
+  useEffect(() => {
+    if (runsOnServerSide) return // Skip on server
+    if (!lng || i18n.resolvedLanguage === lng) return
+    i18n.changeLanguage(lng)
+  }, [lng, i18n])
+
   return ret
 }

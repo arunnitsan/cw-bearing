@@ -8,7 +8,7 @@ import Routes, { getRoute } from "../utils/Routes";
 import getAPIData from "../utils/API";
 import smoothScroll from "../utils/smoothScroll";
 import { isGerman } from "../utils/checkLanguage";
-import ContentType from "../utils/ContentType";
+import ContentType, { hasHeaderBig } from "../utils/ContentType";
 import PageWrapper from "../components/PageWrapper";
 import GlobalContext from "../context/GlobalContext";
 import ErrorBoundary from "../components/ErrorBoundary";
@@ -38,6 +38,7 @@ const Page = ({
     handleMenuItems,
     handleCopyright,
     handleSocialMedia,
+    handleBigHeader,
     setDeMenuData,
     setEnMenuData,
     setUsMenuData,
@@ -73,6 +74,17 @@ const Page = ({
       smoothScroll();
     }, 1500);
   });
+
+  // Update isBigHeader state whenever page content changes (for client-side navigation)
+  useEffect(() => {
+    if (pageData && pageData.data && pageData.data.content && pageData.data.content.colPos0) {
+      const shouldHaveBigHeader = hasHeaderBig(pageData.data.content.colPos0);
+      handleBigHeader(shouldHaveBigHeader);
+    } else {
+      // No page content means no HeaderBig
+      handleBigHeader(false);
+    }
+  }, [pageData, handleBigHeader]);
 
   useEffect(() => {
     (async function () {

@@ -62,7 +62,6 @@ const ContentType = ({ pageContentProps }) => {
 
         try {
           let contentType = items.type;
-          console.log(`ContentType: Processing item ${index} with type: ${contentType}`);
           // let contentData = findValuesObject(
           //   items.content,
           //   "pi_flexform_content"
