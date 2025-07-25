@@ -20,7 +20,9 @@ i18next
     detection: {
       order: ['path', 'htmlTag', 'cookie', 'navigator'],
     },
-    preload: runsOnServerSide ? languages : []
+    preload: runsOnServerSide ? languages : [],
+    fallbackLng: 'de', // Ensure fallback is set
+    supportedLngs: languages, // Ensure supported languages are set
   })
 
 export function useTranslation(lng, ns, options) {

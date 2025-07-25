@@ -19,25 +19,29 @@ export const getRoute = ({ lang, langPages, defaultLocale }) => {
 const getRoutes = (menuData, lang) => {
   var mainMenu = [];
 
-  const mainNavMenu = menuData.data.page.mainNavigation.map((article) => {
-    // const link =
-    //   lang === "de"
-    //     ? article.data.slug.substring(1)
-    //     : article.data.slug.replace(`/${lang}/`, "");
-    return {
+  const mainNavMenu = menuData.data.page.mainNavigation
+    .filter((article) => article.data && article.data.slug && article.data.slug.length > 1)
+    .map((article) => {
+      // const link =
+      //   lang === "de"
+      //     ? article.data.slug.substring(1)
+      //     : article.data.slug.replace(`/${lang}/`, "");
+      return {
+        params: {
+          slug: [article.data.slug.substring(1)],
+        },
+        locale: lang,
+      };
+    });
+
+  const subNavMenu = menuData.data.page.subNavigation
+    .filter((article) => article.data && article.data.slug && article.data.slug.length > 1)
+    .map((article) => ({
       params: {
         slug: [article.data.slug.substring(1)],
       },
       locale: lang,
-    };
-  });
-
-  const subNavMenu = menuData.data.page.subNavigation.map((article) => ({
-    params: {
-      slug: [article.data.slug.substring(1)],
-    },
-    locale: lang,
-  }));
+    }));
 
   mainMenu = [...mainNavMenu, ...subNavMenu];
 
@@ -47,18 +51,20 @@ const getRoutes = (menuData, lang) => {
     if (!menus.children || !menus.children.length) {
       return;
     }
-    var spreadMenuChildren = menus.children.map((child) => {
-      // const subLink =
-      //   lang === "de"
-      //     ? child.link.substring(1)
-      //     : child.link.replace(`/${lang}/`, "");
-      return {
-        params: {
-          slug: child.data.slug.substring(1).split("/"),
-        },
-        locale: lang,
-      };
-    });
+    var spreadMenuChildren = menus.children
+      .filter((child) => child.data && child.data.slug && child.data.slug.length > 1)
+      .map((child) => {
+        // const subLink =
+        //   lang === "de"
+        //     ? child.link.substring(1)
+        //     : child.link.replace(`/${lang}/`, "");
+        return {
+          params: {
+            slug: child.data.slug.substring(1).split("/"),
+          },
+          locale: lang,
+        };
+      });
     menuChildren = [...menuChildren, ...spreadMenuChildren];
   });
 
@@ -68,14 +74,16 @@ const getRoutes = (menuData, lang) => {
       if (!mainNav.children && !mainNav.children.length) {
         return;
       }
-      var spreadMenuChildren = mainNav.children.map((child) => {
-        return {
-          params: {
-            slug: child.data.slug.substring(1).split("/"),
-          },
-          locale: lang,
-        };
-      });
+      var spreadMenuChildren = mainNav.children
+        .filter((child) => child.data && child.data.slug && child.data.slug.length > 1)
+        .map((child) => {
+          return {
+            params: {
+              slug: child.data.slug.substring(1).split("/"),
+            },
+            locale: lang,
+          };
+        });
       menuChildren = [...menuChildren, ...spreadMenuChildren];
     });
 
@@ -90,14 +98,16 @@ const getRoutes = (menuData, lang) => {
         return;
       }
       let spreadSubMenuChildren;
-      spreadSubMenuChildren = child.children.map((subChild) => {
-        return {
-          params: {
-            slug: subChild.data.slug.substring(1).split("/"),
-          },
-          locale: lang,
-        };
-      });
+      spreadSubMenuChildren = child.children
+        .filter((subChild) => subChild.data && subChild.data.slug && subChild.data.slug.length > 1)
+        .map((subChild) => {
+          return {
+            params: {
+              slug: subChild.data.slug.substring(1).split("/"),
+            },
+            locale: lang,
+          };
+        });
       subMenuChildren = [...subMenuChildren, ...spreadSubMenuChildren];
     });
   });
@@ -111,14 +121,16 @@ const getRoutes = (menuData, lang) => {
         return;
       }
       let spreadSubMenuChildren;
-      spreadSubMenuChildren = child.children.map((subChild) => {
-        return {
-          params: {
-            slug: subChild.data.slug.substring(1).split("/"),
-          },
-          locale: lang,
-        };
-      });
+      spreadSubMenuChildren = child.children
+        .filter((subChild) => subChild.data && subChild.data.slug && subChild.data.slug.length > 1)
+        .map((subChild) => {
+          return {
+            params: {
+              slug: subChild.data.slug.substring(1).split("/"),
+            },
+            locale: lang,
+          };
+        });
       subMenuChildren = [...subMenuChildren, ...spreadSubMenuChildren];
     });
   });
@@ -134,18 +146,48 @@ const getNewsList = (newsData) => {
 };
 
 export const Routes = async () => {
-  const menuData = await getAPIData("");
-  const enMenuData = await getAPIData("en");
-  const usMenuData = await getAPIData("us");
-  const itMenuData = await getAPIData("it");
-  const frMenuData = await getAPIData("fr");
-  const plMenuData = await getAPIData("pl");
-  const newsData = await getAPIData("news");
-  const enNewsData = await getAPIData("en/news");
-  const usNewsData = await getAPIData("us/news");
-  const itNewsData = await getAPIData("it/news");
-  const frNewsData = await getAPIData("fr/news");
-  const plNewsData = await getAPIData("pl/news");
+  let menuData, enMenuData, usMenuData, itMenuData, frMenuData, plMenuData;
+  let newsData, enNewsData, usNewsData, itNewsData, frNewsData, plNewsData;
+
+  try {
+    [menuData, enMenuData, usMenuData, itMenuData, frMenuData, plMenuData] = await Promise.allSettled([
+      getAPIData(""),
+      getAPIData("en"),
+      getAPIData("us"),
+      getAPIData("it"),
+      getAPIData("fr"),
+      getAPIData("pl")
+    ]);
+
+    [newsData, enNewsData, usNewsData, itNewsData, frNewsData, plNewsData] = await Promise.allSettled([
+      getAPIData("news"),
+      getAPIData("en/news"),
+      getAPIData("us/news"),
+      getAPIData("it/news"),
+      getAPIData("fr/news"),
+      getAPIData("pl/news")
+    ]);
+
+    // Extract values from Promise.allSettled results
+    menuData = menuData.status === 'fulfilled' ? menuData.value : null;
+    enMenuData = enMenuData.status === 'fulfilled' ? enMenuData.value : null;
+    usMenuData = usMenuData.status === 'fulfilled' ? usMenuData.value : null;
+    itMenuData = itMenuData.status === 'fulfilled' ? itMenuData.value : null;
+    frMenuData = frMenuData.status === 'fulfilled' ? frMenuData.value : null;
+    plMenuData = plMenuData.status === 'fulfilled' ? plMenuData.value : null;
+
+    newsData = newsData.status === 'fulfilled' ? newsData.value : null;
+    enNewsData = enNewsData.status === 'fulfilled' ? enNewsData.value : null;
+    usNewsData = usNewsData.status === 'fulfilled' ? usNewsData.value : null;
+    itNewsData = itNewsData.status === 'fulfilled' ? itNewsData.value : null;
+    frNewsData = frNewsData.status === 'fulfilled' ? frNewsData.value : null;
+    plNewsData = plNewsData.status === 'fulfilled' ? plNewsData.value : null;
+  } catch (error) {
+    console.error('Error fetching menu data:', error);
+    // Set all to null if there's an error
+    menuData = enMenuData = usMenuData = itMenuData = frMenuData = plMenuData = null;
+    newsData = enNewsData = usNewsData = itNewsData = frNewsData = plNewsData = null;
+  }
   let allNews = [];
 
   let pages = [
@@ -220,29 +262,32 @@ export const Routes = async () => {
     ...getPLRoutes,
   ];
 
-  if (newsData && newsData.data) {
-    var newsMenu = getNewsList(newsData.data.content.colPos0).content.data.list;
+  if (newsData && newsData.data && newsData.data.content && newsData.data.content.colPos0) {
+    var newsMenu = getNewsList(newsData.data.content.colPos0)?.content?.data?.list;
     if (newsMenu) {
-      var news = newsMenu.map((article) => ({
-        params: {
-          slug: ["news", article.pathSegment],
-        },
-        locale: "de",
-      }));
+      var news = newsMenu
+        .filter((article) => article && article.pathSegment)
+        .map((article) => ({
+          params: {
+            slug: ["news", article.pathSegment],
+          },
+          locale: "de",
+        }));
       allNews = [...allNews, ...news];
     }
   }
 
-  if (enNewsData && enNewsData.data) {
-    var newsMenu = getNewsList(enNewsData.data.content.colPos0).content.data
-      .list;
+  if (enNewsData && enNewsData.data && enNewsData.data.content && enNewsData.data.content.colPos0) {
+    var newsMenu = getNewsList(enNewsData.data.content.colPos0)?.content?.data?.list;
     if (newsMenu) {
-      news = newsMenu.map((article) => ({
-        params: {
-          slug: ["news", article.pathSegment],
-        },
-        locale: "en",
-      }));
+      news = newsMenu
+        .filter((article) => article && article.pathSegment)
+        .map((article) => ({
+          params: {
+            slug: ["news", article.pathSegment],
+          },
+          locale: "en",
+        }));
       allNews = [...allNews, ...news];
     }
   }

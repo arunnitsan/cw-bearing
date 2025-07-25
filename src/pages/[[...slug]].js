@@ -365,11 +365,27 @@ const Page = ({
 };
 
 export const getStaticPaths = async (context) => {
-  const paths = await Routes();
-  return {
-    paths: paths,
-    fallback: 'blocking',
-  };
+  try {
+    const paths = await Routes();
+    return {
+      paths: paths || [],
+      fallback: 'blocking',
+    };
+  } catch (error) {
+    console.error('Error in getStaticPaths:', error);
+    // Return minimal paths to prevent build failure
+    return {
+      paths: [
+        { params: { slug: [""] }, locale: "de" },
+        { params: { slug: [""] }, locale: "en" },
+        { params: { slug: [""] }, locale: "us" },
+        { params: { slug: [""] }, locale: "it" },
+        { params: { slug: [""] }, locale: "fr" },
+        { params: { slug: [""] }, locale: "pl" },
+      ],
+      fallback: 'blocking',
+    };
+  }
 };
 
 export const getStaticProps = async (context) => {
