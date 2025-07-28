@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import ReactPlayer from "react-player/lazy";
+import ReactPlayer from "react-player";
 
 const PlayerWrapper = styled.div`
   position: relative;

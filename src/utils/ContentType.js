@@ -17,104 +17,104 @@ export const hasHeaderBig = (pageContentProps) => {
 };
 
 // Load Component Whenever It's Calling from CMS Page
-const HeaderBig = dynamic(() => import("../sections/HeaderBig"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading header...</div>,
+const HeaderBig = dynamic(() => import("../sections/HeaderBig").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const Spacer = dynamic(() => import("../sections/Spacer"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading spacer...</div>,
+const Spacer = dynamic(() => import("../sections/Spacer").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const IconLinkList = dynamic(() => import("../sections/IconLinkList"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading icon list...</div>,
+const IconLinkList = dynamic(() => import("../sections/IconLinkList").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const Form = dynamic(() => import("../sections/Form"), {
+const Form = dynamic(() => import("../sections/Form").then(mod => mod.default), {
   ssr: false, // Keep this as client-side only due to form validation
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading form...</div>
+  loading: () => <div></div>
 });
-const ProductSolutions = dynamic(() => import("../sections/ProductSolutions"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading products...</div>,
+const ProductSolutions = dynamic(() => import("../sections/ProductSolutions").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const Accordion = dynamic(() => import("../sections/Accordion"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading accordion...</div>,
+const Accordion = dynamic(() => import("../sections/Accordion").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const FullContentAccordion = dynamic(() => import("../sections/FullContentAccordion"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading content...</div>,
+const FullContentAccordion = dynamic(() => import("../sections/FullContentAccordion").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const Testimonial = dynamic(() => import("../sections/Testimonial"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading testimonial...</div>,
+const Testimonial = dynamic(() => import("../sections/Testimonial").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const IntroProductsOverview = dynamic(() => import("../sections/IntroProductsOverview"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading overview...</div>,
+const IntroProductsOverview = dynamic(() => import("../sections/IntroProductsOverview").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const ImageIconText = dynamic(() => import("../sections/ImageIconText"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading content...</div>,
+const ImageIconText = dynamic(() => import("../sections/ImageIconText").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const IntroIndustriesOverview = dynamic(() => import("../sections/IntroIndustriesOverview"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading industries...</div>,
+const IntroIndustriesOverview = dynamic(() => import("../sections/IntroIndustriesOverview").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const IntroIndustries = dynamic(() => import("../sections/IntroIndustries"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading industries...</div>,
+const IntroIndustries = dynamic(() => import("../sections/IntroIndustries").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const IntroProducts = dynamic(() => import("../sections/IntroProducts"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading products...</div>,
+const IntroProducts = dynamic(() => import("../sections/IntroProducts").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const PersonalContact = dynamic(() => import("../sections/PersonalContact"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading contact...</div>,
+const PersonalContact = dynamic(() => import("../sections/PersonalContact").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const CTAWithBackground = dynamic(() => import("../sections/CTAWithBackground"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading CTA...</div>,
+const CTAWithBackground = dynamic(() => import("../sections/CTAWithBackground").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const CTAWithCircle = dynamic(() => import("../sections/CTAWithCircle"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading CTA...</div>,
+const CTAWithCircle = dynamic(() => import("../sections/CTAWithCircle").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const ProductTypes = dynamic(() => import("../sections/ProductTypes"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading types...</div>,
+const ProductTypes = dynamic(() => import("../sections/ProductTypes").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const NewsTeaser = dynamic(() => import("../sections/NewsTeaser"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading news...</div>,
+const NewsTeaser = dynamic(() => import("../sections/NewsTeaser").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const IndexedSearch = dynamic(() => import("../sections/IndexedSearch"), {
+const IndexedSearch = dynamic(() => import("../sections/IndexedSearch").then(mod => mod.default), {
   ssr: false, // Keep this as client-side only due to search functionality
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading search...</div>
+  loading: () => <div></div>
 });
-const IntroCareer = dynamic(() => import("../sections/IntroCareer"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading career...</div>,
+const IntroCareer = dynamic(() => import("../sections/IntroCareer").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const SimpleDownload = dynamic(() => import("../sections/SimplesDownload"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading downloads...</div>,
+const SimpleDownload = dynamic(() => import("../sections/SimplesDownload").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const SubMenuPages = dynamic(() => import("../sections/SubMenuPages"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading menu...</div>,
+const SubMenuPages = dynamic(() => import("../sections/SubMenuPages").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const AccordionDownloads = dynamic(() => import("../sections/AccordionDownloads"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading downloads...</div>,
+const AccordionDownloads = dynamic(() => import("../sections/AccordionDownloads").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const StructuredContent = dynamic(() => import("../sections/StructuredContent"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading content...</div>,
+const StructuredContent = dynamic(() => import("../sections/StructuredContent").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
-const Video = dynamic(() => import("../sections/Video"), {
-  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading video...</div>,
+const Video = dynamic(() => import("../sections/Video").then(mod => mod.default), {
+  loading: () => <div></div>,
   ssr: true
 });
 

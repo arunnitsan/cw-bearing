@@ -164,6 +164,21 @@ export const renderComponents = (id, type, data) => {
 			return (
 				<SafeComponent component={SimpleDownload} id={`${id}`} data={data} />
 			);
+		
+		case "text":
+			return false;
+		
+		case "textpic":
+			return false;
+		
+		case "textmedia":
+			return false;
+		
+		case "image":
+			return false;
+		
+		case "header":
+			return false;
 
 		default:
 			// Return null for unknown component types to prevent React errors
