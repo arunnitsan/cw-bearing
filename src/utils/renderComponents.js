@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { Row } from "react-bootstrap";
 import Spacer from "../sections/Spacer";
 import IconLinkList from "../sections/IconLinkList";
@@ -15,106 +16,138 @@ import CTAWithBackground from "../sections/CTAWithBackground";
 import CTAWithCircle from "../sections/CTAWithCircle";
 import NewsTeaser from "../sections/NewsTeaser";
 import Video from "../sections/Video";
-import SimplesDownload from "../sections/SimplesDownload";
+import SimpleDownload from "../sections/SimplesDownload";
+
+// Component wrapper with error handling
+const SafeComponent = ({ component: Component, ...props }) => {
+  const [hasError, setHasError] = React.useState(false);
+  const [isClient, setIsClient] = React.useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  try {
+    if (!Component) {
+      console.warn('SafeComponent: Component is undefined');
+      return null;
+    }
+
+    if (hasError) {
+      return <div>Component failed to load</div>;
+    }
+
+    // Don't render until client-side hydration is complete
+    if (!isClient) {
+      return <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Initializing...</div>;
+    }
+
+    return <Component {...props} />;
+  } catch (error) {
+    console.error('SafeComponent: Error rendering component:', error);
+    setHasError(true);
+    return <div>Component failed to load</div>;
+  }
+};
 
 export const renderComponents = (id, type, data) => {
 	switch (type) {
 		case "mask_ns_spacer":
 			return (
-				<Spacer data={data} />
+				<SafeComponent component={Spacer} data={data} />
 			);
 
 		case "mask_ns_video":
 			return (
-				<Video id={`${id}`} data={data} />
+				<SafeComponent component={Video} id={`${id}`} data={data} />
 			);
 
 		case "mask_ns_iconlinklist":
 			return (
 				<Row>
-					<IconLinkList id={`${id}`} data={data} />
+					<SafeComponent component={IconLinkList} id={`${id}`} data={data} />
 				</Row>
 			);
 
 		case "mask_ns_productsolutions":
 			return (
 				<Row>
-					<ProductSolutions id={`${id}`} data={data} />
+					<SafeComponent component={ProductSolutions} id={`${id}`} data={data} />
 				</Row>
 			);
 
 		case "mask_ns_accordion":
 			return (
 				<Row>
-					<CustomAccordion id={`${id}`} data={data} />
+					<SafeComponent component={CustomAccordion} id={`${id}`} data={data} />
 				</Row>
 			);
 
 		case "mask_ns_testimonial":
 			return (
 				<Row>
-					<Testimonial id={`${id}`} data={data} />
+					<SafeComponent component={Testimonial} id={`${id}`} data={data} />
 				</Row>
 			);
 
 		case "mask_ns_introproductsoverview":
 			return (
 				<Row>
-					<IntroProductsOverview id={`${id}`} data={data} />
+					<SafeComponent component={IntroProductsOverview} id={`${id}`} data={data} />
 				</Row>
 			);
 
 		case "mask_ns_introproducts":
 			return (
 				<Row>
-					<IntroProducts id={`${id}`} data={data} />
+					<SafeComponent component={IntroProducts} id={`${id}`} data={data} />
 				</Row>
 			);
 
 		case "mask_ns_imageicontext":
 			return (
 				<Row>
-					<ImageIconText id={`${id}`} data={data} />
+					<SafeComponent component={ImageIconText} id={`${id}`} data={data} />
 				</Row>
 			);
 
 		case "mask_ns_introindustriesoverview":
 			return (
 				<Row>
-					<IntroIndustriesOverview id={`${id}`} data={data} />
+					<SafeComponent component={IntroIndustriesOverview} id={`${id}`} data={data} />
 				</Row>
 			);
 
 		case "mask_ns_introindustries":
 			return (
 				<Row>
-					<IntroIndustries id={`${id}`} data={data} />
+					<SafeComponent component={IntroIndustries} id={`${id}`} data={data} />
 				</Row>
 			);
 
 		case "mask_ns_personalcontact":
 			return (
 				<Row>
-					<PersonalContact id={`${id}`} data={data} />
+					<SafeComponent component={PersonalContact} id={`${id}`} data={data} />
 				</Row>
 			);
 
 		case "mask_ns_producttypes":
 			return (
-				<ProductTypes id={`${id}`} data={data} />
+				<SafeComponent component={ProductTypes} id={`${id}`} data={data} />
 			);
 
 		case "mask_ns_ctabgimage":
 			return (
 				<Row>
-					<CTAWithBackground id={`${id}`} data={data} />
+					<SafeComponent component={CTAWithBackground} id={`${id}`} data={data} />
 				</Row>
 			);
 
 		case "mask_ns_ctacircle":
 			return (
 				<Row>
-					<CTAWithCircle
+					<SafeComponent component={CTAWithCircle}
 						id={`${id}`}
 						data={data}
 						contactVariant={parseInt(data.style)}
@@ -124,12 +157,17 @@ export const renderComponents = (id, type, data) => {
 
 		case "news_pi1":
 			return (
-				<NewsTeaser id={`${id}`} data={data} />
+				<SafeComponent component={NewsTeaser} id={`${id}`} data={data} />
 			);
 
 		case "mask_ns_simpledownload":
 			return (
-				<SimplesDownload id={`${id}`} data={data} />
+				<SafeComponent component={SimpleDownload} id={`${id}`} data={data} />
 			);
+
+		default:
+			// Return null for unknown component types to prevent React errors
+			console.warn(`renderComponents: Unknown component type: ${type}`);
+			return null;
 	}
 };

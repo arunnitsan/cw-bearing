@@ -12,6 +12,7 @@ import ContentType, { hasHeaderBig } from "../utils/ContentType";
 import PageWrapper from "../components/PageWrapper";
 import GlobalContext from "../context/GlobalContext";
 import ErrorBoundary from "../components/ErrorBoundary";
+import LoadingSpinner from "../components/LoadingSpinner";
 import Configurator from "../components/Configurator";
 import SuccessModal from "../components/SuccessModal/SuccessModal";
 import DraftModeBanner from "../components/DraftModeBanner";
@@ -29,6 +30,21 @@ const Page = ({
   sitePlData,
 }) => {
   const router = useRouter();
+  const [isHydrated, setIsHydrated] = React.useState(false);
+
+  // Handle hydration state
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  // Reset hydration state when locale changes
+  useEffect(() => {
+    setIsHydrated(false);
+    const timer = setTimeout(() => {
+      setIsHydrated(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [router.locale]);
 
   // Handle router events to prevent navigation conflicts
   useEffect(() => {
@@ -102,33 +118,37 @@ const Page = ({
 
   // Update isBigHeader state whenever page content changes (for client-side navigation)
   useEffect(() => {
-    if (pageData && pageData.data && pageData.data.content && pageData.data.content.colPos0) {
+    if (isHydrated && pageData && pageData.data && pageData.data.content && pageData.data.content.colPos0) {
       const shouldHaveBigHeader = hasHeaderBig(pageData.data.content.colPos0);
       handleBigHeader(shouldHaveBigHeader);
-    } else {
+    } else if (isHydrated) {
       // No page content means no HeaderBig
       handleBigHeader(false);
     }
-  }, [pageData, handleBigHeader]);
+  }, [pageData, handleBigHeader, isHydrated]);
 
   useEffect(() => {
-    (async function () {
-      let res;
-      if (router.locale === "de") {
-        res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}product-configurator`
-        );
-      } else {
-        res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}${router.locale}/product-configurator`
-        );
-      }
-      setConfiguratorData({
-        ...configuratorData,
-        sendButton: res.data.content?.colPos0[0].content.data.send_button,
-      });
-    })();
+    if (isHydrated) {
+      (async function () {
+        let res;
+        if (router.locale === "de") {
+          res = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}product-configurator`
+          );
+        } else {
+          res = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}${router.locale}/product-configurator`
+          );
+        }
+        setConfiguratorData({
+          ...configuratorData,
+          sendButton: res.data.content?.colPos0[0].content.data.send_button,
+        });
+      })();
+    }
+  }, [isHydrated, router.locale]);
 
+  useEffect(() => {
     if (typeof window !== "undefined") {
       const language =
         window.navigator.userLanguage || window.navigator.language;
@@ -196,23 +216,24 @@ const Page = ({
   }, []);
 
   useEffect(() => {
-    if (pageData && pageData.error) return;
-    const ns_seo = pageData.data.page.constants.ns_seo;
-    const ns_basetheme = pageData.data.page.constants.ns_basetheme;
-    let spreadSocialMedia;
-    if (ns_seo) {
-      spreadSocialMedia = {
-        linkedin: ns_seo.seo_linkedin_link,
-        facebook: ns_seo.seo_facebook_link,
-        xing: ns_seo.seo_xing_link,
-        twitter: ns_seo.seo_twitter_link,
-      };
+    if (isHydrated && pageData && !pageData.error) {
+      const ns_seo = pageData.data.page.constants.ns_seo;
+      const ns_basetheme = pageData.data.page.constants.ns_basetheme;
+      let spreadSocialMedia;
+      if (ns_seo) {
+        spreadSocialMedia = {
+          linkedin: ns_seo.seo_linkedin_link,
+          facebook: ns_seo.seo_facebook_link,
+          xing: ns_seo.seo_xing_link,
+          twitter: ns_seo.seo_twitter_link,
+        };
+      }
+      handleCopyright(ns_basetheme.copyright);
+      handleSocialMedia({
+        ...spreadSocialMedia,
+      });
     }
-    handleCopyright(ns_basetheme.copyright);
-    handleSocialMedia({
-      ...spreadSocialMedia,
-    });
-  }, []);
+  }, [pageData, isHydrated]);
 
   useEffect(() => {
     let timer = setInterval(scrollToEl, 500);
@@ -236,14 +257,16 @@ const Page = ({
   }, [pageData]);
 
   useEffect(() => {
-    setEnMenuData(siteEnData);
-    setDeMenuData(siteDeData);
-    setUsMenuData(siteUsData);
-    setItMenuData(siteItData);
-    setFrMenuData(siteFrData);
-    setPlMenuData(sitePlData);
-    handleMenuItems(pageMenuItems);
-  }, [pageMenuItems]);
+    if (isHydrated) {
+      setEnMenuData(siteEnData);
+      setDeMenuData(siteDeData);
+      setUsMenuData(siteUsData);
+      setItMenuData(siteItData);
+      setFrMenuData(siteFrData);
+      setPlMenuData(sitePlData);
+      handleMenuItems(pageMenuItems);
+    }
+  }, [pageMenuItems, isHydrated]);
 
   return (
     <>
@@ -310,7 +333,7 @@ const Page = ({
 
           {/* <script type="text/plain" data-cookieconsent="marketing" async src="https://userlike-cdn-widgets.s3-eu-west-1.amazonaws.com/a805f53a53f8473ea7e06bd768d86504f78b13b43177489396baddf8a99d9ee6.js"></script> */}
         </Head>
-        {!pageData && <div>Loading...</div>}
+        {!pageData && <LoadingSpinner />}
 
         {pageData && pageData.error && (
           <div
@@ -335,16 +358,20 @@ const Page = ({
         )}
 
         {pageData && !pageData.error && (
-          <main>
+          <main suppressHydrationWarning={true}>
             {pageData &&
             pageData.data &&
             pageData.data.content &&
             pageData.data.content.colPos0 &&
             Array.isArray(pageData.data.content.colPos0) &&
             pageData.data.content.colPos0.length > 0 ? (
-              <ErrorBoundary>
-                <ContentType pageContentProps={pageData.data.content.colPos0} />
-              </ErrorBoundary>
+              <ContentWrapper
+                locale={router.locale}
+                asPath={router.asPath}
+                pageContentProps={pageData.data.content.colPos0}
+                isHydrated={isHydrated}
+                componentKey={`colPos0-${router.locale}-${router.asPath}`}
+              />
             ) : (
               <div className="content-section pt-11 pb-7 pt-lg-30 pb-lg-28 bg-default-6">
                 <Container>
@@ -386,6 +413,30 @@ const Page = ({
         ></Script>
       </PageWrapper>
     </>
+  );
+};
+
+// Component wrapper with error handling and locale change detection
+const ContentWrapper = ({ locale, asPath, pageContentProps, isHydrated, componentKey }) => {
+  const [errorKey, setErrorKey] = React.useState(0);
+
+  // Reset error boundary when locale or path changes
+  React.useEffect(() => {
+    setErrorKey(prev => prev + 1);
+  }, [locale, asPath, componentKey]);
+
+  // Show loading spinner while hydrating
+  if (!isHydrated) {
+    return <LoadingSpinner message="Preparing content..." />;
+  }
+
+  return (
+    <ErrorBoundary key={errorKey}>
+      <ContentType 
+        key={`${locale}-${asPath}-${componentKey}`}
+        pageContentProps={pageContentProps} 
+      />
+    </ErrorBoundary>
   );
 };
 

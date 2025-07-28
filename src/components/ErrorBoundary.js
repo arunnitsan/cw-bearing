@@ -3,11 +3,21 @@ import React from 'react';
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null, errorInfo: null };
+    this.state = { hasError: false, error: null, errorInfo: null, isHydrationError: false };
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true };
+    // Check if this is a hydration error
+    const isHydrationError = error.message && (
+      error.message.includes('hydration') || 
+      error.message.includes('Hydration') ||
+      error.message.includes('Text content does not match')
+    );
+    
+    return { 
+      hasError: true, 
+      isHydrationError 
+    };
   }
 
   componentDidCatch(error, errorInfo) {
@@ -22,6 +32,22 @@ class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
+      // Special handling for hydration errors
+      if (this.state.isHydrationError) {
+        return (
+          <div style={{ padding: '20px', border: '1px solid orange', margin: '20px', backgroundColor: '#fff3cd' }}>
+            <h2>Content is loading...</h2>
+            <p>Please wait while the page content loads properly.</p>
+            <button
+              onClick={() => this.setState({ hasError: false, error: null, errorInfo: null, isHydrationError: false })}
+              style={{ marginTop: '10px', padding: '5px 10px', backgroundColor: '#ffc107', border: 'none', borderRadius: '4px' }}
+            >
+              Retry
+            </button>
+          </div>
+        );
+      }
+
       return (
         <div style={{ padding: '20px', border: '1px solid red', margin: '20px' }}>
           <h2>Something went wrong!</h2>
@@ -34,7 +60,7 @@ class ErrorBoundary extends React.Component {
             <pre>{this.state.error && this.state.error.stack}</pre>
           </details>
           <button
-            onClick={() => this.setState({ hasError: false, error: null, errorInfo: null })}
+            onClick={() => this.setState({ hasError: false, error: null, errorInfo: null, isHydrationError: false })}
             style={{ marginTop: '10px', padding: '5px 10px' }}
           >
             Try Again

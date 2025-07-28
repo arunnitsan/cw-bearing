@@ -1,8 +1,9 @@
 // Load Core of React.js and Next.js
-import React from "react";
-import { Container } from "react-bootstrap";
+import React, { useEffect } from "react";
+import { Container, Row } from "react-bootstrap";
 import { LazyLoadComponent } from "react-lazy-load-image-component";
 import dynamic from "next/dynamic";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 // Helper function to detect HeaderBig content type for SSR
 export const hasHeaderBig = (pageContentProps) => {
@@ -16,41 +17,156 @@ export const hasHeaderBig = (pageContentProps) => {
 };
 
 // Load Component Whenever It's Calling from CMS Page
-const HeaderBig = dynamic(() => import("../sections/HeaderBig"));
-const Spacer = dynamic(() => import("../sections/Spacer"));
-const IconLinkList = dynamic(() => import("../sections/IconLinkList"));
+const HeaderBig = dynamic(() => import("../sections/HeaderBig"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading header...</div>,
+  ssr: true
+});
+const Spacer = dynamic(() => import("../sections/Spacer"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading spacer...</div>,
+  ssr: true
+});
+const IconLinkList = dynamic(() => import("../sections/IconLinkList"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading icon list...</div>,
+  ssr: true
+});
 const Form = dynamic(() => import("../sections/Form"), {
   ssr: false, // Keep this as client-side only due to form validation
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading form...</div>
 });
-const ProductSolutions = dynamic(() => import("../sections/ProductSolutions"));
-const Accordion = dynamic(() => import("../sections/Accordion"));
-const FullContentAccordion = dynamic(() => import("../sections/FullContentAccordion"));
-const Testimonial = dynamic(() => import("../sections/Testimonial"));
-const IntroProductsOverview = dynamic(() => import("../sections/IntroProductsOverview"));
-const ImageIconText = dynamic(() => import("../sections/ImageIconText"));
-const IntroIndustriesOverview = dynamic(() => import("../sections/IntroIndustriesOverview"));
-const IntroIndustries = dynamic(() => import("../sections/IntroIndustries"));
-const IntroProducts = dynamic(() => import("../sections/IntroProducts"));
-const PersonalContact = dynamic(() => import("../sections/PersonalContact"));
-const CTAWithBackground = dynamic(() => import("../sections/CTAWithBackground"));
-const CTAWithCircle = dynamic(() => import("../sections/CTAWithCircle"));
-const ProductTypes = dynamic(() => import("../sections/ProductTypes"));
-const NewsTeaser = dynamic(() => import("../sections/NewsTeaser"));
+const ProductSolutions = dynamic(() => import("../sections/ProductSolutions"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading products...</div>,
+  ssr: true
+});
+const Accordion = dynamic(() => import("../sections/Accordion"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading accordion...</div>,
+  ssr: true
+});
+const FullContentAccordion = dynamic(() => import("../sections/FullContentAccordion"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading content...</div>,
+  ssr: true
+});
+const Testimonial = dynamic(() => import("../sections/Testimonial"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading testimonial...</div>,
+  ssr: true
+});
+const IntroProductsOverview = dynamic(() => import("../sections/IntroProductsOverview"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading overview...</div>,
+  ssr: true
+});
+const ImageIconText = dynamic(() => import("../sections/ImageIconText"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading content...</div>,
+  ssr: true
+});
+const IntroIndustriesOverview = dynamic(() => import("../sections/IntroIndustriesOverview"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading industries...</div>,
+  ssr: true
+});
+const IntroIndustries = dynamic(() => import("../sections/IntroIndustries"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading industries...</div>,
+  ssr: true
+});
+const IntroProducts = dynamic(() => import("../sections/IntroProducts"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading products...</div>,
+  ssr: true
+});
+const PersonalContact = dynamic(() => import("../sections/PersonalContact"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading contact...</div>,
+  ssr: true
+});
+const CTAWithBackground = dynamic(() => import("../sections/CTAWithBackground"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading CTA...</div>,
+  ssr: true
+});
+const CTAWithCircle = dynamic(() => import("../sections/CTAWithCircle"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading CTA...</div>,
+  ssr: true
+});
+const ProductTypes = dynamic(() => import("../sections/ProductTypes"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading types...</div>,
+  ssr: true
+});
+const NewsTeaser = dynamic(() => import("../sections/NewsTeaser"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading news...</div>,
+  ssr: true
+});
 const IndexedSearch = dynamic(() => import("../sections/IndexedSearch"), {
   ssr: false, // Keep this as client-side only due to search functionality
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading search...</div>
 });
-const IntroCareer = dynamic(() => import("../sections/IntroCareer"));
-const SimplesDownload = dynamic(() => import("../sections/SimplesDownload"));
-const SubMenuPages = dynamic(() => import("../sections/SubMenuPages"));
-const AccordionDownloads = dynamic(() => import("../sections/AccordionDownloads"));
-const StructuredContent = dynamic(() => import("../sections/StructuredContent"));
-const Video = dynamic(() => import("../sections/Video"));
+const IntroCareer = dynamic(() => import("../sections/IntroCareer"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading career...</div>,
+  ssr: true
+});
+const SimpleDownload = dynamic(() => import("../sections/SimplesDownload"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading downloads...</div>,
+  ssr: true
+});
+const SubMenuPages = dynamic(() => import("../sections/SubMenuPages"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading menu...</div>,
+  ssr: true
+});
+const AccordionDownloads = dynamic(() => import("../sections/AccordionDownloads"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading downloads...</div>,
+  ssr: true
+});
+const StructuredContent = dynamic(() => import("../sections/StructuredContent"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading content...</div>,
+  ssr: true
+});
+const Video = dynamic(() => import("../sections/Video"), {
+  loading: () => <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Loading video...</div>,
+  ssr: true
+});
+
+// Component wrapper with error handling
+const SafeComponent = ({ component: Component, ...props }) => {
+  const [hasError, setHasError] = React.useState(false);
+  const [isClient, setIsClient] = React.useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  try {
+    if (!Component) {
+      console.warn('SafeComponent: Component is undefined');
+      return null;
+    }
+
+    if (hasError) {
+      return <div>Component failed to load</div>;
+    }
+
+    // Don't render until client-side hydration is complete
+    if (!isClient) {
+      return <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>Initializing...</div>;
+    }
+
+    return <Component {...props} />;
+  } catch (error) {
+    console.error('SafeComponent: Error rendering component:', error);
+    setHasError(true);
+    return <div>Component failed to load</div>;
+  }
+};
 
 const ContentType = ({ pageContentProps }) => {
+  const [isClient, setIsClient] = React.useState(false);
+
+  // Ensure we're on the client side
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   // Add error handling for missing or invalid props
   if (!pageContentProps || !Array.isArray(pageContentProps)) {
     console.warn('ContentType: pageContentProps is missing or not an array');
     return null;
+  }
+
+  // Don't render until client-side hydration is complete
+  if (!isClient) {
+    return <LoadingSpinner message="Loading components..." />;
   }
 
   return (
@@ -80,6 +196,12 @@ const ContentType = ({ pageContentProps }) => {
             return null;
           }
 
+          // Validate that contentData[0] exists before using it
+          if (!contentData[0]) {
+            console.warn(`ContentType: contentData[0] is undefined for item ${index} with type ${contentType}`);
+            return null;
+          }
+
           return (
             <React.Fragment key={index}>
               {(() => {
@@ -87,38 +209,44 @@ const ContentType = ({ pageContentProps }) => {
                   // Type: HeaderBig (Core)
                   case "mask_ns_headerbig":
                     return (
-                      <HeaderBig data={contentData[0]} />
+                      <SafeComponent component={HeaderBig} data={contentData[0]} />
                     );
 
                   case "mask_ns_spacer":
                     return (
-                      <Spacer data={contentData[0]} />
+                      <SafeComponent component={Spacer} data={contentData[0]} />
                     );
 
                   case "mask_ns_iconlinklist":
                     return (
-                      <IconLinkList id={items.id} data={contentData[0]} />
+                      <SafeComponent component={IconLinkList} id={items.id} data={contentData[0]} />
                     );
 
                   case "mask_ns_productsolutions":
                     return (
-                      <ProductSolutions id={items.id} data={contentData[0]} />
+                      <SafeComponent component={ProductSolutions} id={items.id} data={contentData[0]} />
                     );
 
                   case "mask_ns_accordion":
                     return (
-                      <Accordion id={items.id} data={contentData[0]} />
+                      <SafeComponent component={Accordion} id={items.id} data={contentData[0]} />
                     );
 
                   case "mask_ns_video":
                     return (
-                      <Video id={items.id} data={contentData[0]} />
+                      <SafeComponent component={Video} id={items.id} data={contentData[0]} />
                     );
 
                   case "structured_content":
+                    // Validate frameData before using it
+                    if (!frameData || !Array.isArray(frameData) || !frameData[0]) {
+                      console.warn(`ContentType: Invalid frameData for structured_content at index ${index}`);
+                      return null;
+                    }
+                    
                     if (items.appearance?.frameClass === "accordion") {
                       return (
-                        <FullContentAccordion
+                        <SafeComponent component={FullContentAccordion}
                           id={items.id}
                           data={frameData[0]}
                         />
@@ -127,22 +255,22 @@ const ContentType = ({ pageContentProps }) => {
                       items.appearance?.frameClass === "accordion-download"
                     ) {
                       return (
-                        <AccordionDownloads id={items.id} data={frameData[0]} />
+                        <SafeComponent component={AccordionDownloads} id={items.id} data={frameData[0]} />
                       );
                     } else {
                       return (
-                        <StructuredContent id={items.id} data={frameData[0]} />
+                        <SafeComponent component={StructuredContent} id={items.id} data={frameData[0]} />
                       );
                     }
 
                   case "mask_ns_testimonial":
                     return (
-                      <Testimonial id={items.id} data={contentData[0]} />
+                      <SafeComponent component={Testimonial} id={items.id} data={contentData[0]} />
                     );
 
                   case "mask_ns_introproductsoverview":
                     return (
-                      <IntroProductsOverview
+                      <SafeComponent component={IntroProductsOverview}
                         id={items.id}
                         data={contentData[0]}
                       />
@@ -150,22 +278,27 @@ const ContentType = ({ pageContentProps }) => {
 
                   case "mask_ns_introproducts":
                     return (
-                      <IntroProducts id={items.id} data={contentData[0]} />
+                      <SafeComponent component={IntroProducts} id={items.id} data={contentData[0]} />
                     );
 
                   case "mask_ns_imageicontext":
                     return (
-                      <ImageIconText id={items.id} data={contentData[0]} />
+                      <SafeComponent component={ImageIconText} id={items.id} data={contentData[0]} />
                     );
 
                   case "menu_subpages":
+                    // Validate frameData before using it
+                    if (!frameData || !Array.isArray(frameData) || !frameData[0]) {
+                      console.warn(`ContentType: Invalid frameData for menu_subpages at index ${index}`);
+                      return null;
+                    }
                     return (
-                      <SubMenuPages id={items.id} data={frameData[0]} />
+                      <SafeComponent component={SubMenuPages} id={items.id} data={frameData[0]} />
                     );
 
                   case "mask_ns_introindustriesoverview":
                     return (
-                      <IntroIndustriesOverview
+                      <SafeComponent component={IntroIndustriesOverview}
                         id={items.id}
                         data={contentData[0]}
                       />
@@ -173,25 +306,25 @@ const ContentType = ({ pageContentProps }) => {
 
                   case "mask_ns_introindustries":
                     return (
-                      <IntroIndustries id={items.id} data={contentData[0]} />
+                      <SafeComponent component={IntroIndustries} id={items.id} data={contentData[0]} />
                     );
 
                   case "mask_ns_personalcontact":
                     return (
                       <LazyLoadComponent>
-                        <PersonalContact id={items.id} data={contentData[0]} />
+                        <SafeComponent component={PersonalContact} id={items.id} data={contentData[0]} />
                       </LazyLoadComponent>
                     );
 
                   case "mask_ns_producttypes":
                     return (
-                      <ProductTypes id={items.id} data={contentData[0]} />
+                      <SafeComponent component={ProductTypes} id={items.id} data={contentData[0]} />
                     );
 
                   case "mask_ns_ctabgimage":
                     return (
                       <LazyLoadComponent>
-                        <CTAWithBackground
+                        <SafeComponent component={CTAWithBackground}
                           id={items.id}
                           data={contentData[0]}
                         />
@@ -200,7 +333,7 @@ const ContentType = ({ pageContentProps }) => {
 
                   case "mask_ns_ctacircle":
                     return (
-                      <CTAWithCircle
+                      <SafeComponent component={CTAWithCircle}
                         id={items.id}
                         data={contentData[0]}
                         contactVariant={contentData[0]?.style ? parseInt(contentData[0].style) : 0}
@@ -209,12 +342,12 @@ const ContentType = ({ pageContentProps }) => {
 
                   case "news_pi1":
                     return (
-                      <NewsTeaser id={items.id} data={items.content} />
+                      <SafeComponent component={NewsTeaser} id={items.id} data={items.content} />
                     );
 
                   case "ke_search_pi2":
                     return (
-                      <IndexedSearch data={outerData} />
+                      <SafeComponent component={IndexedSearch} data={outerData} />
                     );
 
                   case "ke_search_pi1":
@@ -222,22 +355,27 @@ const ContentType = ({ pageContentProps }) => {
 
                   case "mask_ns_introcareer":
                     return (
-                      <IntroCareer id={items.id} data={contentData[0]} />
+                      <SafeComponent component={IntroCareer} id={items.id} data={contentData[0]} />
                     );
 
                   case "mask_ns_simpledownload":
                     return (
-                      <SimplesDownload id={items.id} data={contentData[0]} />
+                      <SafeComponent component={SimpleDownload} id={items.id} data={contentData[0]} />
                     );
 
                   case "form_formframework":
                     return (
                       <Container>
-                        <Form id={items.id} data={items.content} />
+                        <SafeComponent component={Form} id={items.id} data={items.content} />
                       </Container>
                     );
 
                   case "shortcut":
+                    // Validate shortcut content before recursive call
+                    if (!items.content?.shortcut || !Array.isArray(items.content.shortcut)) {
+                      console.warn(`ContentType: Invalid shortcut content at index ${index}`);
+                      return null;
+                    }
                     return (
                       <ContentType pageContentProps={items.content.shortcut} />
                     );
