@@ -8,19 +8,12 @@ const SecondaryButton = ({ diffDomain, targetBlank, children, link, className, .
         <a href={`${process.env.NEXT_PUBLIC_API_URL1}${link}`} className={`btn test btn-red btn-br-red ${className}`} target="_blank" {...props}>
           {children}
         </a>
-      ) : (<>
+      ) : (
         <Link href={extractTextFromHtml(link)} className={`btn test btn-red btn-br-red ${className}`} target={`${targetBlank ? '_blank' : ""}`} {...props}>
           {children}
         </Link>
-      </>
-
       )}
     </>
-    // <Link href={`${diffDomain ? '${process.env.NEXT_PUBLIC_API_URL1}/' : ''}${link}`}>
-    //   <a className={`btn test btn-red btn-br-red ${className}`} target={`${targetBlank ? '_blank' : ""}`} {...props}>
-    //     {children}
-    //   </a>
-    // </Link>
   );
 };
 

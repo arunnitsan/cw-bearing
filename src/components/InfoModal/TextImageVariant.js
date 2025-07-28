@@ -17,26 +17,26 @@ const TextImageVariant = ({ translation, handleStepTwoSelectChange, data }) => {
         className="info-inner"
         onClick={() => {
           if (
-            box.dependency_show &&
-            document.querySelector(`#dropdown${box.dependency_show}`)
+            info.dependency_show &&
+            document.querySelector(`#dropdown${info.dependency_show}`)
           ) {
             document
-              .querySelector(`#dropdown${box.dependency_show}`)
+              .querySelector(`#dropdown${info.dependency_show}`)
               .classList.remove("d-none");
           }
           if (
-            box.dependency_hide &&
-            document.querySelector(`#dropdown${box.dependency_hide}`)
+            info.dependency_hide &&
+            document.querySelector(`#dropdown${info.dependency_hide}`)
           ) {
             document
-              .querySelector(`#dropdown${box.dependency_hide}`)
+              .querySelector(`#dropdown${info.dependency_hide}`)
               .classList.add("d-none");
           }
           handleShowInfo({ isVisible: false });
           handleStepTwoSelectChange(
             data.uid,
-            box.name,
-            box.infobox_value,
+            info.name,
+            info.infobox_value,
             data.name
           );
         }}

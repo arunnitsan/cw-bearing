@@ -45,7 +45,7 @@ const CTAWithBackground = ({ id, data }) => {
                 backgroundImage: `url(${data.media[0]?.publicUrl ? data.media[0]?.publicUrl : `${process.env.NEXT_PUBLIC_API_URL}${data.media[0]?.properties?.originalUrl}`})`,
               }}
             ></span>
-          ):(<></>)}
+          ) : (<></>)}
         </>
       )}
       <div className="container-md">
@@ -78,7 +78,7 @@ const CTAWithBackground = ({ id, data }) => {
                     </React.Fragment>
                   ))}
                 </>
-              ):(
+              ) : (
                 <></>
               )}
             </div>

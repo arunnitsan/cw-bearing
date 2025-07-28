@@ -83,11 +83,6 @@ const TextOnly = ({ translation, handleStepTwoSelectChange, data }) => {
                   ${data.name}`),
                   }}
                 />
-                //   <span className="icon-in">
-                //     <img src="/images/png/info-i.svg" alt="Info" />
-                //   </span>
-                //   {data.name}
-                // </h3>
               )}
             </div>
             <div className="info-desc">

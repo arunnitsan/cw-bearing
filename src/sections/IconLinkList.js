@@ -26,7 +26,7 @@ const renderIconLinkList = (data) => {
           </div>
           <div className="choose-wrapper">
             {l.btnlink && l.btntext ? (
-                              <Link href={extractTextFromHtml(l.btnlink.href)}>
+              <Link href={extractTextFromHtml(l.btnlink.href)}>
                   {l.btntext}
                   <span className="mobile-visible">
                     <img
@@ -38,7 +38,7 @@ const renderIconLinkList = (data) => {
                     <img src="/images/png/arrow-right-circle.svg" alt="Arrow" />
                   </span>
               </Link>
-            ): ("")}
+            ) : ("")}
           </div>
         </div>
       </Col>

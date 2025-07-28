@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import AOS from "aos";
 import Header from "../Header";
 import Footer from "../Footer";
